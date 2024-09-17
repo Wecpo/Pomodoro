@@ -1,82 +1,82 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { formatTime } from "../utils/formatTime.ts";
+import { computed, ref } from "vue";
+import { formatTime } from "../utils/formatTime";
+import TimerButton from "./TimerButton.vue";
 
-const initTime = 1500;
+const focusTime = 10;
+const shortRestTime = 3
+const longRestTime = 600
 
 enum TimerStatus {
   Started = "started",
   Paused = "paused",
-  Stopped = "stopped",
 }
 
-const initialTimer = ref<number>(initTime);
+enum TimerType {
+  Focus = 'focus',
+  ShortRest = 'shortRest',
+  LongRest = 'longRest'
+}
 
-const timerStatus = ref<TimerStatus>(TimerStatus.Stopped);
+const timerType = ref<string>(TimerType.Focus)
+const currentTime = ref<number>(focusTime);
 
-const currentInterval = ref<NodeJS.Timeout>();
+const timerStatus = ref<TimerStatus>(TimerStatus.Paused);
+
+const currentIntervalId = ref<number>();
 
 const startTimer = () => {
   timerStatus.value = TimerStatus.Started;
-  console.log("start", timerStatus.value);
-  const interval = setInterval(() => {
-    initialTimer.value--;
 
-    if (initialTimer.value === 0) {
+  const interval = setInterval(() => {
+    currentTime.value--;
+    if (currentTime.value === 0) {
       clearInterval(interval);
-      alert("Помидор завершился!");
+      if (timerType.value === TimerType.Focus) {
+        timerType.value = TimerType.ShortRest
+        currentTime.value = shortRestTime
+        timerStatus.value = TimerStatus.Paused
+        alert("Помидор завершился!");
+        return
+      }
+      if (timerType.value === TimerType.ShortRest) {
+        timerType.value = TimerType.Focus
+        currentTime.value = focusTime
+        timerStatus.value = TimerStatus.Paused
+        alert("Короткий перерыв завершился!");
+        return
+      }
+
     }
   }, 1000);
 
-  currentInterval.value = interval;
+  currentIntervalId.value = interval;
 };
 
-const stopTimer = () => {
-  clearInterval(currentInterval.value);
-  timerStatus.value = TimerStatus.Stopped;
-  console.log("stop", timerStatus.value);
-  initialTimer.value = initTime;
-};
 const pauseTimer = () => {
-  clearInterval(currentInterval.value);
+  clearInterval(currentIntervalId.value);
   timerStatus.value = TimerStatus.Paused;
-  console.log("[pause]", timerStatus.value);
 };
+
+const currentTimerClass = computed(() => {
+  return timerType.value === TimerType.Focus ? `mainContainerFocus` : `mainContainerRest`
+})
 </script>
 
 <template>
-  <div class="mainContainer">
+  <div :class="currentTimerClass">
     <div class="timerContainer">
-      <h1>{{ formatTime(initialTimer) }}</h1>
+      {{ formatTime(currentTime) }}
     </div>
     <div class="timerButtonsContainer">
-      <button
-        v-if="
-          timerStatus === TimerStatus.Started ||
-          timerStatus === TimerStatus.Paused
-        "
-        @click="stopTimer"
-      >
-        Stop
-      </button>
-      <button
-        v-if="
-          timerStatus === TimerStatus.Stopped ||
-          timerStatus === TimerStatus.Paused
-        "
-        @click="startTimer"
-      >
-        Start
-      </button>
-      <button v-if="timerStatus === TimerStatus.Started" @click="pauseTimer">
-        Pause
-      </button>
+      <TimerButton v-if="timerStatus === TimerStatus.Paused" @click="startTimer">Start</TimerButton>
+      <TimerButton v-if="timerStatus === TimerStatus.Started" @click="pauseTimer">Pause</TimerButton>
     </div>
   </div>
 </template>
 
 <style scoped>
-.mainContainer {
+.mainContainerFocus {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -84,15 +84,18 @@ const pauseTimer = () => {
   background-color: rgb(221, 70, 70);
 }
 
-.timerContainer {
-  color: #fff;
+.mainContainerRest {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+  background-color: rgb(177, 218, 179);
 }
 
-.timerButtonsContainer {
-  margin: 5px;
-  padding: 5px;
-  :hover {
-    cursor: pointer;
-  }
+.timerContainer {
+  font-size: 40px;
+  font-weight: bolder;
+  color: #fff;
+  margin: 20px;
 }
 </style>
