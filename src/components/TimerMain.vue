@@ -5,7 +5,6 @@ import TimerButton from "./TimerButton.vue";
 
 const focusTime = 10;
 const shortRestTime = 3
-const longRestTime = 600
 
 enum TimerStatus {
   Started = "started",
@@ -13,64 +12,70 @@ enum TimerStatus {
 }
 
 enum TimerType {
-  Focus = 'focus',
-  ShortRest = 'shortRest',
-  LongRest = 'longRest'
+  Focus = 'Focus',
+  ShortRest = 'Short Break',
+  LongRest = 'Long Break'
 }
 
-const timerType = ref<string>(TimerType.Focus)
-const currentTime = ref<number>(focusTime);
-
+const timer = ref<number>(focusTime);
+const timerType = ref<TimerType>(TimerType.Focus)
 const timerStatus = ref<TimerStatus>(TimerStatus.Paused);
+const intervalId = ref<number | undefined>();
 
-const currentIntervalId = ref<number>();
+const changeTimer = () => {
+  if (timerType.value === TimerType.Focus) {
+    timerType.value = TimerType.ShortRest
+    timer.value = shortRestTime
+    timerStatus.value = TimerStatus.Paused
+    alert("Помидор завершился!");
+    return
+  }
+  if (timerType.value === TimerType.ShortRest) {
+    timerType.value = TimerType.Focus
+    timer.value = focusTime
+    timerStatus.value = TimerStatus.Paused
+    alert("Короткий перерыв завершился!");
+    return
+  }
+}
 
 const startTimer = () => {
   timerStatus.value = TimerStatus.Started;
 
   const interval = setInterval(() => {
-    currentTime.value--;
-    if (currentTime.value === 0) {
+    timer.value--;
+    if (timer.value < 0) {
       clearInterval(interval);
-      if (timerType.value === TimerType.Focus) {
-        timerType.value = TimerType.ShortRest
-        currentTime.value = shortRestTime
-        timerStatus.value = TimerStatus.Paused
-        alert("Помидор завершился!");
-        return
-      }
-      if (timerType.value === TimerType.ShortRest) {
-        timerType.value = TimerType.Focus
-        currentTime.value = focusTime
-        timerStatus.value = TimerStatus.Paused
-        alert("Короткий перерыв завершился!");
-        return
-      }
-
+      changeTimer()
     }
   }, 1000);
 
-  currentIntervalId.value = interval;
+  intervalId.value = interval;
 };
 
 const pauseTimer = () => {
-  clearInterval(currentIntervalId.value);
+  clearInterval(intervalId.value);
   timerStatus.value = TimerStatus.Paused;
 };
 
-const currentTimerClass = computed(() => {
+const timerClass = computed(() => {
   return timerType.value === TimerType.Focus ? `mainContainerFocus` : `mainContainerRest`
 })
+
+const isTimerPaused = computed(() => timerStatus.value === TimerStatus.Paused)
+const isTimerStarted = computed(() => timerStatus.value === TimerStatus.Started)
+
 </script>
 
 <template>
-  <div :class="currentTimerClass">
+  <div :class="timerClass">
     <div class="timerContainer">
-      {{ formatTime(currentTime) }}
+      <div>{{ timerType }}</div>
+      <div>{{ formatTime(timer) }}</div>
     </div>
     <div class="timerButtonsContainer">
-      <TimerButton v-if="timerStatus === TimerStatus.Paused" @click="startTimer">Start</TimerButton>
-      <TimerButton v-if="timerStatus === TimerStatus.Started" @click="pauseTimer">Pause</TimerButton>
+      <TimerButton v-if="isTimerPaused" @click="startTimer">Start</TimerButton>
+      <TimerButton v-if="isTimerStarted" @click="pauseTimer">Pause</TimerButton>
     </div>
   </div>
 </template>
@@ -93,6 +98,9 @@ const currentTimerClass = computed(() => {
 }
 
 .timerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-size: 40px;
   font-weight: bolder;
   color: #fff;
