@@ -2,20 +2,10 @@
 import { computed, ref } from "vue";
 import { formatTime } from "@/utils/formatTime";
 import TimerButton from "@/components/TimerButton.vue";
+import { TimerStatus, TimerType } from "@/constants/TimerEnums";
 
 const focusTime = 10;
 const shortRestTime = 3
-
-enum TimerStatus {
-  Started = "started",
-  Paused = "paused",
-}
-
-enum TimerType {
-  Focus = 'Focus',
-  ShortRest = 'Short Break',
-  LongRest = 'Long Break'
-}
 
 const timer = ref<number>(focusTime);
 const timerType = ref<TimerType>(TimerType.Focus)
