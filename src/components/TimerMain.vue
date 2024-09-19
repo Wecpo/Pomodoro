@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { formatTime } from "../utils/formatTime";
-import TimerButton from "./TimerButton.vue";
+import { formatTime } from "@/utils/formatTime";
+import TimerButton from "@/components/TimerButton.vue";
 
 const focusTime = 10;
 const shortRestTime = 3
