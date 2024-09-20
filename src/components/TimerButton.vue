@@ -1,7 +1,7 @@
 <template>
-    <button class="timerButton">
-        <slot></slot>
-    </button>
+  <button class="timerButton">
+    <slot />
+  </button>
 </template>
 
 <style>
