@@ -1,19 +1,22 @@
 <script setup lang="ts">
+import SettingsModal from '@/components/SettingsModal.vue'
 import TimerButton from '@/components/TimerButton.vue'
 import { TimerStatus, TimerType } from '@/constants/TimerEnums'
 import { formatTime } from '@/utils/formatTime'
 import { computed, ref } from 'vue'
 import { useToast } from 'vue-toastification'
+import IconSettings from './icons/IconSettings.vue'
 
 const toast = useToast()
 
 const focusTime = 10
 const shortRestTime = 3
 
-const timer = ref<number>(focusTime)
+const timer = ref(focusTime)
 const timerType = ref<TimerType>(TimerType.Focus)
 const timerStatus = ref<TimerStatus>(TimerStatus.Paused)
 const intervalId = ref<number | undefined>()
+const showModal = ref(false)
 
 function changeTimer() {
   if (timerType.value === TimerType.Focus) {
@@ -60,6 +63,7 @@ const isTimerStarted = computed(() => timerStatus.value === TimerStatus.Started)
 
 <template>
   <div :class="timerClass">
+    <IconSettings @click="showModal = !showModal" />
     <div class="timerContainer">
       <div>{{ timerType }}</div>
       <div>{{ formatTime(timer) }}</div>
@@ -73,6 +77,7 @@ const isTimerStarted = computed(() => timerStatus.value === TimerStatus.Started)
       </TimerButton>
     </div>
   </div>
+  <SettingsModal v-if="showModal" />
 </template>
 
 <style scoped>
