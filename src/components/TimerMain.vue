@@ -7,10 +7,13 @@ import { computed, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import IconSettings from './icons/IconSettings.vue'
 
-const toast = useToast()
+const settings = JSON.parse(localStorage.getItem('timerSettings'))
 
-const focusTime = 10
-const shortRestTime = 3
+const toast = useToast()
+const focusTime = settings.focus * 60
+const shortRestTime = settings.shortRest * 60
+const longRestTime = settings.longRest * 60
+const rounds = settings.rounds
 
 const timer = ref(focusTime)
 const timerType = ref<TimerType>(TimerType.Focus)
@@ -54,11 +57,15 @@ function pauseTimer() {
 }
 
 const timerClass = computed(() => {
-  return timerType.value === TimerType.Focus ? `mainContainerFocus` : `mainContainerRest`
+  return timerType.value === TimerType.Focus
+    ? `mainContainerFocus`
+    : `mainContainerRest`
 })
 
 const isTimerPaused = computed(() => timerStatus.value === TimerStatus.Paused)
-const isTimerStarted = computed(() => timerStatus.value === TimerStatus.Started)
+const isTimerStarted = computed(
+  () => timerStatus.value === TimerStatus.Started,
+)
 </script>
 
 <template>
