@@ -1,30 +1,36 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const props = defineProps({
-  settings: Object,
-})
+interface Props {
+  settings: { focusTime: number, shortBreakTime: number, longBreakTime: number, rounds: number }
+
+}
+const props = defineProps<Props>()
+
+const emit = defineEmits(['close', 'update'])
 
 const settings = ref(props.settings)
 
 function editSettings() {
   const data = JSON.stringify(settings.value)
   localStorage.setItem('timerSettings', data)
+  emit('update')
+  emit('close')
 }
 </script>
 
 <template>
   <form class="modal" @submit.prevent="editSettings">
-    <label>Focus Time</label>
+    <label>Focus Time (m)</label>
     <input v-model="settings.focusTime" type="number">
-    <label>Short Rest</label>
+    <label>Short Rest (m)</label>
     <input v-model="settings.shortBreakTime" type="number">
-    <label>Long Rest</label>
+    <label>Long Rest (m)</label>
     <input v-model="settings.longBreakTime" type="number">
     <label>Rounds</label>
     <input v-model="settings.rounds" type="number">
     <button type="submit">
-      Edit
+      Apply
     </button>
   </form>
 </template>
