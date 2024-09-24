@@ -3,10 +3,9 @@ import { ref } from 'vue'
 
 interface Props {
   settings: { focusTime: number, shortBreakTime: number, longBreakTime: number, rounds: number }
-
 }
-const props = defineProps<Props>()
 
+const props = defineProps<Props>()
 const emit = defineEmits(['close', 'update'])
 
 const settings = ref(props.settings)

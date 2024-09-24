@@ -18,6 +18,7 @@ const defaultTimerSettings = { focusTime: 30, shortBreakTime: 5, longBreakTime: 
 
 let timerSettings: ITimerSettings = reactive(defaultTimerSettings)
 const timer = ref(timerSettings.focusTime)
+const roundCounter = ref(1)
 const timerType = ref<TimerType>(TimerType.Focus)
 const timerStatus = ref<TimerStatus>(TimerStatus.Paused)
 const intervalId = ref<number | undefined>()
@@ -38,17 +39,37 @@ onMounted(() => {
 
 function changeTimer() {
   if (timerType.value === TimerType.Focus) {
-    timerType.value = TimerType.ShortBreak
-    timer.value = timerSettings.shortBreakTime
-    timerStatus.value = TimerStatus.Paused
-    toast.success('Помидор завершен!')
-    return
+    if (roundCounter.value < timerSettings.rounds) {
+      roundCounter.value++
+      timerType.value = TimerType.ShortBreak
+      timer.value = timerSettings.shortBreakTime
+      timerStatus.value = TimerStatus.Paused
+      toast.success('Помидор завершен!')
+      return
+    }
+    if (roundCounter.value === timerSettings.rounds) {
+      roundCounter.value++
+      timerType.value = TimerType.LongBreak
+      timer.value = timerSettings.longBreakTime
+      timerStatus.value = TimerStatus.Paused
+      toast.success('Помидор завершен!')
+      return
+    }
   }
+
   if (timerType.value === TimerType.ShortBreak) {
     timerType.value = TimerType.Focus
     timer.value = timerSettings.focusTime
     timerStatus.value = TimerStatus.Paused
     toast.info('Короткий перерыв завершен!')
+  }
+
+  if (timerType.value === TimerType.LongBreak) {
+    roundCounter.value = 0
+    timerType.value = TimerType.Focus
+    timer.value = timerSettings.focusTime
+    timerStatus.value = TimerStatus.Paused
+    toast.info('Длинный перерыв завершен!')
   }
 }
 
