@@ -1,23 +1,20 @@
 <script setup lang="ts">
+import type { TimerSettings } from '@/types/interfaces/TimerSettings'
+import IconSettings from '@/components/icons/IconSettings.vue'
 import SettingsModal from '@/components/SettingsModal.vue'
-import TimerButton from '@/components/TimerButton.vue'
-import { TimerStatus, TimerType } from '@/constants/TimerEnums'
+import TimerButton from '@/components/Timer/TimerButton.vue'
+import { TimerStatus } from '@/types/enums/TimerEnums/TimerStatusEnum'
+import { TimerType } from '@/types/enums/TimerEnums/TimerTypeEnum'
 import { formatTime } from '@/utils/formatTime'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useToast } from 'vue-toastification'
-import IconSettings from './icons/IconSettings.vue'
 
 const toast = useToast()
-interface ITimerSettings {
-  focusTime: number
-  shortBreakTime: number
-  longBreakTime: number
-  rounds: number
-}
-const defaultTimerSettings = { focusTime: 30, shortBreakTime: 5, longBreakTime: 10, rounds: 3 }
 
-let timerSettings: ITimerSettings = reactive(defaultTimerSettings)
-const timer = ref(timerSettings.focusTime)
+const defaultTimerSettings = { focusDuration: 30, shortBreakDuration: 5, longBreakDuration: 10, rounds: 3 }
+
+let timerSettings: TimerSettings = reactive(defaultTimerSettings)
+const timer = ref(timerSettings.focusDuration)
 const roundCounter = ref(1)
 const timerType = ref<TimerType>(TimerType.Focus)
 const timerStatus = ref<TimerStatus>(TimerStatus.Paused)
@@ -29,7 +26,7 @@ function fetchSettings() {
 
   if (settingsData) {
     timerSettings = JSON.parse(settingsData)
-    timer.value = timerSettings.focusTime
+    timer.value = timerSettings.focusDuration
   }
 }
 
@@ -42,7 +39,7 @@ function changeTimer() {
     if (roundCounter.value < timerSettings.rounds) {
       roundCounter.value++
       timerType.value = TimerType.ShortBreak
-      timer.value = timerSettings.shortBreakTime
+      timer.value = timerSettings.shortBreakDuration
       timerStatus.value = TimerStatus.Paused
       toast.success('Помидор завершен!')
       return
@@ -50,7 +47,7 @@ function changeTimer() {
     if (roundCounter.value === timerSettings.rounds) {
       roundCounter.value++
       timerType.value = TimerType.LongBreak
-      timer.value = timerSettings.longBreakTime
+      timer.value = timerSettings.longBreakDuration
       timerStatus.value = TimerStatus.Paused
       toast.success('Помидор завершен!')
       return
@@ -59,7 +56,7 @@ function changeTimer() {
 
   if (timerType.value === TimerType.ShortBreak) {
     timerType.value = TimerType.Focus
-    timer.value = timerSettings.focusTime
+    timer.value = timerSettings.focusDuration
     timerStatus.value = TimerStatus.Paused
     toast.info('Короткий перерыв завершен!')
   }
@@ -67,7 +64,7 @@ function changeTimer() {
   if (timerType.value === TimerType.LongBreak) {
     roundCounter.value = 0
     timerType.value = TimerType.Focus
-    timer.value = timerSettings.focusTime
+    timer.value = timerSettings.focusDuration
     timerStatus.value = TimerStatus.Paused
     toast.info('Длинный перерыв завершен!')
   }
@@ -93,9 +90,17 @@ function pauseTimer() {
 }
 
 const timerClass = computed(() => {
-  return timerType.value === TimerType.Focus
-    ? `mainContainerFocus`
-    : `mainContainerBreak`
+  if (timerType.value === TimerType.Focus) {
+    return 'timer--backgound--focus'
+  }
+
+  if (timerType.value === TimerType.ShortBreak) {
+    return 'timer--background--short-break'
+  }
+
+  else {
+    return 'timer--background--long-break'
+  }
 })
 
 const isTimerPaused = computed(() => timerStatus.value === TimerStatus.Paused)
@@ -105,13 +110,16 @@ const isTimerStarted = computed(
 </script>
 
 <template>
-  <div :class="timerClass">
+  <div :class="`timer ${timerClass}`">
     <IconSettings @click="showModal = !showModal" />
-    <div class="timerContainer">
-      <div>{{ timerType }}</div>
-      <div>{{ formatTime(timer * 60) }}</div>
+    <div class="timer__title">
+      {{ timerType }}
     </div>
-    <div class="timerButtonsContainer">
+    <div class="timer__time">
+      {{ formatTime(timer) }}
+    </div>
+
+    <div class="timer__controls">
       <TimerButton v-if="isTimerPaused" @click="startTimer">
         Start
       </TimerButton>
@@ -124,29 +132,40 @@ const isTimerStarted = computed(
 </template>
 
 <style scoped>
-.mainContainerFocus {
+.timer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 5px;
-  background-color: rgb(221, 70, 70);
+  font-family: Arial, sans-serif;
+  border-radius: 10px;
+  padding: 6px;
+  color:#fff;
 }
 
-.mainContainerBreak {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 5px;
-  background-color: rgb(177, 218, 179);
+.timer--backgound--focus {
+  background-color:rgb(206, 76, 76);
 }
 
-.timerContainer {
+.timer--background--short-break {
+  background-color:rgb(85, 197, 122);
+}
+
+.timer--background--long-break {
+  background-color:rgb(107, 194, 209);
+}
+
+.timer__title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.timer__time {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.timer__controls {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 40px;
-  font-weight: bolder;
-  color: #fff;
-  margin: 20px;
+  gap: 0.5rem;
 }
 </style>

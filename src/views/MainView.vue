@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TimerMain from '@/components/TimerMain.vue'
+import TimerMain from '@/components/Timer/TimerMain.vue'
 </script>
 
 <template>

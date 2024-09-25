@@ -1,11 +1,8 @@
 <script setup lang="ts">
+import type { SettingsModalProps } from '@/types/interfaces/SettingsModalProps'
 import { ref } from 'vue'
 
-interface Props {
-  settings: { focusTime: number, shortBreakTime: number, longBreakTime: number, rounds: number }
-}
-
-const props = defineProps<Props>()
+const props = defineProps<SettingsModalProps>()
 const emit = defineEmits(['close', 'update'])
 
 const settings = ref(props.settings)
@@ -21,11 +18,11 @@ function editSettings() {
 <template>
   <form class="modal" @submit.prevent="editSettings">
     <label>Focus Time (m)</label>
-    <input v-model="settings.focusTime" type="number">
+    <input v-model="settings.focusDuration" type="number">
     <label>Short Rest (m)</label>
-    <input v-model="settings.shortBreakTime" type="number">
+    <input v-model="settings.shortBreakDuration" type="number">
     <label>Long Rest (m)</label>
-    <input v-model="settings.longBreakTime" type="number">
+    <input v-model="settings.longBreakDuration" type="number">
     <label>Rounds</label>
     <input v-model="settings.rounds" type="number">
     <button type="submit">
