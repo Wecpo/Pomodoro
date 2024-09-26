@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { SettingsModalProps } from '@/types/interfaces/SettingsModalProps'
-import { ref } from 'vue'
+import { onBeforeUnmount, onMounted, onUnmounted, onUpdated, ref } from 'vue'
 
 const props = defineProps<SettingsModalProps>()
 const emit = defineEmits(['close', 'update'])
@@ -13,22 +13,43 @@ function editSettings() {
   emit('update')
   emit('close')
 }
+const modalRef = ref<HTMLElement | null>(null)
+
+function handleClickOutside(event: MouseEvent) {
+  if (modalRef.value && !modalRef.value.contains(event.target as Node)) {
+    emit('close')
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside, {
+    capture: true,
+  })
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside, {
+    capture: true,
+  })
+})
 </script>
 
 <template>
-  <form class="modal" @submit.prevent="editSettings">
-    <label>Focus Time (m)</label>
-    <input v-model="settings.focusDuration" type="number">
-    <label>Short Rest (m)</label>
-    <input v-model="settings.shortBreakDuration" type="number">
-    <label>Long Rest (m)</label>
-    <input v-model="settings.longBreakDuration" type="number">
-    <label>Rounds</label>
-    <input v-model="settings.rounds" type="number">
-    <button type="submit">
-      Apply
-    </button>
-  </form>
+  <div ref="modalRef">
+    <form class="modal" @submit.prevent="editSettings">
+      <label>Focus Time (m)</label>
+      <input v-model="settings.focusDuration" type="number">
+      <label>Short Rest (m)</label>
+      <input v-model="settings.shortBreakDuration" type="number">
+      <label>Long Rest (m)</label>
+      <input v-model="settings.longBreakDuration" type="number">
+      <label>Rounds</label>
+      <input v-model="settings.rounds" type="number">
+      <button type="submit">
+        Apply
+      </button>
+    </form>
+  </div>
 </template>
 
 <style scoped>

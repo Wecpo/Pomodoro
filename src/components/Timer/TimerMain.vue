@@ -14,7 +14,7 @@ const toast = useToast()
 const defaultTimerSettings = { focusDuration: 30, shortBreakDuration: 5, longBreakDuration: 10, rounds: 3 }
 
 let timerSettings: TimerSettings = reactive(defaultTimerSettings)
-const timer = ref(timerSettings.focusDuration)
+const timer = ref<number>(timerSettings.focusDuration)
 const roundCounter = ref(1)
 const timerType = ref<TimerType>(TimerType.Focus)
 const timerStatus = ref<TimerStatus>(TimerStatus.Paused)
@@ -123,12 +123,12 @@ const isTimerStarted = computed(
       <TimerButton v-if="isTimerPaused" @click="startTimer">
         Start
       </TimerButton>
-      <TimerButton v-if="isTimerStarted" @click="pauseTimer">
+      <TimerButton v-else-if="isTimerStarted" @click="pauseTimer">
         Pause
       </TimerButton>
     </div>
   </div>
-  <SettingsModal v-if="showModal" :settings="timerSettings" @update="fetchSettings" @close="showModal = false" />
+  <SettingsModal v-if="showModal" :settings="timerSettings" @update="fetchSettings" @close="showModal = !showModal" />
 </template>
 
 <style scoped>
