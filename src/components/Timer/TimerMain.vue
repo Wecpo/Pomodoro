@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { TimerSettings } from '@/types/interfaces/TimerSettings'
 import IconSettings from '@/components/icons/IconSettings.vue'
-import SettingsModal from '@/components/SettingsModal.vue'
 import TimerButton from '@/components/Timer/TimerButton.vue'
+import SettingsModal from '@/components/Timer/TimerSettingsModal.vue'
 import { TimerStatus } from '@/types/enums/TimerEnums/TimerStatusEnum'
 import { TimerType } from '@/types/enums/TimerEnums/TimerTypeEnum'
 import { formatTime } from '@/utils/formatTime'
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, onUpdated, reactive, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 
 const toast = useToast()
@@ -20,6 +20,7 @@ const timerType = ref<TimerType>(TimerType.Focus)
 const timerStatus = ref<TimerStatus>(TimerStatus.Paused)
 const intervalId = ref<number | undefined>()
 const showModal = ref(false)
+const settingsIconRef = ref<HTMLElement | null>(null)
 
 function fetchSettings() {
   const settingsData = localStorage.getItem('timerSettings')
@@ -104,14 +105,14 @@ const timerClass = computed(() => {
 })
 
 const isTimerPaused = computed(() => timerStatus.value === TimerStatus.Paused)
-const isTimerStarted = computed(
-  () => timerStatus.value === TimerStatus.Started,
-)
+const isTimerStarted = computed(() => timerStatus.value === TimerStatus.Started)
 </script>
 
 <template>
   <div :class="`timer ${timerClass}`">
-    <IconSettings @click="showModal = !showModal" />
+    <div ref="settingsIconRef" @click="showModal = !showModal">
+      <IconSettings ref="settingsIconRef" />
+    </div>
     <div class="timer__title">
       {{ timerType }}
     </div>
@@ -128,7 +129,7 @@ const isTimerStarted = computed(
       </TimerButton>
     </div>
   </div>
-  <SettingsModal v-if="showModal" :settings="timerSettings" @update="fetchSettings" @close="showModal = !showModal" />
+  <SettingsModal v-if="showModal" :settings-icon-ref="settingsIconRef" :settings="timerSettings" @update="fetchSettings" @close="showModal = !showModal" />
 </template>
 
 <style scoped>

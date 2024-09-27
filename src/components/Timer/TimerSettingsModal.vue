@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import type { SettingsModalProps } from '@/types/interfaces/SettingsModalProps'
-import { onBeforeUnmount, onMounted, onUnmounted, onUpdated, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 const props = defineProps<SettingsModalProps>()
 const emit = defineEmits(['close', 'update'])
-
 const settings = ref(props.settings)
 
 function editSettings() {
@@ -16,21 +15,20 @@ function editSettings() {
 const modalRef = ref<HTMLElement | null>(null)
 
 function handleClickOutside(event: MouseEvent) {
-  if (modalRef.value && !modalRef.value.contains(event.target as Node)) {
+  if (props.settingsIconRef && props.settingsIconRef.contains(event.target as Node)) {
+    emit('close')
+  }
+  else if (modalRef.value && !modalRef.value.contains(event.target as Node)) {
     emit('close')
   }
 }
 
 onMounted(() => {
-  document.addEventListener('click', handleClickOutside, {
-    capture: true,
-  })
+  document.addEventListener('mousedown', handleClickOutside)
 })
 
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside, {
-    capture: true,
-  })
+  document.removeEventListener('mousedown', handleClickOutside)
 })
 </script>
 
