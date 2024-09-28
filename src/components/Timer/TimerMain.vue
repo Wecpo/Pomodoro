@@ -3,8 +3,7 @@ import type { TimerSettings } from '@/types/interfaces/TimerSettings'
 import IconSettings from '@/components/icons/IconSettings.vue'
 import TimerButton from '@/components/Timer/TimerButton.vue'
 import SettingsModal from '@/components/Timer/TimerSettingsModal.vue'
-import { TimerStatus } from '@/types/enums/TimerEnums/TimerStatusEnum'
-import { TimerType } from '@/types/enums/TimerEnums/TimerTypeEnum'
+import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer'
 import { formatTime } from '@/utils/formatTime'
 import { computed, onMounted, onUpdated, reactive, ref } from 'vue'
 import { useToast } from 'vue-toastification'
@@ -16,8 +15,8 @@ const defaultTimerSettings = { focusDuration: 30, shortBreakDuration: 5, longBre
 let timerSettings: TimerSettings = reactive(defaultTimerSettings)
 const timer = ref<number>(timerSettings.focusDuration)
 const roundCounter = ref(1)
-const timerType = ref<TimerType>(TimerType.Focus)
-const timerStatus = ref<TimerStatus>(TimerStatus.Paused)
+const timerType = ref<TIMER_TYPE>(TIMER_TYPE.FOCUS)
+const timerStatus = ref<TIMER_STATUS>(TIMER_STATUS.PAUSED)
 const intervalId = ref<number | undefined>()
 const showModal = ref(false)
 const settingsIconRef = ref<HTMLElement | null>(null)
@@ -36,43 +35,43 @@ onMounted(() => {
 })
 
 function changeTimer() {
-  if (timerType.value === TimerType.Focus) {
+  if (timerType.value === TIMER_TYPE.FOCUS) {
     if (roundCounter.value < timerSettings.rounds) {
       roundCounter.value++
-      timerType.value = TimerType.ShortBreak
+      timerType.value = TIMER_TYPE.SHORT_BREAK
       timer.value = timerSettings.shortBreakDuration
-      timerStatus.value = TimerStatus.Paused
+      timerStatus.value = TIMER_STATUS.PAUSED
       toast.success('Помидор завершен!')
       return
     }
     if (roundCounter.value === timerSettings.rounds) {
       roundCounter.value++
-      timerType.value = TimerType.LongBreak
+      timerType.value = TIMER_TYPE.LONG_BREAK
       timer.value = timerSettings.longBreakDuration
-      timerStatus.value = TimerStatus.Paused
+      timerStatus.value = TIMER_STATUS.PAUSED
       toast.success('Помидор завершен!')
       return
     }
   }
 
-  if (timerType.value === TimerType.ShortBreak) {
-    timerType.value = TimerType.Focus
+  if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
+    timerType.value = TIMER_TYPE.FOCUS
     timer.value = timerSettings.focusDuration
-    timerStatus.value = TimerStatus.Paused
+    timerStatus.value = TIMER_STATUS.PAUSED
     toast.info('Короткий перерыв завершен!')
   }
 
-  if (timerType.value === TimerType.LongBreak) {
+  if (timerType.value === TIMER_TYPE.LONG_BREAK) {
     roundCounter.value = 0
-    timerType.value = TimerType.Focus
+    timerType.value = TIMER_TYPE.FOCUS
     timer.value = timerSettings.focusDuration
-    timerStatus.value = TimerStatus.Paused
+    timerStatus.value = TIMER_STATUS.PAUSED
     toast.info('Длинный перерыв завершен!')
   }
 }
 
 function startTimer() {
-  timerStatus.value = TimerStatus.Started
+  timerStatus.value = TIMER_STATUS.STARTED
 
   const interval = setInterval(() => {
     timer.value--
@@ -87,15 +86,15 @@ function startTimer() {
 
 function pauseTimer() {
   clearInterval(intervalId.value)
-  timerStatus.value = TimerStatus.Paused
+  timerStatus.value = TIMER_STATUS.PAUSED
 }
 
 const timerClass = computed(() => {
-  if (timerType.value === TimerType.Focus) {
+  if (timerType.value === TIMER_TYPE.FOCUS) {
     return 'timer--backgound--focus'
   }
 
-  if (timerType.value === TimerType.ShortBreak) {
+  if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
     return 'timer--background--short-break'
   }
 
@@ -104,8 +103,8 @@ const timerClass = computed(() => {
   }
 })
 
-const isTimerPaused = computed(() => timerStatus.value === TimerStatus.Paused)
-const isTimerStarted = computed(() => timerStatus.value === TimerStatus.Started)
+const isTimerPaused = computed(() => timerStatus.value === TIMER_STATUS.PAUSED)
+const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED)
 </script>
 
 <template>

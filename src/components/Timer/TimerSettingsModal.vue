@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { SettingsModalProps } from '@/types/interfaces/SettingsModalProps'
+import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal'
 import { onMounted, onUnmounted, ref } from 'vue'
 
-const props = defineProps<SettingsModalProps>()
+const props = defineProps<TimerSettingsModal>()
 const emit = defineEmits(['close', 'update'])
 const settings = ref(props.settings)
 
@@ -18,7 +18,7 @@ function handleClickOutside(event: MouseEvent) {
   if (props.settingsIconRef && props.settingsIconRef.contains(event.target as Node)) {
     emit('close')
   }
-  else if (modalRef.value && !modalRef.value.contains(event.target as Node)) {
+  if (modalRef.value && !modalRef.value.contains(event.target as Node)) {
     emit('close')
   }
 }
