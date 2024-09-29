@@ -1,6 +1,9 @@
 export interface TimerSettings {
-  focusDuration: number
-  shortBreakDuration: number
-  longBreakDuration: number
-  rounds: number
+  settings: {
+    focusDuration: number
+    shortBreakDuration: number
+    longBreakDuration: number
+    rounds: number
+  }
+
 }

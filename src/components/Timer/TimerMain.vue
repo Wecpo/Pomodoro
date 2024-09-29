@@ -1,116 +1,128 @@
 <script setup lang="ts">
-import type { TimerSettings } from '@/types/interfaces/TimerSettings'
-import IconSettings from '@/components/icons/IconSettings.vue'
-import TimerButton from '@/components/Timer/TimerButton.vue'
-import SettingsModal from '@/components/Timer/TimerSettingsModal.vue'
-import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer'
-import { formatTime } from '@/utils/formatTime'
-import { computed, onMounted, onUpdated, reactive, ref } from 'vue'
-import { useToast } from 'vue-toastification'
+import type { TimerSettings } from '@/types/interfaces/TimerSettings';
+import IconSettings from '@/components/icons/IconSettings.vue';
+import TimerButton from '@/components/Timer/TimerButton.vue';
+import SettingsModal from '@/components/Timer/TimerSettingsModal.vue';
+import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
+import { formatTime } from '@/utils/formatTime';
+import { computed, onMounted, reactive, ref } from 'vue';
+import { useToast } from 'vue-toastification';
 
-const toast = useToast()
+const toast = useToast();
 
-const defaultTimerSettings = { focusDuration: 30, shortBreakDuration: 5, longBreakDuration: 10, rounds: 3 }
+const DEFAULT_TIMER_SETTINGS = {
+  focusDuration: 30,
+  shortBreakDuration: 5,
+  longBreakDuration: 10,
+  rounds: 3,
+};
 
-let timerSettings: TimerSettings = reactive(defaultTimerSettings)
-const timer = ref<number>(timerSettings.focusDuration)
-const roundCounter = ref(1)
-const timerType = ref<TIMER_TYPE>(TIMER_TYPE.FOCUS)
-const timerStatus = ref<TIMER_STATUS>(TIMER_STATUS.PAUSED)
-const intervalId = ref<number | undefined>()
-const showModal = ref(false)
-const settingsIconRef = ref<HTMLElement | null>(null)
+const timerSettings = reactive<TimerSettings>({ settings: DEFAULT_TIMER_SETTINGS });
+const timer = ref<number>(timerSettings.settings.focusDuration);
+const roundCounter = ref(1);
+const timerType = ref<TIMER_TYPE>(TIMER_TYPE.FOCUS);
+const timerStatus = ref<TIMER_STATUS>(TIMER_STATUS.PAUSED);
+const intervalId = ref<number | undefined>();
+const showModal = ref(false);
+const settingsIconRef = ref<HTMLElement | null>(null);
 
 function fetchSettings() {
-  const settingsData = localStorage.getItem('timerSettings')
+  const settingsData = localStorage.getItem('timerSettings');
 
   if (settingsData) {
-    timerSettings = JSON.parse(settingsData)
-    timer.value = timerSettings.focusDuration
+    timerSettings.settings = JSON.parse(settingsData);
+    timer.value = timerSettings.settings.focusDuration;
   }
 }
 
 onMounted(() => {
-  fetchSettings()
-})
+  fetchSettings();
+});
 
-function changeTimer() {
-  if (timerType.value === TIMER_TYPE.FOCUS) {
-    if (roundCounter.value < timerSettings.rounds) {
-      roundCounter.value++
-      timerType.value = TIMER_TYPE.SHORT_BREAK
-      timer.value = timerSettings.shortBreakDuration
-      timerStatus.value = TIMER_STATUS.PAUSED
-      toast.success('Помидор завершен!')
-      return
-    }
-    if (roundCounter.value === timerSettings.rounds) {
-      roundCounter.value++
-      timerType.value = TIMER_TYPE.LONG_BREAK
-      timer.value = timerSettings.longBreakDuration
-      timerStatus.value = TIMER_STATUS.PAUSED
-      toast.success('Помидор завершен!')
-      return
-    }
-  }
+const changeTimerMap = new Map<TIMER_TYPE, () => void>([
+  [TIMER_TYPE.FOCUS, changeTimerToBreak],
+  [TIMER_TYPE.LONG_BREAK, changeTimerToFocus],
+  [TIMER_TYPE.SHORT_BREAK, changeTimerToFocus],
+]);
 
+function changeTimerToFocus(): void {
   if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
-    timerType.value = TIMER_TYPE.FOCUS
-    timer.value = timerSettings.focusDuration
-    timerStatus.value = TIMER_STATUS.PAUSED
-    toast.info('Короткий перерыв завершен!')
+    timerType.value = TIMER_TYPE.FOCUS;
+    timer.value = timerSettings.settings.focusDuration;
+    timerStatus.value = TIMER_STATUS.PAUSED;
+    toast.info('Короткий перерыв завершен!');
+    return;
+  }
+  if (timerType.value === TIMER_TYPE.LONG_BREAK) {
+    roundCounter.value = 0;
+    timerType.value = TIMER_TYPE.FOCUS;
+    timer.value = timerSettings.settings.focusDuration;
+    timerStatus.value = TIMER_STATUS.PAUSED;
+    toast.info('Длинный перерыв завершен!');
+  }
+}
+
+function changeTimerToBreak() {
+  if (roundCounter.value < timerSettings.settings.rounds) {
+    roundCounter.value++;
+    timerType.value = TIMER_TYPE.SHORT_BREAK;
+    timer.value = timerSettings.settings.shortBreakDuration;
+    timerStatus.value = TIMER_STATUS.PAUSED;
+    toast.success('Помидор завершен!');
+    return;
   }
 
-  if (timerType.value === TIMER_TYPE.LONG_BREAK) {
-    roundCounter.value = 0
-    timerType.value = TIMER_TYPE.FOCUS
-    timer.value = timerSettings.focusDuration
-    timerStatus.value = TIMER_STATUS.PAUSED
-    toast.info('Длинный перерыв завершен!')
+  if (roundCounter.value === timerSettings.settings.rounds) {
+    roundCounter.value++;
+    timerType.value = TIMER_TYPE.LONG_BREAK;
+    timer.value = timerSettings.settings.longBreakDuration;
+    timerStatus.value = TIMER_STATUS.PAUSED;
+    toast.success('Помидор завершен!');
   }
 }
 
 function startTimer() {
-  timerStatus.value = TIMER_STATUS.STARTED
+  timerStatus.value = TIMER_STATUS.STARTED;
 
   const interval = setInterval(() => {
-    timer.value--
+    timer.value--;
     if (timer.value < 0) {
-      clearInterval(interval)
-      changeTimer()
+      clearInterval(interval);
+      const changeTimer = changeTimerMap.get(timerType.value);
+      if (changeTimer) {
+        changeTimer();
+      }
     }
-  }, 1000)
+  }, 1000);
 
-  intervalId.value = interval
+  intervalId.value = interval;
 }
 
 function pauseTimer() {
-  clearInterval(intervalId.value)
-  timerStatus.value = TIMER_STATUS.PAUSED
+  clearInterval(intervalId.value);
+  timerStatus.value = TIMER_STATUS.PAUSED;
 }
 
 const timerClass = computed(() => {
   if (timerType.value === TIMER_TYPE.FOCUS) {
-    return 'timer--backgound--focus'
+    return 'timer--backgound--focus';
   }
 
   if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
-    return 'timer--background--short-break'
+    return 'timer--background--short-break';
   }
 
-  else {
-    return 'timer--background--long-break'
-  }
-})
+  return 'timer--background--long-break';
+});
 
-const isTimerPaused = computed(() => timerStatus.value === TIMER_STATUS.PAUSED)
-const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED)
+const isTimerPaused = computed(() => timerStatus.value === TIMER_STATUS.PAUSED);
+const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED);
 </script>
 
 <template>
   <div :class="`timer ${timerClass}`">
     <div ref="settingsIconRef" @click="showModal = !showModal">
-      <IconSettings ref="settingsIconRef" />
+      <IconSettings />
     </div>
     <div class="timer__title">
       {{ timerType }}
@@ -118,7 +130,6 @@ const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED
     <div class="timer__time">
       {{ formatTime(timer) }}
     </div>
-
     <div class="timer__controls">
       <TimerButton v-if="isTimerPaused" @click="startTimer">
         Start
@@ -128,7 +139,11 @@ const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED
       </TimerButton>
     </div>
   </div>
-  <SettingsModal v-if="showModal" :settings-icon-ref="settingsIconRef" :settings="timerSettings" @update="fetchSettings" @close="showModal = !showModal" />
+  <SettingsModal
+    v-if="showModal"
+    :settings-icon-ref="settingsIconRef" :settings="timerSettings.settings"
+    @update="fetchSettings" @close="showModal = !showModal"
+  />
 </template>
 
 <style scoped>
@@ -139,19 +154,19 @@ const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED
   font-family: Arial, sans-serif;
   border-radius: 10px;
   padding: 6px;
-  color:#fff;
+  color: #fff;
 }
 
 .timer--backgound--focus {
-  background-color:rgb(206, 76, 76);
+  background-color: rgb(206, 76, 76);
 }
 
 .timer--background--short-break {
-  background-color:rgb(85, 197, 122);
+  background-color: rgb(85, 197, 122);
 }
 
 .timer--background--long-break {
-  background-color:rgb(107, 194, 209);
+  background-color: rgb(107, 194, 209);
 }
 
 .timer__title {

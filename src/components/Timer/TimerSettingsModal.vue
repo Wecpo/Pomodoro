@@ -1,35 +1,39 @@
 <script setup lang="ts">
-import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal'
-import { onMounted, onUnmounted, ref } from 'vue'
+import type { TimerSettings } from '@/types/interfaces/TimerSettings';
+import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
+import { onMounted, onUnmounted, ref } from 'vue';
 
-const props = defineProps<TimerSettingsModal>()
-const emit = defineEmits(['close', 'update'])
-const settings = ref(props.settings)
+const props = defineProps<TimerSettingsModal>();
+const emit = defineEmits<{
+  (e: 'close'): void
+  (e: 'update'): void
+}>();
+const settings = ref(Object.assign({}, props.settings));
 
 function editSettings() {
-  const data = JSON.stringify(settings.value)
-  localStorage.setItem('timerSettings', data)
-  emit('update')
-  emit('close')
+  const data = JSON.stringify(settings.value);
+  localStorage.setItem('timerSettings', data);
+  emit('update');
+  emit('close');
 }
-const modalRef = ref<HTMLElement | null>(null)
+const modalRef = ref<HTMLElement | null>(null);
 
 function handleClickOutside(event: MouseEvent) {
   if (props.settingsIconRef && props.settingsIconRef.contains(event.target as Node)) {
-    emit('close')
+    emit('close');
   }
   if (modalRef.value && !modalRef.value.contains(event.target as Node)) {
-    emit('close')
+    emit('close');
   }
 }
 
 onMounted(() => {
-  document.addEventListener('mousedown', handleClickOutside)
-})
+  document.addEventListener('mousedown', handleClickOutside);
+});
 
 onUnmounted(() => {
-  document.removeEventListener('mousedown', handleClickOutside)
-})
+  document.removeEventListener('mousedown', handleClickOutside);
+});
 </script>
 
 <template>
@@ -39,7 +43,7 @@ onUnmounted(() => {
       <input v-model="settings.focusDuration" type="number">
       <label>Short Rest (m)</label>
       <input v-model="settings.shortBreakDuration" type="number">
-      <label>Long Rest (m)</label>
+      <label>Long Rest (m) </label>
       <input v-model="settings.longBreakDuration" type="number">
       <label>Rounds</label>
       <input v-model="settings.rounds" type="number">
