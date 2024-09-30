@@ -8,11 +8,12 @@
 
 <style scoped>
 svg {
+  height:  100%;
     height: 30px;
 }
 
-svg:hover {
-    height: 31px;
+svg:hover { 
     cursor: pointer;
+    transform: scale(1.1);
 }
 </style>

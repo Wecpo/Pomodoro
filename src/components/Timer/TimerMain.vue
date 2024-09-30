@@ -6,7 +6,7 @@ import SettingsModal from '@/components/Timer/TimerSettingsModal.vue';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
 import { computed, onMounted, reactive, ref } from 'vue';
-import { useToast } from 'vue-toastification';
+import { useToast } from 'vue-toastification'; 
 
 const toast = useToast();
 
@@ -21,10 +21,10 @@ const timerSettings = reactive<TimerSettings>({ settings: DEFAULT_TIMER_SETTINGS
 const timer = ref<number>(timerSettings.settings.focusDuration);
 const roundCounter = ref(1);
 const timerType = ref<TIMER_TYPE>(TIMER_TYPE.FOCUS);
-const timerStatus = ref<TIMER_STATUS>(TIMER_STATUS.PAUSED);
-const intervalId = ref<number | undefined>();
+const timerStatus = ref<TIMER_STATUS>(TIMER_STATUS.PAUSED); 
 const showModal = ref(false);
 const settingsIconRef = ref<HTMLElement | null>(null);
+let intervalId = 0
 
 function fetchSettings() {
   const settingsData = localStorage.getItem('timerSettings');
@@ -35,9 +35,9 @@ function fetchSettings() {
   }
 }
 
-onMounted(() => {
+onMounted(() => { 
   fetchSettings();
-});
+});  
 
 const changeTimerMap = new Map<TIMER_TYPE, () => void>([
   [TIMER_TYPE.FOCUS, changeTimerToBreak],
@@ -45,7 +45,7 @@ const changeTimerMap = new Map<TIMER_TYPE, () => void>([
   [TIMER_TYPE.SHORT_BREAK, changeTimerToFocus],
 ]);
 
-function changeTimerToFocus(): void {
+function changeTimerToFocus() {
   if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
     timerType.value = TIMER_TYPE.FOCUS;
     timer.value = timerSettings.settings.focusDuration;
@@ -84,22 +84,20 @@ function changeTimerToBreak() {
 function startTimer() {
   timerStatus.value = TIMER_STATUS.STARTED;
 
-  const interval = setInterval(() => {
+  intervalId = setInterval(() => {
     timer.value--;
     if (timer.value < 0) {
-      clearInterval(interval);
+      clearInterval(intervalId);
       const changeTimer = changeTimerMap.get(timerType.value);
       if (changeTimer) {
         changeTimer();
       }
     }
-  }, 1000);
-
-  intervalId.value = interval;
+  }, 1000); 
 }
 
 function pauseTimer() {
-  clearInterval(intervalId.value);
+  clearInterval(intervalId);
   timerStatus.value = TIMER_STATUS.PAUSED;
 }
 
