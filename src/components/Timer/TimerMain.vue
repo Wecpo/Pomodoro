@@ -7,6 +7,7 @@ import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
 import { computed, onMounted, reactive, ref } from 'vue';
 import { useToast } from 'vue-toastification'; 
+import IconForwardButton from '../icons/IconForwardButton.vue';
 
 const toast = useToast();
 
@@ -88,12 +89,16 @@ function startTimer() {
     timer.value--;
     if (timer.value < 0) {
       clearInterval(intervalId);
-      const changeTimer = changeTimerMap.get(timerType.value);
-      if (changeTimer) {
-        changeTimer();
-      }
+      changeTimer()
     }
   }, 1000); 
+}
+
+function changeTimer ()   {
+  const changeTimer1 = changeTimerMap.get(timerType.value);
+  if (changeTimer1) {
+        changeTimer1();
+      }
 }
 
 function pauseTimer() {
@@ -127,6 +132,7 @@ const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED
     </div>
     <div class="timer__time">
       {{ formatTime(timer) }}
+    <div> <IconForwardButton @click="changeTimer"/> </div> 
     </div>
     <div class="timer__controls">
       <TimerButton v-if="isTimerPaused" @click="startTimer">
