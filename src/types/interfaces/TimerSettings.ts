@@ -5,5 +5,4 @@ export interface TimerSettings {
     longBreakDuration: number
     rounds: number
   }
-
 }

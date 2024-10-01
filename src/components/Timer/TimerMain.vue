@@ -6,7 +6,7 @@ import SettingsModal from '@/components/Timer/TimerSettingsModal.vue';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
 import { computed, onMounted, reactive, ref } from 'vue';
-import { useToast } from 'vue-toastification'; 
+import { useToast } from 'vue-toastification';
 import IconForwardButton from '../icons/IconForwardButton.vue';
 
 const toast = useToast();
@@ -22,10 +22,10 @@ const timerSettings = reactive<TimerSettings>({ settings: DEFAULT_TIMER_SETTINGS
 const timer = ref<number>(timerSettings.settings.focusDuration);
 const roundCounter = ref(1);
 const timerType = ref<TIMER_TYPE>(TIMER_TYPE.FOCUS);
-const timerStatus = ref<TIMER_STATUS>(TIMER_STATUS.PAUSED); 
+const timerStatus = ref<TIMER_STATUS>(TIMER_STATUS.PAUSED);
 const showModal = ref(false);
 const settingsIconRef = ref<HTMLElement | null>(null);
-let intervalId = 0
+let intervalId = 0;
 
 function fetchSettings() {
   const settingsData = localStorage.getItem('timerSettings');
@@ -36,9 +36,9 @@ function fetchSettings() {
   }
 }
 
-onMounted(() => { 
+onMounted(() => {
   fetchSettings();
-});  
+});
 
 const changeTimerMap = new Map<TIMER_TYPE, () => void>([
   [TIMER_TYPE.FOCUS, changeTimerToBreak],
@@ -50,7 +50,7 @@ function changeTimerToFocus() {
   if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
     timerType.value = TIMER_TYPE.FOCUS;
     timer.value = timerSettings.settings.focusDuration;
-    timerStatus.value = TIMER_STATUS.PAUSED;
+    pauseTimer();
     toast.info('Короткий перерыв завершен!');
     return;
   }
@@ -58,7 +58,7 @@ function changeTimerToFocus() {
     roundCounter.value = 0;
     timerType.value = TIMER_TYPE.FOCUS;
     timer.value = timerSettings.settings.focusDuration;
-    timerStatus.value = TIMER_STATUS.PAUSED;
+    pauseTimer();
     toast.info('Длинный перерыв завершен!');
   }
 }
@@ -68,7 +68,7 @@ function changeTimerToBreak() {
     roundCounter.value++;
     timerType.value = TIMER_TYPE.SHORT_BREAK;
     timer.value = timerSettings.settings.shortBreakDuration;
-    timerStatus.value = TIMER_STATUS.PAUSED;
+    pauseTimer();
     toast.success('Помидор завершен!');
     return;
   }
@@ -77,7 +77,7 @@ function changeTimerToBreak() {
     roundCounter.value++;
     timerType.value = TIMER_TYPE.LONG_BREAK;
     timer.value = timerSettings.settings.longBreakDuration;
-    timerStatus.value = TIMER_STATUS.PAUSED;
+    pauseTimer();
     toast.success('Помидор завершен!');
   }
 }
@@ -89,16 +89,16 @@ function startTimer() {
     timer.value--;
     if (timer.value < 0) {
       clearInterval(intervalId);
-      changeTimer()
+      changeTimer();
     }
-  }, 1000); 
+  }, 1000);
 }
 
-function changeTimer ()   {
+function changeTimer() {
   const changeTimer1 = changeTimerMap.get(timerType.value);
   if (changeTimer1) {
-        changeTimer1();
-      }
+    changeTimer1();
+  }
 }
 
 function pauseTimer() {
@@ -132,7 +132,6 @@ const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED
     </div>
     <div class="timer__time">
       {{ formatTime(timer) }}
-    <div> <IconForwardButton @click="changeTimer"/> </div> 
     </div>
     <div class="timer__controls">
       <TimerButton v-if="isTimerPaused" @click="startTimer">
@@ -141,6 +140,7 @@ const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED
       <TimerButton v-else-if="isTimerStarted" @click="pauseTimer">
         Pause
       </TimerButton>
+      <IconForwardButton v-if="isTimerStarted" @click="changeTimer" />
     </div>
   </div>
   <SettingsModal
@@ -185,6 +185,8 @@ const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED
 
 .timer__controls {
   display: flex;
+  position: relative;
+  align-items: center;
   gap: 0.5rem;
 }
 </style>
