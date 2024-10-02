@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TimerSettings } from '@/types/interfaces/TimerSettings';
+import type { TimerSettingsRef } from '@/types/interfaces/TimerSettings';
 import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
 import { onMounted, onUnmounted, ref } from 'vue';
 
@@ -8,7 +8,7 @@ const emit = defineEmits<{
   (e: 'close'): void
   (e: 'update'): void
 }>();
-const settings = ref(Object.assign({}, props.settings));
+const settings = ref<TimerSettingsRef>(Object.assign({}, props.settings));
 
 function editSettings() {
   const data = JSON.stringify(settings.value);
@@ -40,13 +40,13 @@ onUnmounted(() => {
   <div ref="modalRef">
     <form class="modal" @submit.prevent="editSettings">
       <label>Focus Time (m)</label>
-      <input v-model="settings.focusDuration" type="number">
+      <input v-model="settings.focusDuration" min="0" type="number">
       <label>Short Rest (m)</label>
-      <input v-model="settings.shortBreakDuration" type="number">
+      <input v-model="settings.shortBreakDuration" min="0" type="number">
       <label>Long Rest (m) </label>
-      <input v-model="settings.longBreakDuration" type="number">
+      <input v-model="settings.longBreakDuration" min="0" type="number">
       <label>Rounds</label>
-      <input v-model="settings.rounds" type="number">
+      <input v-model="settings.rounds" min="0" type="number">
       <button type="submit">
         Apply
       </button>

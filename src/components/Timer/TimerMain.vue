@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TimerSettings } from '@/types/interfaces/TimerSettings';
+import type { TimerSettingsReactive } from '@/types/interfaces/TimerSettings';
 import IconSettings from '@/components/icons/IconSettings.vue';
 import TimerButton from '@/components/Timer/TimerButton.vue';
 import SettingsModal from '@/components/Timer/TimerSettingsModal.vue';
@@ -18,7 +18,7 @@ const DEFAULT_TIMER_SETTINGS = {
   rounds: 3,
 };
 
-const timerSettings = reactive<TimerSettings>({ settings: DEFAULT_TIMER_SETTINGS });
+const timerSettings = reactive<TimerSettingsReactive>({ settings: DEFAULT_TIMER_SETTINGS });
 const timer = ref<number>(timerSettings.settings.focusDuration);
 const roundCounter = ref(1);
 const timerType = ref<TIMER_TYPE>(TIMER_TYPE.FOCUS);
@@ -140,7 +140,9 @@ const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED
       <TimerButton v-else-if="isTimerStarted" @click="pauseTimer">
         Pause
       </TimerButton>
-      <IconForwardButton v-if="isTimerStarted" @click="changeTimer" />
+      <Transition>
+        <IconForwardButton v-if="isTimerStarted" @click="changeTimer" />
+      </Transition>
     </div>
   </div>
   <SettingsModal
@@ -188,5 +190,15 @@ const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED
   position: relative;
   align-items: center;
   gap: 0.5rem;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>
