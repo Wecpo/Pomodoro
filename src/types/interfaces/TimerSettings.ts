@@ -8,10 +8,8 @@ export interface TimerSettingsReactive {
 }
 
 export interface TimerSettingsRef {
-
   focusDuration: number
   shortBreakDuration: number
   longBreakDuration: number
   rounds: number
-
 }

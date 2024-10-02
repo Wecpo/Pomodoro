@@ -19,7 +19,7 @@ const DEFAULT_TIMER_SETTINGS = {
 };
 
 const timerSettings = reactive<TimerSettingsReactive>({ settings: DEFAULT_TIMER_SETTINGS });
-const timer = ref<number>(timerSettings.settings.focusDuration);
+const timer = ref<number>(timerSettings.settings.focusDuration * 60);
 const roundCounter = ref(1);
 const timerType = ref<TIMER_TYPE>(TIMER_TYPE.FOCUS);
 const timerStatus = ref<TIMER_STATUS>(TIMER_STATUS.PAUSED);
@@ -32,7 +32,7 @@ function fetchSettings() {
 
   if (settingsData) {
     timerSettings.settings = JSON.parse(settingsData);
-    timer.value = timerSettings.settings.focusDuration;
+    timer.value = timerSettings.settings.focusDuration * 60;
   }
 }
 
@@ -49,7 +49,7 @@ const changeTimerMap = new Map<TIMER_TYPE, () => void>([
 function changeTimerToFocus() {
   if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
     timerType.value = TIMER_TYPE.FOCUS;
-    timer.value = timerSettings.settings.focusDuration;
+    timer.value = timerSettings.settings.focusDuration * 60;
     pauseTimer();
     toast.info('Короткий перерыв завершен!');
     return;
@@ -57,7 +57,7 @@ function changeTimerToFocus() {
   if (timerType.value === TIMER_TYPE.LONG_BREAK) {
     roundCounter.value = 0;
     timerType.value = TIMER_TYPE.FOCUS;
-    timer.value = timerSettings.settings.focusDuration;
+    timer.value = timerSettings.settings.focusDuration * 60;
     pauseTimer();
     toast.info('Длинный перерыв завершен!');
   }
@@ -67,7 +67,7 @@ function changeTimerToBreak() {
   if (roundCounter.value < timerSettings.settings.rounds) {
     roundCounter.value++;
     timerType.value = TIMER_TYPE.SHORT_BREAK;
-    timer.value = timerSettings.settings.shortBreakDuration;
+    timer.value = timerSettings.settings.shortBreakDuration * 60;
     pauseTimer();
     toast.success('Помидор завершен!');
     return;
@@ -76,7 +76,7 @@ function changeTimerToBreak() {
   if (roundCounter.value === timerSettings.settings.rounds) {
     roundCounter.value++;
     timerType.value = TIMER_TYPE.LONG_BREAK;
-    timer.value = timerSettings.settings.longBreakDuration;
+    timer.value = timerSettings.settings.longBreakDuration * 60;
     pauseTimer();
     toast.success('Помидор завершен!');
   }
