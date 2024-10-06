@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { TimerSettingsReactive } from '@/types/interfaces/TimerSettings';
 import IconSettings from '@/components/icons/IconSettings.vue';
-import TimerButton from '@/components/Timer/TimerButton.vue';
-import SettingsModal from '@/components/Timer/TimerSettingsModal.vue';
+import TimerButton from '@/components/timer/TimerButton.vue';
+import SettingsModal from '@/components/timer/TimerSettingsModal.vue';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
 import { computed, onMounted, reactive, ref } from 'vue';
@@ -27,12 +27,22 @@ const showModal = ref(false);
 const settingsIconRef = ref<HTMLElement | null>(null);
 let intervalId = 0;
 
+function currentTimerKey() {
+  if (timerType.value === TIMER_TYPE.FOCUS) {
+    return 'focusDuration';
+  }
+  if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
+    return 'shortBreakDuration';
+  }
+  return 'longBreakDuration';
+}
+
 function fetchSettings() {
   const settingsData = localStorage.getItem('timerSettings');
 
   if (settingsData) {
     timerSettings.settings = JSON.parse(settingsData);
-    timer.value = timerSettings.settings.focusDuration * 60;
+    timer.value = timerSettings.settings[currentTimerKey()] * 60;
   }
 }
 
@@ -45,6 +55,9 @@ const changeTimerMap = new Map<TIMER_TYPE, () => void>([
   [TIMER_TYPE.LONG_BREAK, changeTimerToFocus],
   [TIMER_TYPE.SHORT_BREAK, changeTimerToFocus],
 ]);
+
+const isTimerPaused = computed(() => timerStatus.value === TIMER_STATUS.PAUSED);
+const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED);
 
 function changeTimerToFocus() {
   if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
@@ -117,9 +130,6 @@ const timerClass = computed(() => {
 
   return 'timer--background--long-break';
 });
-
-const isTimerPaused = computed(() => timerStatus.value === TIMER_STATUS.PAUSED);
-const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED);
 </script>
 
 <template>
