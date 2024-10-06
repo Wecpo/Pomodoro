@@ -39,11 +39,11 @@ onUnmounted(() => {
 <template>
   <div ref="modalRef">
     <form class="modal" @submit.prevent="editSettings">
-      <label>Focus Time (m)</label>
+      <label>Focus duration (m)</label>
       <input v-model="settings.focusDuration" min="0" type="number">
-      <label>Short Rest (m)</label>
+      <label>Short break duration (m)</label>
       <input v-model="settings.shortBreakDuration" min="0" type="number">
-      <label>Long Rest (m) </label>
+      <label>Long break duration (m) </label>
       <input v-model="settings.longBreakDuration" min="0" type="number">
       <label>Rounds</label>
       <input v-model="settings.rounds" min="0" type="number">
