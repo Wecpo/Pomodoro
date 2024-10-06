@@ -2,7 +2,7 @@
 import type { TimerSettingsReactive } from '@/types/interfaces/TimerSettings';
 import IconSettings from '@/components/icons/IconSettings.vue';
 import TimerButton from '@/components/timer/TimerButton.vue';
-import SettingsModal from '@/components/timer/TimerSettingsModal.vue';
+import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
 import { computed, onMounted, reactive, ref } from 'vue';
@@ -155,7 +155,7 @@ const timerClass = computed(() => {
       </Transition>
     </div>
   </div>
-  <SettingsModal
+  <TimerSettingsModal
     v-if="showModal"
     :settings-icon-ref="settingsIconRef" :settings="timerSettings.settings"
     @update="fetchSettings" @close="showModal = !showModal"
