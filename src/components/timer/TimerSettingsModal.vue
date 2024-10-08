@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { TimerSettingsRef } from '@/types/interfaces/TimerSettings';
 import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
 import { onMounted, onUnmounted, ref } from 'vue';
 
@@ -8,13 +7,23 @@ const emit = defineEmits<{
   (e: 'close'): void
   (e: 'update'): void
 }>();
-const settings = ref<TimerSettingsRef>(Object.assign({}, props.settings));
+
+const focusDuration = defineModel('focusDuration');
+const shortBreakDuration = defineModel('shortBreakDuration');
+const longBreakDuration = defineModel('longBreakDuration');
+const rounds = defineModel('rounds');
 
 function editSettings() {
-  const data = JSON.stringify(settings.value);
-  localStorage.setItem('timerSettings', data);
+  const data = {
+    focusDuration: focusDuration.value,
+    shortBreakDuration: shortBreakDuration.value,
+    longBreakDuration: longBreakDuration.value,
+    rounds: rounds.value,
+  };
+
+  const LSdata = JSON.stringify(data);
+  localStorage.setItem('timerSettings', LSdata);
   emit('update');
-  emit('close');
 }
 const modalRef = ref<HTMLElement | null>(null);
 
@@ -38,18 +47,15 @@ onUnmounted(() => {
 
 <template>
   <div ref="modalRef">
-    <form class="modal" @submit.prevent="editSettings">
+    <form class="modal" @change="editSettings">
       <label>Focus duration (m)</label>
-      <input v-model="settings.focusDuration" min="0" type="number">
+      <input v-model.number="focusDuration" min="0" type="number">
       <label>Short break duration (m)</label>
-      <input v-model="settings.shortBreakDuration" min="0" type="number">
+      <input v-model.number="shortBreakDuration" min="0" type="number">
       <label>Long break duration (m) </label>
-      <input v-model="settings.longBreakDuration" min="0" type="number">
+      <input v-model.number="longBreakDuration" min="0" type="number">
       <label>Rounds</label>
-      <input v-model="settings.rounds" min="0" type="number">
-      <button type="submit">
-        Apply
-      </button>
+      <input v-model.number="rounds" min="0" type="number">
     </form>
   </div>
 </template>
