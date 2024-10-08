@@ -5,7 +5,7 @@ import TimerButton from '@/components/timer/TimerButton.vue';
 import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
-import { computed, onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 import IconForwardButton from '../icons/IconForwardButton.vue';
 
@@ -76,6 +76,18 @@ function changeTimerToFocus() {
   }
 }
 
+watch(timerSettings, () => {
+  if (timerType.value === TIMER_TYPE.FOCUS) {
+    timer.value = timerSettings.settings.focusDuration * 60;
+    return;
+  }
+  if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
+    timer.value = timerSettings.settings.shortBreakDuration * 60;
+    return;
+  }
+  timer.value = timerSettings.settings.longBreakDuration * 60;
+});
+
 function changeTimerToBreak() {
   if (roundCounter.value < timerSettings.settings.rounds) {
     roundCounter.value++;
@@ -108,9 +120,9 @@ function startTimer() {
 }
 
 function changeTimer() {
-  const changeTimer1 = changeTimerMap.get(timerType.value);
-  if (changeTimer1) {
-    changeTimer1();
+  const changeTimerFunc = changeTimerMap.get(timerType.value);
+  if (changeTimerFunc) {
+    changeTimerFunc();
   }
 }
 
@@ -157,7 +169,11 @@ const timerClass = computed(() => {
   </div>
   <TimerSettingsModal
     v-if="showModal"
-    :settings-icon-ref="settingsIconRef" :settings="timerSettings.settings"
+    v-model:focus-duration="timerSettings.settings.focusDuration"
+    v-model:short-break-duration="timerSettings.settings.shortBreakDuration"
+    v-model:long-break-duration="timerSettings.settings.longBreakDuration"
+    v-model:rounds="timerSettings.settings.rounds"
+    :settings-icon-ref="settingsIconRef"
     @update="fetchSettings" @close="showModal = !showModal"
   />
 </template>
