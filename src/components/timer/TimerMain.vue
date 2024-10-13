@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TimerSettingsReactive } from '@/types/interfaces/TimerSettings';
+import type { TimerSettings } from '@/types/interfaces/TimerSettings';
 import IconSettings from '@/components/icons/IconSettings.vue';
 import TimerButton from '@/components/timer/TimerButton.vue';
 import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
@@ -18,8 +18,8 @@ const DEFAULT_TIMER_SETTINGS = {
   rounds: 3,
 };
 
-const timerSettings = reactive<TimerSettingsReactive>({ settings: DEFAULT_TIMER_SETTINGS });
-const timer = ref<number>(timerSettings.settings.focusDuration * 60);
+const timerSettings = reactive<TimerSettings>(DEFAULT_TIMER_SETTINGS);
+const timer = ref<number>(timerSettings.focusDuration * 60);
 const roundCounter = ref(1);
 const timerType = ref<TIMER_TYPE>(TIMER_TYPE.FOCUS);
 const timerStatus = ref<TIMER_STATUS>(TIMER_STATUS.PAUSED);
@@ -41,8 +41,12 @@ function fetchSettings() {
   const settingsData = localStorage.getItem('timerSettings');
 
   if (settingsData) {
-    timerSettings.settings = JSON.parse(settingsData);
-    timer.value = timerSettings.settings[currentTimerKey()] * 60;
+    const { focusDuration, shortBreakDuration, longBreakDuration, rounds } = JSON.parse(settingsData);
+    timerSettings.focusDuration = focusDuration;
+    timerSettings.shortBreakDuration = shortBreakDuration;
+    timerSettings.longBreakDuration = longBreakDuration;
+    timerSettings.rounds = rounds;
+    timer.value = timerSettings[currentTimerKey()] * 60;
   }
 }
 
@@ -50,19 +54,13 @@ onMounted(() => {
   fetchSettings();
 });
 
-const changeTimerMap = new Map<TIMER_TYPE, () => void>([
-  [TIMER_TYPE.FOCUS, changeTimerToBreak],
-  [TIMER_TYPE.LONG_BREAK, changeTimerToFocus],
-  [TIMER_TYPE.SHORT_BREAK, changeTimerToFocus],
-]);
-
 const isTimerPaused = computed(() => timerStatus.value === TIMER_STATUS.PAUSED);
 const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED);
 
 function changeTimerToFocus() {
   if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
     timerType.value = TIMER_TYPE.FOCUS;
-    timer.value = timerSettings.settings.focusDuration * 60;
+    timer.value = timerSettings.focusDuration * 60;
     pauseTimer();
     toast.info('Короткий перерыв завершен!');
     return;
@@ -70,7 +68,7 @@ function changeTimerToFocus() {
   if (timerType.value === TIMER_TYPE.LONG_BREAK) {
     roundCounter.value = 0;
     timerType.value = TIMER_TYPE.FOCUS;
-    timer.value = timerSettings.settings.focusDuration * 60;
+    timer.value = timerSettings.focusDuration * 60;
     pauseTimer();
     toast.info('Длинный перерыв завершен!');
   }
@@ -78,30 +76,30 @@ function changeTimerToFocus() {
 
 watch(timerSettings, () => {
   if (timerType.value === TIMER_TYPE.FOCUS) {
-    timer.value = timerSettings.settings.focusDuration * 60;
+    timer.value = timerSettings.focusDuration * 60;
     return;
   }
   if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
-    timer.value = timerSettings.settings.shortBreakDuration * 60;
+    timer.value = timerSettings.shortBreakDuration * 60;
     return;
   }
-  timer.value = timerSettings.settings.longBreakDuration * 60;
+  timer.value = timerSettings.longBreakDuration * 60;
 });
 
 function changeTimerToBreak() {
-  if (roundCounter.value < timerSettings.settings.rounds) {
+  if (roundCounter.value < timerSettings.rounds) {
     roundCounter.value++;
     timerType.value = TIMER_TYPE.SHORT_BREAK;
-    timer.value = timerSettings.settings.shortBreakDuration * 60;
+    timer.value = timerSettings.shortBreakDuration * 60;
     pauseTimer();
     toast.success('Помидор завершен!');
     return;
   }
 
-  if (roundCounter.value === timerSettings.settings.rounds) {
+  if (roundCounter.value === timerSettings.rounds) {
     roundCounter.value++;
     timerType.value = TIMER_TYPE.LONG_BREAK;
-    timer.value = timerSettings.settings.longBreakDuration * 60;
+    timer.value = timerSettings.longBreakDuration * 60;
     pauseTimer();
     toast.success('Помидор завершен!');
   }
@@ -119,16 +117,19 @@ function startTimer() {
   }, 1000);
 }
 
-function changeTimer() {
-  const changeTimerFunc = changeTimerMap.get(timerType.value);
-  if (changeTimerFunc) {
-    changeTimerFunc();
-  }
-}
-
 function pauseTimer() {
   clearInterval(intervalId);
   timerStatus.value = TIMER_STATUS.PAUSED;
+}
+
+const changeTimerMap = new Map<TIMER_TYPE, () => void>([
+  [TIMER_TYPE.FOCUS, changeTimerToBreak],
+  [TIMER_TYPE.LONG_BREAK, changeTimerToFocus],
+  [TIMER_TYPE.SHORT_BREAK, changeTimerToFocus],
+]);
+
+function changeTimer() {
+  changeTimerMap.get(timerType.value)?.();
 }
 
 const timerClass = computed(() => {
@@ -169,10 +170,10 @@ const timerClass = computed(() => {
   </div>
   <TimerSettingsModal
     v-if="showModal"
-    v-model:focus-duration="timerSettings.settings.focusDuration"
-    v-model:short-break-duration="timerSettings.settings.shortBreakDuration"
-    v-model:long-break-duration="timerSettings.settings.longBreakDuration"
-    v-model:rounds="timerSettings.settings.rounds"
+    v-model:focus-duration="timerSettings.focusDuration"
+    v-model:short-break-duration="timerSettings.shortBreakDuration"
+    v-model:long-break-duration="timerSettings.longBreakDuration"
+    v-model:rounds="timerSettings.rounds"
     :settings-icon-ref="settingsIconRef"
     @update="fetchSettings" @close="showModal = !showModal"
   />

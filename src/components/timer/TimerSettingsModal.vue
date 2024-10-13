@@ -1,17 +1,52 @@
 <script setup lang="ts">
 import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 
 const props = defineProps<TimerSettingsModal>();
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'update'): void
+  (e: 'update:focusDuration', value: number): void
+  (e: 'update:shortBreakDuration', value: number): void
+  (e: 'update:longBreakDuration', value: number): void
+  (e: 'update:rounds', value: number): void
 }>();
 
-const focusDuration = defineModel('focusDuration');
-const shortBreakDuration = defineModel('shortBreakDuration');
-const longBreakDuration = defineModel('longBreakDuration');
-const rounds = defineModel('rounds');
+const focusDuration = computed({
+  get() {
+    return props.focusDuration;
+  },
+  set(newValue) {
+    emit('update:focusDuration', newValue);
+  },
+});
+
+const shortBreakDuration = computed({
+  get() {
+    return props.shortBreakDuration;
+  },
+  set(newValue) {
+    emit('update:shortBreakDuration', newValue);
+  },
+});
+
+const longBreakDuration = computed({
+  get() {
+    return props.focusDuration;
+  },
+  set(newValue) {
+    emit('update:longBreakDuration', newValue);
+  },
+});
+
+const rounds = computed({
+  get() {
+    return props.focusDuration;
+  },
+  set(newValue) {
+    emit('update:rounds', newValue);
+  },
+});
 
 function editSettings() {
   const data = {
@@ -25,6 +60,7 @@ function editSettings() {
   localStorage.setItem('timerSettings', LSdata);
   emit('update');
 }
+
 const modalRef = ref<HTMLElement | null>(null);
 
 function handleClickOutside(event: MouseEvent) {
