@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { TimerSettingsReactive } from '@/types/interfaces/TimerSettings';
+import IconForwardButton from '@/components/icons/IconForwardButton.vue';
 import IconSettings from '@/components/icons/IconSettings.vue';
 import TimerButton from '@/components/timer/TimerButton.vue';
+import TimerProgressBar from '@/components/timer/TimerProgressBar.vue';
 import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
 import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
-import IconForwardButton from '../icons/IconForwardButton.vue';
 
 const toast = useToast();
 
@@ -146,6 +147,7 @@ const timerClass = computed(() => {
 
 <template>
   <div :class="`timer ${timerClass}`">
+    <TimerProgressBar :timer="timer" />
     <div ref="settingsIconRef" @click="showModal = !showModal">
       <IconSettings />
     </div>
