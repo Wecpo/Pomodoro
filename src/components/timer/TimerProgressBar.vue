@@ -1,30 +1,32 @@
 <script setup lang="ts">
-import { computed, onUpdated, ref, watch } from 'vue';
+import { TIMER_TYPE } from '@/types/enums/Timer';
+import { computed, onUpdated } from 'vue';
 
-const props = defineProps(['timer']);
-const hundred = ref(props.timer);
+const props = defineProps(['timer', 'timerType', 'timerSettings']);
 
-const current = () => hundred.value - props.timer;
+const timerType = computed(() => props.timerType);
 
-watch(() => props.timer, () => {
-  hundred.value = props.timer;
-  console.log(hundred.value);
+const timerTypeKey = computed(() => {
+  if (timerType.value === TIMER_TYPE.FOCUS) {
+    return 'focusDuration';
+  }
+  if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
+    return 'shortBreakDuration';
+  }
+  return 'longBreakDuration';
 });
-
-// onUpdated(() => {
-//   console.log(hundred);
-//   hundred.value = props.timer;
-// });
+const progressMax = computed(() => props.timerSettings.settings[timerTypeKey.value] * 60);
+const progressValue = computed(() => progressMax.value - props.timer);
 </script>
 
 <template>
-  <progress :value="props.timer" :max="hundred" />
+  <progress :value="progressValue" :max="progressMax" />
 </template>
 
 <style scoped>
-   progress {
+progress {
   margin: 5px;
-  width: 50%;
+  width: 30%;
   height: 5px;
   background-color: red;
 }

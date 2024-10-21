@@ -147,7 +147,7 @@ const timerClass = computed(() => {
 
 <template>
   <div :class="`timer ${timerClass}`">
-    <TimerProgressBar :timer="timer" />
+    <TimerProgressBar :timer="timer" :timer-settings="timerSettings" :timer-type="timerType" />
     <div ref="settingsIconRef" @click="showModal = !showModal">
       <IconSettings />
     </div>

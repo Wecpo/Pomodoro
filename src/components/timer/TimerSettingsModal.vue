@@ -47,7 +47,7 @@ onUnmounted(() => {
 
 <template>
   <div ref="modalRef">
-    <form class="modal" @change="editSettings">
+    <form class="modal" @input="editSettings">
       <label>Focus duration (m)</label>
       <input v-model.number="focusDuration" min="0" type="number">
       <label>Short break duration (m)</label>
