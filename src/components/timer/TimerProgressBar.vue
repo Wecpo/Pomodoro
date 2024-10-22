@@ -1,21 +1,14 @@
 <script setup lang="ts">
 import type { TimerProgressBarProps } from '@/types/interfaces/TimerProgressBar';
-import { TIMER_TYPE } from '@/types/enums/Timer';
+import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
 import { computed } from 'vue';
 
 const props = defineProps<TimerProgressBarProps>();
 
-const timerTypeKey = computed(() => {
-  if (props.timerType === TIMER_TYPE.FOCUS) {
-    return 'focusDuration';
-  }
-  if (props.timerType === TIMER_TYPE.SHORT_BREAK) {
-    return 'shortBreakDuration';
-  }
-  return 'longBreakDuration';
-});
+const timerTest = computed(() => props.timerType);
+const timerTypeKey = useTimerTypeKey(timerTest);
 
-const progressMax = computed(() => props.timerSettings.settings[timerTypeKey.value] * 60);
+const progressMax = computed(() => props.timerSettings[timerTypeKey.value] * 60);
 const progressValue = computed(() => progressMax.value - props.timer);
 </script>
 
