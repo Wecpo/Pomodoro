@@ -7,7 +7,7 @@ import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
 import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
-import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 import IconForwardButton from '../icons/IconForwardButton.vue';
 
@@ -67,18 +67,6 @@ function changeTimerToFocus() {
   }
 }
 
-watch(timerSettings, () => {
-  if (timerType.value === TIMER_TYPE.FOCUS) {
-    timer.value = timerSettings.focusDuration * 60;
-    return;
-  }
-  if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
-    timer.value = timerSettings.shortBreakDuration * 60;
-    return;
-  }
-  timer.value = timerSettings.longBreakDuration * 60;
-});
-
 function changeTimerToBreak() {
   if (roundCounter.value < timerSettings.rounds) {
     roundCounter.value++;
@@ -135,6 +123,10 @@ const timerClass = computed(() => {
   }
 
   return 'timer--background--long-break';
+});
+
+onUnmounted(() => {
+  clearInterval(intervalId);
 });
 </script>
 
