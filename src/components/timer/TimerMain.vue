@@ -2,7 +2,9 @@
 import type { TimerSettings } from '@/types/interfaces/TimerSettings';
 import IconSettings from '@/components/icons/IconSettings.vue';
 import TimerButton from '@/components/timer/TimerButton.vue';
+import TimerProgressBar from '@/components/timer/TimerProgressBar.vue';
 import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
+import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
 import { computed, onMounted, reactive, ref, watch } from 'vue';
@@ -27,26 +29,17 @@ const showModal = ref(false);
 const settingsIconRef = ref<HTMLElement | null>(null);
 let intervalId = 0;
 
-function currentTimerKey() {
-  if (timerType.value === TIMER_TYPE.FOCUS) {
-    return 'focusDuration';
-  }
-  if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
-    return 'shortBreakDuration';
-  }
-  return 'longBreakDuration';
-}
-
 function fetchSettings() {
   const settingsData = localStorage.getItem('timerSettings');
 
   if (settingsData) {
+    const timerTypeKey = useTimerTypeKey(timerType);
     const { focusDuration, shortBreakDuration, longBreakDuration, rounds } = JSON.parse(settingsData);
     timerSettings.focusDuration = focusDuration;
     timerSettings.shortBreakDuration = shortBreakDuration;
     timerSettings.longBreakDuration = longBreakDuration;
     timerSettings.rounds = rounds;
-    timer.value = timerSettings[currentTimerKey()] * 60;
+    timer.value = timerSettings[timerTypeKey.value] * 60;
   }
 }
 
@@ -147,6 +140,7 @@ const timerClass = computed(() => {
 
 <template>
   <div :class="`timer ${timerClass}`">
+    <TimerProgressBar :timer="timer" :timer-settings="timerSettings" :timer-type="timerType" />
     <div ref="settingsIconRef" @click="showModal = !showModal">
       <IconSettings />
     </div>

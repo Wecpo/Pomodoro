@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
-import { computed, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 
 const props = defineProps<TimerSettingsModal>();
 const emit = defineEmits<{
@@ -32,7 +32,7 @@ const shortBreakDuration = computed({
 
 const longBreakDuration = computed({
   get() {
-    return props.focusDuration;
+    return props.longBreakDuration;
   },
   set(newValue) {
     emit('update:longBreakDuration', newValue);
@@ -41,7 +41,7 @@ const longBreakDuration = computed({
 
 const rounds = computed({
   get() {
-    return props.focusDuration;
+    return props.rounds;
   },
   set(newValue) {
     emit('update:rounds', newValue);
@@ -83,7 +83,7 @@ onUnmounted(() => {
 
 <template>
   <div ref="modalRef">
-    <form class="modal" @change="editSettings">
+    <form class="modal" @input="editSettings">
       <label>Focus duration (m)</label>
       <input v-model.number="focusDuration" min="0" type="number">
       <label>Short break duration (m)</label>
