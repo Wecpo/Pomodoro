@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TimerSettings } from '@/types/interfaces/TimerSettings';
+import IconForwardButton from '@/components/icons/IconForwardButton.vue';
 import IconSettings from '@/components/icons/IconSettings.vue';
 import TimerButton from '@/components/timer/TimerButton.vue';
 import TimerProgressBar from '@/components/timer/TimerProgressBar.vue';
@@ -7,9 +8,8 @@ import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
 import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
-import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref } from 'vue';
 import { useToast } from 'vue-toastification';
-import IconForwardButton from '../icons/IconForwardButton.vue';
 
 const toast = useToast();
 
@@ -18,10 +18,12 @@ const DEFAULT_TIMER_SETTINGS = {
   shortBreakDuration: 5,
   longBreakDuration: 10,
   rounds: 3,
+  timerValue: 'minutes',
 };
 
 const timerSettings = reactive<TimerSettings>(DEFAULT_TIMER_SETTINGS);
-const timer = ref<number>(timerSettings.focusDuration * 60);
+
+const timer = ref<number>(timerSettings.focusDuration);
 const roundCounter = ref(1);
 const timerType = ref<TIMER_TYPE>(TIMER_TYPE.FOCUS);
 const timerStatus = ref<TIMER_STATUS>(TIMER_STATUS.PAUSED);
@@ -156,10 +158,7 @@ onUnmounted(() => {
   </div>
   <TimerSettingsModal
     v-if="showModal"
-    v-model:focus-duration="timerSettings.focusDuration"
-    v-model:short-break-duration="timerSettings.shortBreakDuration"
-    v-model:long-break-duration="timerSettings.longBreakDuration"
-    v-model:rounds="timerSettings.rounds"
+    :timer-settings="timerSettings"
     :settings-icon-ref="settingsIconRef"
     @update="fetchSettings" @close="showModal = !showModal"
   />

@@ -1,64 +1,28 @@
 <script setup lang="ts">
 import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
 const props = defineProps<TimerSettingsModal>();
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'update'): void
-  (e: 'update:focusDuration', value: number): void
-  (e: 'update:shortBreakDuration', value: number): void
-  (e: 'update:longBreakDuration', value: number): void
-  (e: 'update:rounds', value: number): void
 }>();
 
-const focusDuration = computed({
-  get() {
-    return props.focusDuration;
-  },
-  set(newValue) {
-    emit('update:focusDuration', newValue);
-  },
-});
-
-const shortBreakDuration = computed({
-  get() {
-    return props.shortBreakDuration;
-  },
-  set(newValue) {
-    emit('update:shortBreakDuration', newValue);
-  },
-});
-
-const longBreakDuration = computed({
-  get() {
-    return props.longBreakDuration;
-  },
-  set(newValue) {
-    emit('update:longBreakDuration', newValue);
-  },
-});
-
-const rounds = computed({
-  get() {
-    return props.rounds;
-  },
-  set(newValue) {
-    emit('update:rounds', newValue);
-  },
+const localTimerSettingsForSubmit = reactive({
+  focusDuration: props.timerSettings.focusDuration,
+  shortBreakDuration: props.timerSettings.shortBreakDuration,
+  longBreakDuration: props.timerSettings.longBreakDuration,
+  rounds: props.timerSettings.rounds,
 });
 
 function editSettings() {
-  const data = {
-    focusDuration: focusDuration.value,
-    shortBreakDuration: shortBreakDuration.value,
-    longBreakDuration: longBreakDuration.value,
-    rounds: rounds.value,
-  };
+  const data = localTimerSettingsForSubmit;
 
   const LSdata = JSON.stringify(data);
   localStorage.setItem('timerSettings', LSdata);
+
   emit('update');
+  emit('close');
 }
 
 const modalRef = ref<HTMLElement | null>(null);
@@ -83,15 +47,30 @@ onUnmounted(() => {
 
 <template>
   <div ref="modalRef">
-    <form class="modal" @input="editSettings">
+    <form class="modal" @submit.prevent="editSettings">
       <label>Focus duration (m)</label>
-      <input v-model.number="focusDuration" min="0" type="number">
+      <input
+        :value="localTimerSettingsForSubmit.focusDuration" min="0" type="number"
+        @input="localTimerSettingsForSubmit.focusDuration = Number($event.target?.value)"
+      >
       <label>Short break duration (m)</label>
-      <input v-model.number="shortBreakDuration" min="0" type="number">
+      <input
+        :value="localTimerSettingsForSubmit.shortBreakDuration" min="0" type="number"
+        @input="localTimerSettingsForSubmit.shortBreakDuration = Number($event.target?.value)"
+      >
       <label>Long break duration (m) </label>
-      <input v-model.number="longBreakDuration" min="0" type="number">
+      <input
+        :value="localTimerSettingsForSubmit.longBreakDuration" min="0" type="number"
+        @input="localTimerSettingsForSubmit.longBreakDuration = Number($event.target?.value)"
+      >
       <label>Rounds</label>
-      <input v-model.number="rounds" min="0" type="number">
+      <input
+        :value="localTimerSettingsForSubmit.rounds" min="0" type="number"
+        @input="localTimerSettingsForSubmit.rounds = Number($event.target?.value)"
+      >
+      <button type="submit">
+        Apply
+      </button>
     </form>
   </div>
 </template>
