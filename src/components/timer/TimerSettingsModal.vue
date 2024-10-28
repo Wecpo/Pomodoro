@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
-import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { onMounted, onUnmounted, onUpdated, reactive, ref } from 'vue';
 
 const props = defineProps<TimerSettingsModal>();
 const emit = defineEmits<{
@@ -13,6 +13,7 @@ const localTimerSettingsForSubmit = reactive({
   shortBreakDuration: props.timerSettings.shortBreakDuration,
   longBreakDuration: props.timerSettings.longBreakDuration,
   rounds: props.timerSettings.rounds,
+  timerFormat: props.timerSettings.timerFormat,
 });
 
 function editSettings() {
@@ -36,6 +37,9 @@ function handleClickOutside(event: MouseEvent) {
   }
 }
 
+onUpdated(() => console.log(localTimerSettingsForSubmit.timerFormat),
+);
+
 onMounted(() => {
   document.addEventListener('mousedown', handleClickOutside);
 });
@@ -48,26 +52,21 @@ onUnmounted(() => {
 <template>
   <div ref="modalRef">
     <form class="modal" @submit.prevent="editSettings">
+      <fieldset class="fieldset">
+        <legend>Choose a timer format</legend>
+        <input v-model="localTimerSettingsForSubmit.timerFormat" type="radio" name="timer-format" value="minutes">
+        <label>Minutes</label><br>
+        <input v-model="localTimerSettingsForSubmit.timerFormat" type="radio" name="timer-format" value="seconds">
+        <label>Seconds</label><br>
+      </fieldset>
       <label>Focus duration (m)</label>
-      <input
-        :value="localTimerSettingsForSubmit.focusDuration" min="0" type="number"
-        @input="localTimerSettingsForSubmit.focusDuration = Number($event.target?.value)"
-      >
+      <input v-model="localTimerSettingsForSubmit.focusDuration" type="number" min="0">
       <label>Short break duration (m)</label>
-      <input
-        :value="localTimerSettingsForSubmit.shortBreakDuration" min="0" type="number"
-        @input="localTimerSettingsForSubmit.shortBreakDuration = Number($event.target?.value)"
-      >
+      <input v-model="localTimerSettingsForSubmit.shortBreakDuration" type="number" min="0">
       <label>Long break duration (m) </label>
-      <input
-        :value="localTimerSettingsForSubmit.longBreakDuration" min="0" type="number"
-        @input="localTimerSettingsForSubmit.longBreakDuration = Number($event.target?.value)"
-      >
+      <input v-model="localTimerSettingsForSubmit.longBreakDuration" type="number" min="0">
       <label>Rounds</label>
-      <input
-        :value="localTimerSettingsForSubmit.rounds" min="0" type="number"
-        @input="localTimerSettingsForSubmit.rounds = Number($event.target?.value)"
-      >
+      <input v-model="localTimerSettingsForSubmit.rounds" type="number" min="0">
       <button type="submit">
         Apply
       </button>
@@ -86,6 +85,10 @@ onUnmounted(() => {
   background-color: rgba(128, 92, 92, 0.8);
   width: 30%;
   min-width: 100px;
+}
+
+.fieldset {
+  margin: 6px;
 }
 
 input {

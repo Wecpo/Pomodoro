@@ -4,6 +4,7 @@ export interface TimerSettingsModal {
     shortBreakDuration: number
     longBreakDuration: number
     rounds: number
+    timerFormat: string
   }
   settingsIconRef: HTMLElement | null
 }

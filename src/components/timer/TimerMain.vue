@@ -18,7 +18,7 @@ const DEFAULT_TIMER_SETTINGS = {
   shortBreakDuration: 5,
   longBreakDuration: 10,
   rounds: 3,
-  timerValue: 'minutes',
+  timerFormat: 'minutes',
 };
 
 const timerSettings = reactive<TimerSettings>(DEFAULT_TIMER_SETTINGS);
@@ -61,7 +61,7 @@ function changeTimerToFocus() {
     return;
   }
   if (timerType.value === TIMER_TYPE.LONG_BREAK) {
-    roundCounter.value = 0;
+    roundCounter.value = 1;
     timerType.value = TIMER_TYPE.FOCUS;
     timer.value = timerSettings.focusDuration * 60;
     pauseTimer();
@@ -206,7 +206,7 @@ onUnmounted(() => {
 
 .v-enter-active,
 .v-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.1s ease;
 }
 
 .v-enter-from,
