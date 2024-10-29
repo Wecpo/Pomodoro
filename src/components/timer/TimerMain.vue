@@ -36,11 +36,12 @@ function fetchSettings() {
 
   if (settingsData) {
     const timerTypeKey = useTimerTypeKey(timerType);
-    const { focusDuration, shortBreakDuration, longBreakDuration, rounds } = JSON.parse(settingsData);
+    const { focusDuration, shortBreakDuration, longBreakDuration, rounds, timerFormat } = JSON.parse(settingsData);
     timerSettings.focusDuration = focusDuration;
     timerSettings.shortBreakDuration = shortBreakDuration;
     timerSettings.longBreakDuration = longBreakDuration;
     timerSettings.rounds = rounds;
+    timerSettings.timerFormat = timerFormat;
     timer.value = timerSettings[timerTypeKey.value] * 60;
   }
 }

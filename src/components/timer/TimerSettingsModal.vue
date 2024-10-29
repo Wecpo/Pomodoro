@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
-import { onMounted, onUnmounted, onUpdated, reactive, ref } from 'vue';
+import { onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
 const props = defineProps<TimerSettingsModal>();
 const emit = defineEmits<{
@@ -18,6 +18,11 @@ const localTimerSettingsForSubmit = reactive({
 
 function editSettings() {
   const data = localTimerSettingsForSubmit;
+  if (localTimerSettingsForSubmit.timerFormat === 'seconds') {
+    data.focusDuration /= 60;
+    data.shortBreakDuration /= 60;
+    data.longBreakDuration /= 60;
+  }
 
   const LSdata = JSON.stringify(data);
   localStorage.setItem('timerSettings', LSdata);
@@ -25,6 +30,18 @@ function editSettings() {
   emit('update');
   emit('close');
 }
+
+watch(() => localTimerSettingsForSubmit.timerFormat, () => {
+  if (localTimerSettingsForSubmit.timerFormat === 'minutes') {
+    localTimerSettingsForSubmit.focusDuration = props.timerSettings.focusDuration;
+    localTimerSettingsForSubmit.shortBreakDuration = props.timerSettings.shortBreakDuration;
+    localTimerSettingsForSubmit.longBreakDuration = props.timerSettings.longBreakDuration;
+    return;
+  }
+  localTimerSettingsForSubmit.focusDuration = props.timerSettings.focusDuration * 60;
+  localTimerSettingsForSubmit.shortBreakDuration = props.timerSettings.shortBreakDuration * 60;
+  localTimerSettingsForSubmit.longBreakDuration = props.timerSettings.longBreakDuration * 60;
+});
 
 const modalRef = ref<HTMLElement | null>(null);
 
@@ -36,9 +53,6 @@ function handleClickOutside(event: MouseEvent) {
     emit('close');
   }
 }
-
-onUpdated(() => console.log(localTimerSettingsForSubmit.timerFormat),
-);
 
 onMounted(() => {
   document.addEventListener('mousedown', handleClickOutside);
@@ -54,16 +68,19 @@ onUnmounted(() => {
     <form class="modal" @submit.prevent="editSettings">
       <fieldset class="fieldset">
         <legend>Choose a timer format</legend>
-        <input v-model="localTimerSettingsForSubmit.timerFormat" type="radio" name="timer-format" value="minutes">
+        <input
+          v-model="localTimerSettingsForSubmit.timerFormat"
+          type="radio" name="timer-format" value="minutes" checked
+        >
         <label>Minutes</label><br>
         <input v-model="localTimerSettingsForSubmit.timerFormat" type="radio" name="timer-format" value="seconds">
         <label>Seconds</label><br>
       </fieldset>
-      <label>Focus duration (m)</label>
+      <label>Focus duration ({{ localTimerSettingsForSubmit.timerFormat.slice(0, 3) }})</label>
       <input v-model="localTimerSettingsForSubmit.focusDuration" type="number" min="0">
-      <label>Short break duration (m)</label>
+      <label>Short break duration ({{ localTimerSettingsForSubmit.timerFormat.slice(0, 3) }})</label>
       <input v-model="localTimerSettingsForSubmit.shortBreakDuration" type="number" min="0">
-      <label>Long break duration (m) </label>
+      <label>Long break duration ({{ localTimerSettingsForSubmit.timerFormat.slice(0, 3) }}) </label>
       <input v-model="localTimerSettingsForSubmit.longBreakDuration" type="number" min="0">
       <label>Rounds</label>
       <input v-model="localTimerSettingsForSubmit.rounds" type="number" min="0">
