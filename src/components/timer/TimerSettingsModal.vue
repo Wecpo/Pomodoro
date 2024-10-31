@@ -16,13 +16,21 @@ const localTimerSettingsForSubmit = reactive({
   timerFormat: props.timerSettings.timerFormat,
 });
 
+onMounted(() => {
+  if (localTimerSettingsForSubmit.timerFormat === 'minutes') {
+    localTimerSettingsForSubmit.focusDuration = localTimerSettingsForSubmit.focusDuration / 60;
+    localTimerSettingsForSubmit.shortBreakDuration = localTimerSettingsForSubmit.shortBreakDuration / 60;
+    localTimerSettingsForSubmit.longBreakDuration = localTimerSettingsForSubmit.longBreakDuration / 60;
+  }
+});
+
 function editSettings() {
   const data = localTimerSettingsForSubmit;
-  if (localTimerSettingsForSubmit.timerFormat === 'seconds') {
-    data.focusDuration /= 60;
-    data.shortBreakDuration /= 60;
-    data.longBreakDuration /= 60;
-  }
+  // if (localTimerSettingsForSubmit.timerFormat === 'seconds') {
+  //   data.focusDuration /= 60;
+  //   data.shortBreakDuration /= 60;
+  //   data.longBreakDuration /= 60;
+  // }
 
   const LSdata = JSON.stringify(data);
   localStorage.setItem('timerSettings', LSdata);
@@ -32,15 +40,17 @@ function editSettings() {
 }
 
 watch(() => localTimerSettingsForSubmit.timerFormat, () => {
-  if (localTimerSettingsForSubmit.timerFormat === 'minutes') {
-    localTimerSettingsForSubmit.focusDuration = props.timerSettings.focusDuration;
-    localTimerSettingsForSubmit.shortBreakDuration = props.timerSettings.shortBreakDuration;
-    localTimerSettingsForSubmit.longBreakDuration = props.timerSettings.longBreakDuration;
+  if (localTimerSettingsForSubmit.timerFormat === 'seconds') {
+    localTimerSettingsForSubmit.focusDuration = localTimerSettingsForSubmit.focusDuration * 60;
+    localTimerSettingsForSubmit.shortBreakDuration = localTimerSettingsForSubmit.shortBreakDuration * 60;
+    localTimerSettingsForSubmit.longBreakDuration = localTimerSettingsForSubmit.longBreakDuration * 60;
     return;
   }
-  localTimerSettingsForSubmit.focusDuration = props.timerSettings.focusDuration * 60;
-  localTimerSettingsForSubmit.shortBreakDuration = props.timerSettings.shortBreakDuration * 60;
-  localTimerSettingsForSubmit.longBreakDuration = props.timerSettings.longBreakDuration * 60;
+  if (localTimerSettingsForSubmit.timerFormat = 'minutes') {
+    localTimerSettingsForSubmit.focusDuration = Number((localTimerSettingsForSubmit.focusDuration / 60).toFixed(0));
+    localTimerSettingsForSubmit.shortBreakDuration = +(localTimerSettingsForSubmit.shortBreakDuration / 60).toFixed(0);
+    localTimerSettingsForSubmit.longBreakDuration = +(localTimerSettingsForSubmit.longBreakDuration / 60).toFixed(0);
+  }
 });
 
 const modalRef = ref<HTMLElement | null>(null);

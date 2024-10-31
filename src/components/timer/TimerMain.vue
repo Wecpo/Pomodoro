@@ -14,9 +14,9 @@ import { useToast } from 'vue-toastification';
 const toast = useToast();
 
 const DEFAULT_TIMER_SETTINGS = {
-  focusDuration: 30,
-  shortBreakDuration: 5,
-  longBreakDuration: 10,
+  focusDuration: 1800,
+  shortBreakDuration: 300,
+  longBreakDuration: 600,
   rounds: 3,
   timerFormat: 'minutes',
 };
@@ -37,12 +37,21 @@ function fetchSettings() {
   if (settingsData) {
     const timerTypeKey = useTimerTypeKey(timerType);
     const { focusDuration, shortBreakDuration, longBreakDuration, rounds, timerFormat } = JSON.parse(settingsData);
-    timerSettings.focusDuration = focusDuration;
-    timerSettings.shortBreakDuration = shortBreakDuration;
-    timerSettings.longBreakDuration = longBreakDuration;
+    if (timerFormat === 'minutes') {
+      timerSettings.focusDuration = focusDuration * 60;
+      timerSettings.shortBreakDuration = shortBreakDuration * 60;
+      timerSettings.longBreakDuration = longBreakDuration * 60;
+    }
+
+    if (timerFormat === 'seconds') {
+      timerSettings.focusDuration = focusDuration;
+      timerSettings.shortBreakDuration = shortBreakDuration;
+      timerSettings.longBreakDuration = longBreakDuration;
+    }
+
     timerSettings.rounds = rounds;
     timerSettings.timerFormat = timerFormat;
-    timer.value = timerSettings[timerTypeKey.value] * 60;
+    timer.value = timerSettings[timerTypeKey.value];
   }
 }
 
@@ -56,7 +65,7 @@ const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED
 function changeTimerToFocus() {
   if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
     timerType.value = TIMER_TYPE.FOCUS;
-    timer.value = timerSettings.focusDuration * 60;
+    timer.value = timerSettings.focusDuration;
     pauseTimer();
     toast.info('Короткий перерыв завершен!');
     return;
@@ -64,7 +73,7 @@ function changeTimerToFocus() {
   if (timerType.value === TIMER_TYPE.LONG_BREAK) {
     roundCounter.value = 1;
     timerType.value = TIMER_TYPE.FOCUS;
-    timer.value = timerSettings.focusDuration * 60;
+    timer.value = timerSettings.focusDuration;
     pauseTimer();
     toast.info('Длинный перерыв завершен!');
   }
@@ -74,7 +83,7 @@ function changeTimerToBreak() {
   if (roundCounter.value < timerSettings.rounds) {
     roundCounter.value++;
     timerType.value = TIMER_TYPE.SHORT_BREAK;
-    timer.value = timerSettings.shortBreakDuration * 60;
+    timer.value = timerSettings.shortBreakDuration;
     pauseTimer();
     toast.success('Помидор завершен!');
     return;
@@ -83,7 +92,7 @@ function changeTimerToBreak() {
   if (roundCounter.value === timerSettings.rounds) {
     roundCounter.value++;
     timerType.value = TIMER_TYPE.LONG_BREAK;
-    timer.value = timerSettings.longBreakDuration * 60;
+    timer.value = timerSettings.longBreakDuration;
     pauseTimer();
     toast.success('Помидор завершен!');
   }

@@ -8,7 +8,7 @@ const props = defineProps<TimerProgressBarProps>();
 const timerTest = computed(() => props.timerType);
 const timerTypeKey = useTimerTypeKey(timerTest);
 
-const progressMax = computed(() => props.timerSettings[timerTypeKey.value] * 60);
+const progressMax = computed(() => props.timerSettings[timerTypeKey.value]);
 const progressValue = computed(() => progressMax.value - props.timer);
 </script>
 
