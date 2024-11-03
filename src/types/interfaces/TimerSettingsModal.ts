@@ -1,7 +1,10 @@
 export interface TimerSettingsModal {
-  focusDuration: number
-  shortBreakDuration: number
-  longBreakDuration: number
-  rounds: number
+  timerSettings: {
+    focusDuration: number
+    shortBreakDuration: number
+    longBreakDuration: number
+    rounds: number
+    timerFormat: string
+  }
   settingsIconRef: HTMLElement | null
 }

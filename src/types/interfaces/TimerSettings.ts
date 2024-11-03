@@ -3,4 +3,5 @@ export interface TimerSettings {
   shortBreakDuration: number
   longBreakDuration: number
   rounds: number
+  timerFormat: string
 }

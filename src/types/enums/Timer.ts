@@ -8,3 +8,9 @@ export enum TIMER_TYPE {
   SHORT_BREAK = 'Short break',
   LONG_BREAK = 'Long break',
 }
+
+export enum TIMER_TYPE_KEY {
+  FOCUS = 'focusDuration',
+  SHORT_BREAK = 'shortBreakDuration',
+  LONG_BREAK = 'longBreakDuration',
+}
