@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
-import { onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
 const props = defineProps<TimerSettingsModal>();
 const emit = defineEmits<{
@@ -8,7 +8,7 @@ const emit = defineEmits<{
   (e: 'update'): void
 }>();
 
-const localTimerSettingsForSubmit = reactive({
+const localTimerSettings = reactive({
   focusDuration: props.timerSettings.focusDuration,
   shortBreakDuration: props.timerSettings.shortBreakDuration,
   longBreakDuration: props.timerSettings.longBreakDuration,
@@ -17,20 +17,15 @@ const localTimerSettingsForSubmit = reactive({
 });
 
 onMounted(() => {
-  if (localTimerSettingsForSubmit.timerFormat === 'minutes') {
-    localTimerSettingsForSubmit.focusDuration = localTimerSettingsForSubmit.focusDuration / 60;
-    localTimerSettingsForSubmit.shortBreakDuration = localTimerSettingsForSubmit.shortBreakDuration / 60;
-    localTimerSettingsForSubmit.longBreakDuration = localTimerSettingsForSubmit.longBreakDuration / 60;
+  if (localTimerSettings.timerFormat === 'minutes') {
+    localTimerSettings.focusDuration = localTimerSettings.focusDuration / 60;
+    localTimerSettings.shortBreakDuration = localTimerSettings.shortBreakDuration / 60;
+    localTimerSettings.longBreakDuration = localTimerSettings.longBreakDuration / 60;
   }
 });
 
 function editSettings() {
-  const data = localTimerSettingsForSubmit;
-  // if (localTimerSettingsForSubmit.timerFormat === 'seconds') {
-  //   data.focusDuration /= 60;
-  //   data.shortBreakDuration /= 60;
-  //   data.longBreakDuration /= 60;
-  // }
+  const data = localTimerSettings;
 
   const LSdata = JSON.stringify(data);
   localStorage.setItem('timerSettings', LSdata);
@@ -39,18 +34,17 @@ function editSettings() {
   emit('close');
 }
 
-watch(() => localTimerSettingsForSubmit.timerFormat, () => {
-  if (localTimerSettingsForSubmit.timerFormat === 'seconds') {
-    localTimerSettingsForSubmit.focusDuration = localTimerSettingsForSubmit.focusDuration * 60;
-    localTimerSettingsForSubmit.shortBreakDuration = localTimerSettingsForSubmit.shortBreakDuration * 60;
-    localTimerSettingsForSubmit.longBreakDuration = localTimerSettingsForSubmit.longBreakDuration * 60;
+watch(() => localTimerSettings.timerFormat, () => {
+  if (localTimerSettings.timerFormat === 'seconds') {
+    localTimerSettings.focusDuration *= 60;
+    localTimerSettings.shortBreakDuration *= 60;
+    localTimerSettings.longBreakDuration *= 60;
     return;
   }
-  if (localTimerSettingsForSubmit.timerFormat = 'minutes') {
-    localTimerSettingsForSubmit.focusDuration = Number((localTimerSettingsForSubmit.focusDuration / 60).toFixed(0));
-    localTimerSettingsForSubmit.shortBreakDuration = +(localTimerSettingsForSubmit.shortBreakDuration / 60).toFixed(0);
-    localTimerSettingsForSubmit.longBreakDuration = +(localTimerSettingsForSubmit.longBreakDuration / 60).toFixed(0);
-  }
+
+  localTimerSettings.focusDuration /= 60;
+  localTimerSettings.shortBreakDuration /= 60;
+  localTimerSettings.longBreakDuration /= 60;
 });
 
 const modalRef = ref<HTMLElement | null>(null);
@@ -71,6 +65,8 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('mousedown', handleClickOutside);
 });
+
+const timerFormatString = computed(() => localTimerSettings.timerFormat.slice(0, 3));
 </script>
 
 <template>
@@ -78,23 +74,20 @@ onUnmounted(() => {
     <form class="modal" @submit.prevent="editSettings">
       <fieldset class="fieldset">
         <legend>Choose a timer format</legend>
-        <input
-          v-model="localTimerSettingsForSubmit.timerFormat"
-          type="radio" name="timer-format" value="minutes" checked
-        >
-        <label>Minutes</label><br>
-        <input v-model="localTimerSettingsForSubmit.timerFormat" type="radio" name="timer-format" value="seconds">
-        <label>Seconds</label><br>
+        <input id="minutes" v-model="localTimerSettings.timerFormat" type="radio" name="timer-format" value="minutes">
+        <label for="minutes">Minutes</label><br>
+        <input id="seconds" v-model="localTimerSettings.timerFormat" type="radio" name="timer-format" value="seconds">
+        <label for="seconds">Seconds</label><br>
       </fieldset>
-      <label>Focus duration ({{ localTimerSettingsForSubmit.timerFormat.slice(0, 3) }})</label>
-      <input v-model="localTimerSettingsForSubmit.focusDuration" type="number" min="0">
-      <label>Short break duration ({{ localTimerSettingsForSubmit.timerFormat.slice(0, 3) }})</label>
-      <input v-model="localTimerSettingsForSubmit.shortBreakDuration" type="number" min="0">
-      <label>Long break duration ({{ localTimerSettingsForSubmit.timerFormat.slice(0, 3) }}) </label>
-      <input v-model="localTimerSettingsForSubmit.longBreakDuration" type="number" min="0">
-      <label>Rounds</label>
-      <input v-model="localTimerSettingsForSubmit.rounds" type="number" min="0">
-      <button type="submit">
+      <label for="focus">Focus duration ({{ timerFormatString }})</label>
+      <input id="focus" v-model="localTimerSettings.focusDuration" type="number" min="0">
+      <label for="shortBreak">Short break duration ({{ timerFormatString }})</label>
+      <input id="shortBreak" v-model="localTimerSettings.shortBreakDuration" type="number" min="0">
+      <label for="longBreak">Long break duration ({{ timerFormatString }})</label>
+      <input id="longBreak" v-model="localTimerSettings.longBreakDuration" type="number" min="0">
+      <label for="rounds">Rounds</label>
+      <input id="rounds" v-model="localTimerSettings.rounds" type="number" min="0">
+      <button class="submit" type="submit">
         Apply
       </button>
     </form>
@@ -103,19 +96,30 @@ onUnmounted(() => {
 
 <style scoped>
 .modal {
-  padding: 20px;
+  padding: 15px;
   position: fixed;
   top: 10%;
-  left: 35%;
+  left: 33.6%;
   display: flex;
   flex-direction: column;
-  background-color: rgba(128, 92, 92, 0.8);
+  background-color: rgba(128, 92, 92, 0.9);
   width: 30%;
   min-width: 100px;
 }
 
 .fieldset {
   margin: 6px;
+}
+
+.submit {
+  background-color: black;
+  color: #fff;
+  height: 30px;
+  margin-top: 10px;
+}
+
+.submit:hover {
+  cursor: pointer;
 }
 
 input {

@@ -1,14 +1,16 @@
-import { TIMER_TYPE } from '@/types/enums/Timer';
+import { TIMER_TYPE, TIMER_TYPE_KEY } from '@/types/enums/Timer';
 import { computed, type Ref } from 'vue';
 
 export function useTimerTypeKey(timerType: Ref<TIMER_TYPE>) {
-  return computed(() => {
+  const timerTypeKey = computed(() => {
     if (timerType.value === TIMER_TYPE.FOCUS) {
-      return 'focusDuration';
+      return TIMER_TYPE_KEY.FOCUS;
     }
     if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
-      return 'shortBreakDuration';
+      return TIMER_TYPE_KEY.SHORT_BREAK;
     }
-    return 'longBreakDuration';
+    return TIMER_TYPE_KEY.LONG_BREAK;
   });
+
+  return { timerTypeKey };
 }

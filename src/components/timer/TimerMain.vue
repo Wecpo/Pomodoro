@@ -5,10 +5,12 @@ import IconSettings from '@/components/icons/IconSettings.vue';
 import TimerButton from '@/components/timer/TimerButton.vue';
 import TimerProgressBar from '@/components/timer/TimerProgressBar.vue';
 import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
+import { useFavicon } from '@/composable/useFavicon';
 import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
+import { useTitle } from '@/composable/useTitle';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
-import { computed, onMounted, onUnmounted, reactive, ref } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 
 const toast = useToast();
@@ -23,19 +25,19 @@ const DEFAULT_TIMER_SETTINGS = {
 
 const timerSettings = reactive<TimerSettings>(DEFAULT_TIMER_SETTINGS);
 
-const timer = ref<number>(timerSettings.focusDuration);
+const timer = ref(timerSettings.focusDuration);
 const roundCounter = ref(1);
 const timerType = ref<TIMER_TYPE>(TIMER_TYPE.FOCUS);
 const timerStatus = ref<TIMER_STATUS>(TIMER_STATUS.PAUSED);
 const showModal = ref(false);
 const settingsIconRef = ref<HTMLElement | null>(null);
+const { timerTypeKey } = useTimerTypeKey(timerType);
 let intervalId = 0;
 
 function fetchSettings() {
   const settingsData = localStorage.getItem('timerSettings');
 
   if (settingsData) {
-    const timerTypeKey = useTimerTypeKey(timerType);
     const { focusDuration, shortBreakDuration, longBreakDuration, rounds, timerFormat } = JSON.parse(settingsData);
     if (timerFormat === 'minutes') {
       timerSettings.focusDuration = focusDuration * 60;
@@ -135,6 +137,14 @@ const timerClass = computed(() => {
   }
 
   return 'timer--background--long-break';
+});
+
+watch(() => timer.value, () => {
+  useTitle(timer.value, timerType.value);
+});
+
+watch(() => timerStatus.value, () => {
+  useFavicon(timerType, timerStatus);
 });
 
 onUnmounted(() => {
