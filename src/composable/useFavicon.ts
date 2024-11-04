@@ -2,7 +2,8 @@ import type { Ref } from 'vue';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 
 export function useFavicon(timerType: Ref<TIMER_TYPE>, timerStatus: Ref<TIMER_STATUS>) {
-  const faviconLink: HTMLLinkElement = document.querySelector('link[rel*=\'icon\']') || document.createElement('link');
+  const faviconLink: HTMLLinkElement
+  = document.querySelector('link[rel*=\'shortcut icon\']') || document.createElement('link');
 
   if (timerStatus.value === TIMER_STATUS.PAUSED) {
     faviconLink.href = '/src/public/pomodoro-paused.png';
