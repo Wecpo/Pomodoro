@@ -5,11 +5,10 @@ import IconSettings from '@/components/icons/IconSettings.vue';
 import TimerButton from '@/components/timer/TimerButton.vue';
 import TimerProgressBar from '@/components/timer/TimerProgressBar.vue';
 import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
-import { useFavicon } from '@/composable/useFavicon';
 import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
-import { computed, onMounted, onUnmounted, reactive, ref, watch, watchEffect } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue';
 import { useToast } from 'vue-toastification';
 
 const toast = useToast();
@@ -151,21 +150,17 @@ watchEffect(() => {
   }
 
   if (timerType.value === TIMER_TYPE.FOCUS) {
-    faviconLink.href = '/pomodoro-focus'; // Фавиконка для фокуса
+    faviconLink.href = '/assets/icons/pomodoro-focus.png';
   }
   else if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
-    faviconLink.href = '/pomodoro-short-break'; // Фавиконка для короткого перерыва
+    faviconLink.href = '/assets/icons/pomodoro-short-break.png';
   }
   else if (timerType.value === TIMER_TYPE.LONG_BREAK) {
-    faviconLink.href = '/pomodoro-long-break'; // Фавиконка для длинного перерыва
+    faviconLink.href = '/assets/icons/pomodoro-long-break.png';
   }
   else if (timerStatus.value === TIMER_STATUS.PAUSED) {
-    faviconLink.href = '/pomodoro-paused'; // Фавиконка на паузе
+    faviconLink.href = '/assets/icons/pomodoro-paused.png';
   }
-});
-
-watch(() => timerStatus.value, () => {
-  useFavicon(timerType, timerStatus);
 });
 
 onUnmounted(() => {
