@@ -150,7 +150,7 @@ watchEffect(() => {
     return;
   }
   if (timerType.value === TIMER_TYPE.FOCUS) {
-    faviconLink.href = '/icons/pomodoro-focus.ico';
+    faviconLink.href = 'icons/pomodoro-focus.ico';
     return;
   }
   if (timerType.value === TIMER_TYPE.SHORT_BREAK) {

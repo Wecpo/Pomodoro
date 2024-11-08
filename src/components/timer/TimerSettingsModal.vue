@@ -2,7 +2,17 @@
 import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
-const props = defineProps<TimerSettingsModal>();
+const props = withDefaults(defineProps<TimerSettingsModal>(), {
+  timerSettings: () =>
+    ({
+      focusDuration: 1800,
+      shortBreakDuration: 300,
+      longBreakDuration: 600,
+      rounds: 3,
+      timerFormat: 'minutes',
+    }),
+});
+
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'update'): void
@@ -15,6 +25,8 @@ const localTimerSettings = reactive({
   rounds: props.timerSettings.rounds,
   timerFormat: props.timerSettings.timerFormat,
 });
+
+const timerFormatString = computed(() => localTimerSettings.timerFormat.slice(0, 3));
 
 onMounted(() => {
   if (localTimerSettings.timerFormat === 'minutes') {
@@ -65,8 +77,6 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('mousedown', handleClickOutside);
 });
-
-const timerFormatString = computed(() => localTimerSettings.timerFormat.slice(0, 3));
 </script>
 
 <template>
@@ -80,7 +90,7 @@ const timerFormatString = computed(() => localTimerSettings.timerFormat.slice(0,
         <label for="seconds">Seconds</label><br>
       </fieldset>
       <label for="focus">Focus duration ({{ timerFormatString }})</label>
-      <input id="focus" v-model="localTimerSettings.focusDuration" type="number" min="0">
+      <input id="focus" v-model.number="localTimerSettings.focusDuration" type="number" min="0">
       <label for="shortBreak">Short break duration ({{ timerFormatString }})</label>
       <input id="shortBreak" v-model="localTimerSettings.shortBreakDuration" type="number" min="0">
       <label for="longBreak">Long break duration ({{ timerFormatString }})</label>
