@@ -5,12 +5,10 @@ import IconSettings from '@/components/icons/IconSettings.vue';
 import TimerButton from '@/components/timer/TimerButton.vue';
 import TimerProgressBar from '@/components/timer/TimerProgressBar.vue';
 import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
-import { useFavicon } from '@/composable/useFavicon';
 import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
-import { useTitle } from '@/composable/useTitle';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
-import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref, watch, watchEffect } from 'vue';
 import { useToast } from 'vue-toastification';
 
 const toast = useToast();
@@ -139,12 +137,27 @@ const timerClass = computed(() => {
   return 'timer--background--long-break';
 });
 
-watch(() => timer.value, () => {
-  useTitle(timer.value, timerType.value);
+watchEffect(() => {
+  document.title = `${formatTime(timer.value, ':')} ${timerType.value} time`;
 });
 
-watch(() => timerStatus.value, () => {
-  useFavicon(timerType, timerStatus);
+watchEffect(() => {
+  const faviconLink: HTMLLinkElement
+  = document.querySelector('link[rel*=\'shortcut icon\']') || document.createElement('link');
+
+  if (timerStatus.value === TIMER_STATUS.PAUSED) {
+    faviconLink.href = '/icons/pomodoro-paused.ico';
+    return;
+  }
+  if (timerType.value === TIMER_TYPE.FOCUS) {
+    faviconLink.href = '/icons/pomodoro-focus.ico';
+    return;
+  }
+  if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
+    faviconLink.href = '/icons/pomodoro-short-break.ico';
+    return;
+  }
+  faviconLink.href = '/icons/pomodoro-long-break.ico';
 });
 
 onUnmounted(() => {
