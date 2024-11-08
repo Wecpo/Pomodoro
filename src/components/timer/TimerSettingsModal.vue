@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
-import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
 const props = withDefaults(defineProps<TimerSettingsModal>(), {
   timerSettings: () =>
@@ -26,14 +26,11 @@ const localTimerSettings = reactive({
   timerFormat: props.timerSettings.timerFormat,
 });
 
-// const timerFormatString = computed(() => localTimerSettings.timerFormat.slice(0, 3));
-// console.log(timerFormatString.value);
-
 onMounted(() => {
   if (localTimerSettings.timerFormat === 'minutes') {
-    localTimerSettings.focusDuration = localTimerSettings.focusDuration / 60;
-    localTimerSettings.shortBreakDuration = localTimerSettings.shortBreakDuration / 60;
-    localTimerSettings.longBreakDuration = localTimerSettings.longBreakDuration / 60;
+    localTimerSettings.focusDuration /= 60;
+    localTimerSettings.shortBreakDuration /= 60;
+    localTimerSettings.longBreakDuration /= 60;
   }
 });
 
@@ -90,11 +87,11 @@ onUnmounted(() => {
         <input id="seconds" v-model="localTimerSettings.timerFormat" type="radio" name="timer-format" value="seconds">
         <label for="seconds">Seconds</label><br>
       </fieldset>
-      <label for="focus">Focus duration ({{ localTimerSettings.timerFormat.slice(0, 3) }})</label>
+      <label for="focus">Focus duration</label>
       <input id="focus" v-model.number="localTimerSettings.focusDuration" type="number" min="0">
-      <label for="shortBreak">Short break duration ({{ localTimerSettings.timerFormat.slice(0, 3) }})</label>
+      <label for="shortBreak">Short break duration</label>
       <input id="shortBreak" v-model="localTimerSettings.shortBreakDuration" type="number" min="0">
-      <label for="longBreak">Long break duration ({{ localTimerSettings.timerFormat.slice(0, 3) }})</label>
+      <label for="longBreak">Long break duration</label>
       <input id="longBreak" v-model="localTimerSettings.longBreakDuration" type="number" min="0">
       <label for="rounds">Rounds</label>
       <input id="rounds" v-model="localTimerSettings.rounds" type="number" min="0">
