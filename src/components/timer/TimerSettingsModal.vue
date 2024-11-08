@@ -26,7 +26,8 @@ const localTimerSettings = reactive({
   timerFormat: props.timerSettings.timerFormat,
 });
 
-const timerFormatString = computed(() => localTimerSettings.timerFormat.slice(0, 3));
+// const timerFormatString = computed(() => localTimerSettings.timerFormat.slice(0, 3));
+// console.log(timerFormatString.value);
 
 onMounted(() => {
   if (localTimerSettings.timerFormat === 'minutes') {
@@ -89,11 +90,11 @@ onUnmounted(() => {
         <input id="seconds" v-model="localTimerSettings.timerFormat" type="radio" name="timer-format" value="seconds">
         <label for="seconds">Seconds</label><br>
       </fieldset>
-      <label for="focus">Focus duration ({{ timerFormatString }})</label>
+      <label for="focus">Focus duration ({{ localTimerSettings.timerFormat.slice(0, 3) }})</label>
       <input id="focus" v-model.number="localTimerSettings.focusDuration" type="number" min="0">
-      <label for="shortBreak">Short break duration ({{ timerFormatString }})</label>
+      <label for="shortBreak">Short break duration ({{ localTimerSettings.timerFormat.slice(0, 3) }})</label>
       <input id="shortBreak" v-model="localTimerSettings.shortBreakDuration" type="number" min="0">
-      <label for="longBreak">Long break duration ({{ timerFormatString }})</label>
+      <label for="longBreak">Long break duration ({{ localTimerSettings.timerFormat.slice(0, 3) }})</label>
       <input id="longBreak" v-model="localTimerSettings.longBreakDuration" type="number" min="0">
       <label for="rounds">Rounds</label>
       <input id="rounds" v-model="localTimerSettings.rounds" type="number" min="0">
