@@ -26,6 +26,8 @@ const localTimerSettings = reactive({
   timerFormat: props.timerSettings.timerFormat,
 });
 
+console.log(localTimerSettings.timerFormat);
+
 function editSettings() {
   const data = localTimerSettings;
 
@@ -82,7 +84,7 @@ onUnmounted(() => {
       <fieldset class="fieldset">
         <legend>Choose a timer format</legend>
         <label>
-          <input v-model="localTimerSettings.timerFormat" checked type="radio" value="minutes">Minutes
+          <input v-model="localTimerSettings.timerFormat" type="radio" value="minutes">Minutes
         </label>
         <br>
         <label>
