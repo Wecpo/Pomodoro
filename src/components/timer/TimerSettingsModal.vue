@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
-import { onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
 const props = withDefaults(defineProps<TimerSettingsModal>(), {
   timerSettings: () =>
@@ -25,8 +25,6 @@ const localTimerSettings = reactive({
   rounds: props.timerSettings.rounds,
   timerFormat: props.timerSettings.timerFormat,
 });
-
-console.log(localTimerSettings.timerFormat);
 
 function editSettings() {
   const data = localTimerSettings;
@@ -61,6 +59,8 @@ function handleClickOutside(event: MouseEvent) {
   }
 }
 
+const timerFormatString = computed(() => `${localTimerSettings.timerFormat.slice(0, 3)}`);
+
 onMounted(() => {
   if (localTimerSettings.timerFormat === 'minutes') {
     localTimerSettings.focusDuration /= 60;
@@ -91,11 +91,11 @@ onUnmounted(() => {
           <input v-model="localTimerSettings.timerFormat" type="radio" value="seconds">Seconds
         </label>
       </fieldset>
-      <label for="focus">Focus duration</label>
+      <label for="focus">Focus duration ({{ timerFormatString }})</label>
       <input id="focus" v-model="localTimerSettings.focusDuration" type="number" required="true" min="1">
-      <label for="shortBreak">Short break duration</label>
+      <label for="shortBreak">Short break duration ({{ timerFormatString }})</label>
       <input id="shortBreak" v-model="localTimerSettings.shortBreakDuration" required="true" type="number" min="1">
-      <label for="longBreak">Long break duration</label>
+      <label for="longBreak">Long break duration ({{ timerFormatString }})</label>
       <input id="longBreak" v-model="localTimerSettings.longBreakDuration" required="true" type="number" min="1">
       <label for="rounds">Rounds</label>
       <input id="rounds" v-model="localTimerSettings.rounds" required="true" type="number" min="1">
