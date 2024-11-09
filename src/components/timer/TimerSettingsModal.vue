@@ -26,14 +26,6 @@ const localTimerSettings = reactive({
   timerFormat: props.timerSettings.timerFormat,
 });
 
-onMounted(() => {
-  if (localTimerSettings.timerFormat === 'minutes') {
-    localTimerSettings.focusDuration /= 60;
-    localTimerSettings.shortBreakDuration /= 60;
-    localTimerSettings.longBreakDuration /= 60;
-  }
-});
-
 function editSettings() {
   const data = localTimerSettings;
 
@@ -69,6 +61,14 @@ function handleClickOutside(event: MouseEvent) {
 }
 
 onMounted(() => {
+  if (localTimerSettings.timerFormat === 'minutes') {
+    localTimerSettings.focusDuration /= 60;
+    localTimerSettings.shortBreakDuration /= 60;
+    localTimerSettings.longBreakDuration /= 60;
+  }
+});
+
+onMounted(() => {
   document.addEventListener('mousedown', handleClickOutside);
 });
 
@@ -82,19 +82,22 @@ onUnmounted(() => {
     <form class="modal" @submit.prevent="editSettings">
       <fieldset class="fieldset">
         <legend>Choose a timer format</legend>
-        <input id="minutes" v-model="localTimerSettings.timerFormat" type="radio" name="timer-format" value="minutes">
-        <label for="minutes">Minutes</label><br>
-        <input id="seconds" v-model="localTimerSettings.timerFormat" type="radio" name="timer-format" value="seconds">
-        <label for="seconds">Seconds</label><br>
+        <label>
+          <input v-model="localTimerSettings.timerFormat" type="radio" value="minutes">Minutes
+        </label>
+        <br>
+        <label>
+          <input v-model="localTimerSettings.timerFormat" type="radio" value="seconds">Seconds
+        </label>
       </fieldset>
       <label for="focus">Focus duration</label>
-      <input id="focus" v-model.number="localTimerSettings.focusDuration" type="number" min="0">
+      <input id="focus" v-model.number="localTimerSettings.focusDuration" type="number" required="true" min="1">
       <label for="shortBreak">Short break duration</label>
-      <input id="shortBreak" v-model="localTimerSettings.shortBreakDuration" type="number" min="0">
+      <input id="shortBreak" v-model="localTimerSettings.shortBreakDuration" required="true" type="number" min="1">
       <label for="longBreak">Long break duration</label>
-      <input id="longBreak" v-model="localTimerSettings.longBreakDuration" type="number" min="0">
+      <input id="longBreak" v-model="localTimerSettings.longBreakDuration" required="true" type="number" min="1">
       <label for="rounds">Rounds</label>
-      <input id="rounds" v-model="localTimerSettings.rounds" type="number" min="0">
+      <input id="rounds" v-model="localTimerSettings.rounds" required="true" type="number" min="1">
       <button class="submit" type="submit">
         Apply
       </button>

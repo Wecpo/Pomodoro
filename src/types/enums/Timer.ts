@@ -4,7 +4,7 @@ export enum TIMER_STATUS {
 }
 
 export enum TIMER_TYPE {
-  FOCUS = 'Focus',
+  FOCUS = 'Focus time',
   SHORT_BREAK = 'Short break',
   LONG_BREAK = 'Long break',
 }

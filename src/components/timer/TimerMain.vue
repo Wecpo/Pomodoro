@@ -8,7 +8,7 @@ import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
 import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
-import { computed, onMounted, onUnmounted, reactive, ref, watch, watchEffect } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue';
 import { useToast } from 'vue-toastification';
 
 const toast = useToast();
@@ -54,10 +54,6 @@ function fetchSettings() {
     timer.value = timerSettings[timerTypeKey.value];
   }
 }
-
-onMounted(() => {
-  fetchSettings();
-});
 
 const isTimerPaused = computed(() => timerStatus.value === TIMER_STATUS.PAUSED);
 const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED);
@@ -138,7 +134,7 @@ const timerClass = computed(() => {
 });
 
 watchEffect(() => {
-  document.title = `${formatTime(timer.value, ':')} ${timerType.value} time`;
+  document.title = `${formatTime(timer.value, ':')} ${timerType.value}`;
 });
 
 watchEffect(() => {
@@ -158,6 +154,10 @@ watchEffect(() => {
     return;
   }
   faviconLink.href = '/icons/pomodoro-long-break.ico';
+});
+
+onMounted(() => {
+  fetchSettings();
 });
 
 onUnmounted(() => {
