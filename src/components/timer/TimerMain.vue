@@ -8,7 +8,7 @@ import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
 import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
-import { computed, onBeforeMount, onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue';
 import { useToast } from 'vue-toastification';
 
 const toast = useToast();

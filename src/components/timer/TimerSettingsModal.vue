@@ -9,7 +9,7 @@ const props = withDefaults(defineProps<TimerSettingsModal>(), {
       shortBreakDuration: 300,
       longBreakDuration: 600,
       rounds: 3,
-      timerFormat: 'minutes',
+      timerFormat: 'seconds',
     }),
 });
 
@@ -46,10 +46,6 @@ watch(() => localTimerSettings.timerFormat, () => {
   localTimerSettings.focusDuration /= 60;
   localTimerSettings.shortBreakDuration /= 60;
   localTimerSettings.longBreakDuration /= 60;
-});
-
-watch(() => localTimerSettings.timerFormat, (value) => {
-  localTimerSettings.timerFormat = value;
 });
 
 const modalRef = ref<HTMLElement | null>(null);
