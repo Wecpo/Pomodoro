@@ -43,9 +43,9 @@ watch(() => localTimerSettings.timerFormat, () => {
     localTimerSettings.longBreakDuration *= 60;
     return;
   }
-  localTimerSettings.focusDuration /= 60;
-  localTimerSettings.shortBreakDuration /= 60;
-  localTimerSettings.longBreakDuration /= 60;
+  localTimerSettings.focusDuration = +(localTimerSettings.focusDuration / 60).toFixed(0);
+  localTimerSettings.shortBreakDuration /= +(localTimerSettings.shortBreakDuration / 60).toFixed(0);
+  localTimerSettings.longBreakDuration /= +(localTimerSettings.longBreakDuration / 60).toFixed(0);
 });
 
 const modalRef = ref<HTMLElement | null>(null);
@@ -63,7 +63,7 @@ const timerFormatString = computed(() => `${localTimerSettings.timerFormat.slice
 
 onMounted(() => {
   if (localTimerSettings.timerFormat === 'minutes') {
-    localTimerSettings.focusDuration /= 60;
+    localTimerSettings.focusDuration /= Math.floor(60);
     localTimerSettings.shortBreakDuration /= 60;
     localTimerSettings.longBreakDuration /= 60;
   }
