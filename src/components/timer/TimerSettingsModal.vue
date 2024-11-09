@@ -83,7 +83,7 @@ onUnmounted(() => {
       <fieldset class="fieldset">
         <legend>Choose a timer format</legend>
         <label>
-          <input v-model="localTimerSettings.timerFormat" type="radio" value="minutes">Minutes
+          <input v-model="localTimerSettings.timerFormat" checked type="radio" value="minutes">Minutes
         </label>
         <br>
         <label>
@@ -91,7 +91,7 @@ onUnmounted(() => {
         </label>
       </fieldset>
       <label for="focus">Focus duration</label>
-      <input id="focus" v-model.number="localTimerSettings.focusDuration" type="number" required="true" min="1">
+      <input id="focus" v-model="localTimerSettings.focusDuration" type="number" required="true" min="1">
       <label for="shortBreak">Short break duration</label>
       <input id="shortBreak" v-model="localTimerSettings.shortBreakDuration" required="true" type="number" min="1">
       <label for="longBreak">Long break duration</label>
