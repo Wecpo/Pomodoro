@@ -8,7 +8,7 @@ import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
 import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
-import { computed, onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue';
+import { computed, onBeforeMount, onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue';
 import { useToast } from 'vue-toastification';
 
 const toast = useToast();
@@ -22,7 +22,6 @@ const DEFAULT_TIMER_SETTINGS = {
 };
 
 const timerSettings = reactive<TimerSettings>(DEFAULT_TIMER_SETTINGS);
-
 const timer = ref(timerSettings.focusDuration);
 const roundCounter = ref(1);
 const timerType = ref<TIMER_TYPE>(TIMER_TYPE.FOCUS);

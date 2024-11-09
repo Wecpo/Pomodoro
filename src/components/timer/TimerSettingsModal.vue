@@ -43,11 +43,14 @@ watch(() => localTimerSettings.timerFormat, () => {
     localTimerSettings.longBreakDuration *= 60;
     return;
   }
-
   localTimerSettings.focusDuration /= 60;
   localTimerSettings.shortBreakDuration /= 60;
   localTimerSettings.longBreakDuration /= 60;
 });
+
+// watch(() => localTimerSettings.timerFormat, (value) => {
+//   localTimerSettings.timerFormat = value;
+// });
 
 const modalRef = ref<HTMLElement | null>(null);
 
@@ -61,6 +64,7 @@ function handleClickOutside(event: MouseEvent) {
 }
 
 onMounted(() => {
+  localTimerSettings.timerFormat = props.timerSettings.timerFormat;
   if (localTimerSettings.timerFormat === 'minutes') {
     localTimerSettings.focusDuration /= 60;
     localTimerSettings.shortBreakDuration /= 60;
