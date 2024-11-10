@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TimerSettings } from '@/types/interfaces/TimerSettings';
+import type { TimerState } from '@/types/interfaces/TimerState';
 import IconForwardButton from '@/components/icons/IconForwardButton.vue';
 import IconSettings from '@/components/icons/IconSettings.vue';
 import TimerButton from '@/components/timer/TimerButton.vue';
@@ -22,14 +23,12 @@ const DEFAULT_TIMER_SETTINGS = {
 };
 
 const timerSettings = reactive<TimerSettings>(DEFAULT_TIMER_SETTINGS);
-const timerState = reactive(
-  {
-    timerValue: timerSettings.focusDuration,
-    roundCounter: 1,
-    timerType: TIMER_TYPE.FOCUS,
-    timerStatus: TIMER_STATUS.PAUSED,
-  },
-);
+const timerState = reactive<TimerState>({
+  timerValue: timerSettings.focusDuration,
+  roundCounter: 1,
+  timerType: TIMER_TYPE.FOCUS,
+  timerStatus: TIMER_STATUS.PAUSED,
+});
 
 const showModal = ref(false);
 const settingsIconRef = ref<HTMLElement | null>(null);
