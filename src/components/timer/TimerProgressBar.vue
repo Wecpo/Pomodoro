@@ -6,7 +6,7 @@ import { computed } from 'vue';
 const props = defineProps<TimerProgressBarProps>();
 
 const timerCurrentValue = computed(() => props.timerType);
-const { timerTypeKey } = useTimerTypeKey(timerCurrentValue.value);
+const { timerTypeKey } = useTimerTypeKey(timerCurrentValue);
 
 const progressMax = computed(() => props.timerSettings[timerTypeKey.value]);
 const progressValue = computed(() => progressMax.value - props.timer);
