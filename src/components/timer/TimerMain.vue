@@ -22,13 +22,18 @@ const DEFAULT_TIMER_SETTINGS = {
 };
 
 const timerSettings = reactive<TimerSettings>(DEFAULT_TIMER_SETTINGS);
-const timer = ref(timerSettings.focusDuration);
-const roundCounter = ref(1);
-const timerType = ref<TIMER_TYPE>(TIMER_TYPE.FOCUS);
-const timerStatus = ref<TIMER_STATUS>(TIMER_STATUS.PAUSED);
+const timerState = reactive(
+  {
+    timerValue: timerSettings.focusDuration,
+    roundCounter: 1,
+    timerType: TIMER_TYPE.FOCUS,
+    timerStatus: TIMER_STATUS.PAUSED,
+  },
+);
+
 const showModal = ref(false);
 const settingsIconRef = ref<HTMLElement | null>(null);
-const { timerTypeKey } = useTimerTypeKey(timerType);
+const { timerTypeKey } = useTimerTypeKey(timerState.timerType);
 let intervalId = 0;
 
 function fetchSettings() {
@@ -50,55 +55,55 @@ function fetchSettings() {
 
     timerSettings.rounds = rounds;
     timerSettings.timerFormat = timerFormat;
-    timer.value = timerSettings[timerTypeKey.value];
+    timerState.timerValue = timerSettings[timerTypeKey.value];
   }
 }
 
-const isTimerPaused = computed(() => timerStatus.value === TIMER_STATUS.PAUSED);
-const isTimerStarted = computed(() => timerStatus.value === TIMER_STATUS.STARTED);
+const isTimerPaused = computed(() => timerState.timerStatus === TIMER_STATUS.PAUSED);
+const isTimerStarted = computed(() => timerState.timerStatus === TIMER_STATUS.STARTED);
 
 function changeTimerToFocus() {
-  if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
-    timerType.value = TIMER_TYPE.FOCUS;
-    timer.value = timerSettings.focusDuration;
+  if (timerState.timerType === TIMER_TYPE.SHORT_BREAK) {
+    timerState.timerType = TIMER_TYPE.FOCUS;
+    timerState.timerValue = timerSettings.focusDuration;
     pauseTimer();
     toast.info('Короткий перерыв завершен!');
     return;
   }
-  if (timerType.value === TIMER_TYPE.LONG_BREAK) {
-    roundCounter.value = 1;
-    timerType.value = TIMER_TYPE.FOCUS;
-    timer.value = timerSettings.focusDuration;
+  if (timerState.timerType === TIMER_TYPE.LONG_BREAK) {
+    timerState.roundCounter = 1;
+    timerState.timerType = TIMER_TYPE.FOCUS;
+    timerState.timerValue = timerSettings.focusDuration;
     pauseTimer();
     toast.info('Длинный перерыв завершен!');
   }
 }
 
 function changeTimerToBreak() {
-  if (roundCounter.value < timerSettings.rounds) {
-    roundCounter.value++;
-    timerType.value = TIMER_TYPE.SHORT_BREAK;
-    timer.value = timerSettings.shortBreakDuration;
+  if (timerState.roundCounter < timerSettings.rounds) {
+    timerState.roundCounter++;
+    timerState.timerType = TIMER_TYPE.SHORT_BREAK;
+    timerState.timerValue = timerSettings.shortBreakDuration;
     pauseTimer();
     toast.success('Помидор завершен!');
     return;
   }
 
-  if (roundCounter.value === timerSettings.rounds) {
-    roundCounter.value++;
-    timerType.value = TIMER_TYPE.LONG_BREAK;
-    timer.value = timerSettings.longBreakDuration;
+  if (timerState.roundCounter === timerSettings.rounds) {
+    timerState.roundCounter++;
+    timerState.timerType = TIMER_TYPE.LONG_BREAK;
+    timerState.timerValue = timerSettings.longBreakDuration;
     pauseTimer();
     toast.success('Помидор завершен!');
   }
 }
 
 function startTimer() {
-  timerStatus.value = TIMER_STATUS.STARTED;
+  timerState.timerStatus = TIMER_STATUS.STARTED;
 
   intervalId = setInterval(() => {
-    timer.value--;
-    if (timer.value < 0) {
+    timerState.timerValue--;
+    if (timerState.timerValue < 0) {
       clearInterval(intervalId);
       changeTimer();
     }
@@ -107,7 +112,7 @@ function startTimer() {
 
 function pauseTimer() {
   clearInterval(intervalId);
-  timerStatus.value = TIMER_STATUS.PAUSED;
+  timerState.timerStatus = TIMER_STATUS.PAUSED;
 }
 
 const changeTimerMap = new Map<TIMER_TYPE, () => void>([
@@ -117,15 +122,15 @@ const changeTimerMap = new Map<TIMER_TYPE, () => void>([
 ]);
 
 function changeTimer() {
-  changeTimerMap.get(timerType.value)?.();
+  changeTimerMap.get(timerState.timerType)?.();
 }
 
 const timerClass = computed(() => {
-  if (timerType.value === TIMER_TYPE.FOCUS) {
+  if (timerState.timerType === TIMER_TYPE.FOCUS) {
     return 'timer--backgound--focus';
   }
 
-  if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
+  if (timerState.timerType === TIMER_TYPE.SHORT_BREAK) {
     return 'timer--background--short-break';
   }
 
@@ -133,22 +138,22 @@ const timerClass = computed(() => {
 });
 
 watchEffect(() => {
-  document.title = `${formatTime(timer.value, ':')} ${timerType.value}`;
+  document.title = `${formatTime(timerState.timerValue, ':')} - ${timerState.timerType}`;
 });
 
 watchEffect(() => {
   const faviconLink: HTMLLinkElement
   = document.querySelector('link[rel*=\'shortcut icon\']') || document.createElement('link');
 
-  if (timerStatus.value === TIMER_STATUS.PAUSED) {
+  if (timerState.timerStatus === TIMER_STATUS.PAUSED) {
     faviconLink.href = '/icons/pomodoro-paused.ico';
     return;
   }
-  if (timerType.value === TIMER_TYPE.FOCUS) {
+  if (timerState.timerType === TIMER_TYPE.FOCUS) {
     faviconLink.href = 'icons/pomodoro-focus.ico';
     return;
   }
-  if (timerType.value === TIMER_TYPE.SHORT_BREAK) {
+  if (timerState.timerType === TIMER_TYPE.SHORT_BREAK) {
     faviconLink.href = '/icons/pomodoro-short-break.ico';
     return;
   }
@@ -166,15 +171,19 @@ onUnmounted(() => {
 
 <template>
   <div :class="`timer ${timerClass}`">
-    <TimerProgressBar :timer="timer" :timer-settings="timerSettings" :timer-type="timerType" />
+    <TimerProgressBar
+      :timer="timerState.timerValue"
+      :timer-settings="timerSettings"
+      :timer-type="timerState.timerType"
+    />
     <div ref="settingsIconRef" @click="showModal = !showModal">
       <IconSettings />
     </div>
     <div class="timer__title">
-      {{ timerType }}
+      {{ timerState.timerType }}
     </div>
     <div class="timer__time">
-      {{ formatTime(timer) }}
+      {{ formatTime(timerState.timerValue) }}
     </div>
     <div class="timer__controls">
       <TimerButton v-if="isTimerPaused" @click="startTimer">
