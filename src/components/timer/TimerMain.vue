@@ -6,10 +6,12 @@ import IconSettings from '@/components/icons/IconSettings.vue';
 import TimerButton from '@/components/timer/TimerButton.vue';
 import TimerProgressBar from '@/components/timer/TimerProgressBar.vue';
 import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
+import { useFaviconHref } from '@/composable/useFaviconHref';
 import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
+import { useTitle } from '@/composable/useTitle';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
-import { computed, onMounted, onUnmounted, reactive, ref, watchEffect } from 'vue';
+import { computed, onMounted, onUnmounted, reactive, ref, toRef, watchEffect } from 'vue';
 import { useToast } from 'vue-toastification';
 
 const toast = useToast();
@@ -32,7 +34,7 @@ const timerState = reactive<TimerState>({
 
 const showModal = ref(false);
 const settingsIconRef = ref<HTMLElement | null>(null);
-const { timerTypeKey } = useTimerTypeKey(timerState.timerType);
+const { timerTypeKey } = useTimerTypeKey(toRef(timerState, 'timerType'));
 let intervalId = 0;
 
 function fetchSettings() {
@@ -137,26 +139,17 @@ const timerClass = computed(() => {
 });
 
 watchEffect(() => {
-  document.title = `${formatTime(timerState.timerValue, ':')} - ${timerState.timerType}`;
+  const { title } = useTitle(timerState.timerValue, timerState.timerType);
+  document.title = title;
 });
 
 watchEffect(() => {
   const faviconLink: HTMLLinkElement
   = document.querySelector('link[rel*=\'shortcut icon\']') || document.createElement('link');
 
-  if (timerState.timerStatus === TIMER_STATUS.PAUSED) {
-    faviconLink.href = '/icons/pomodoro-paused.ico';
-    return;
-  }
-  if (timerState.timerType === TIMER_TYPE.FOCUS) {
-    faviconLink.href = 'icons/pomodoro-focus.ico';
-    return;
-  }
-  if (timerState.timerType === TIMER_TYPE.SHORT_BREAK) {
-    faviconLink.href = '/icons/pomodoro-short-break.ico';
-    return;
-  }
-  faviconLink.href = '/icons/pomodoro-long-break.ico';
+  const { faviconLinkHref } = useFaviconHref(timerState.timerStatus, timerState.timerType);
+
+  faviconLink.href = faviconLinkHref;
 });
 
 onMounted(() => {
