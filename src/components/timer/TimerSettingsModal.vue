@@ -44,8 +44,8 @@ watch(() => localTimerSettings.timerFormat, (timerFormat) => {
     return;
   }
   localTimerSettings.focusDuration = +(localTimerSettings.focusDuration / 60).toFixed(0);
-  localTimerSettings.shortBreakDuration /= +(localTimerSettings.shortBreakDuration / 60).toFixed(0);
-  localTimerSettings.longBreakDuration /= +(localTimerSettings.longBreakDuration / 60).toFixed(0);
+  localTimerSettings.shortBreakDuration = +(localTimerSettings.shortBreakDuration / 60).toFixed(0);
+  localTimerSettings.longBreakDuration = +(localTimerSettings.longBreakDuration / 60).toFixed(0);
 });
 
 const modalRef = ref<HTMLElement | null>(null);
