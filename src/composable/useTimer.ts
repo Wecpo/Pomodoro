@@ -3,12 +3,12 @@ import type { TimerState } from '@/types/interfaces/TimerState';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { reactive, watchEffect } from 'vue';
 import { useToast } from 'vue-toastification';
-import { useFaviconHref } from './useFaviconHref';
-import { useTitle } from './useTitle';
+import { getFaviconHref } from '../utils/getFaviconHref';
+import { getTitle } from '../utils/getTitle';
 
 const toast = useToast();
 
-export function useTimer(timerSettings: TimerSettings) {
+export const useTimer = (timerSettings: TimerSettings) => {
   const timerState = reactive<TimerState>({
     timerValue: timerSettings.focusDuration,
     roundCounter: 1,
@@ -16,7 +16,14 @@ export function useTimer(timerSettings: TimerSettings) {
     timerStatus: TIMER_STATUS.PAUSED,
   });
 
-  function changeTimerToFocus() {
+  let intervalId = 0;
+
+  const pauseTimer = () => {
+    clearInterval(intervalId);
+    timerState.timerStatus = TIMER_STATUS.PAUSED;
+  };
+
+  const changeTimerToFocus = () => {
     if (timerState.timerType === TIMER_TYPE.SHORT_BREAK) {
       timerState.timerType = TIMER_TYPE.FOCUS;
       timerState.timerValue = timerSettings.focusDuration;
@@ -31,9 +38,9 @@ export function useTimer(timerSettings: TimerSettings) {
       pauseTimer();
       toast.info('Длинный перерыв завершен!');
     }
-  }
+  };
 
-  function changeTimerToBreak() {
+  const changeTimerToBreak = () => {
     if (timerState.roundCounter < timerSettings.rounds) {
       timerState.roundCounter++;
       timerState.timerType = TIMER_TYPE.SHORT_BREAK;
@@ -50,26 +57,7 @@ export function useTimer(timerSettings: TimerSettings) {
       pauseTimer();
       toast.success('Помидор завершен!');
     }
-  }
-
-  let intervalId = 0;
-
-  function startTimer() {
-    timerState.timerStatus = TIMER_STATUS.STARTED;
-
-    intervalId = setInterval(() => {
-      timerState.timerValue--;
-      if (timerState.timerValue < 0) {
-        clearInterval(intervalId);
-        changeTimer();
-      }
-    }, 1000);
-  }
-
-  function pauseTimer() {
-    clearInterval(intervalId);
-    timerState.timerStatus = TIMER_STATUS.PAUSED;
-  }
+  };
 
   const changeTimerMap = new Map<TIMER_TYPE, () => void>([
     [TIMER_TYPE.FOCUS, changeTimerToBreak],
@@ -77,12 +65,24 @@ export function useTimer(timerSettings: TimerSettings) {
     [TIMER_TYPE.SHORT_BREAK, changeTimerToFocus],
   ]);
 
-  function changeTimer() {
+  const changeTimer = () => {
     changeTimerMap.get(timerState.timerType)?.();
-  }
+  };
+
+  const startTimer = () => {
+    timerState.timerStatus = TIMER_STATUS.STARTED;
+
+    intervalId = setInterval(() => {
+      timerState.timerValue--;
+      if (timerState.timerValue <= 0) {
+        clearInterval(intervalId);
+        changeTimer();
+      }
+    }, 1000);
+  };
 
   watchEffect(() => {
-    const { title } = useTitle(timerState.timerValue, timerState.timerType);
+    const title = getTitle(timerState.timerValue, timerState.timerType);
     document.title = title;
   });
 
@@ -90,9 +90,9 @@ export function useTimer(timerSettings: TimerSettings) {
     const faviconLink: HTMLLinkElement
     = document.querySelector('link[rel*=\'shortcut icon\']') || document.createElement('link');
 
-    const { faviconLinkHref } = useFaviconHref(timerState.timerStatus, timerState.timerType);
+    const faviconLinkHref = getFaviconHref(timerState.timerStatus, timerState.timerType);
     faviconLink.href = faviconLinkHref;
   });
 
   return { timerState, startTimer, pauseTimer, changeTimer, intervalId };
-}
+};

@@ -26,7 +26,7 @@ const timerSettings = reactive<TimerSettings>(DEFAULT_TIMER_SETTINGS);
 const { timerState, startTimer, pauseTimer, changeTimer, intervalId } = useTimer(timerSettings);
 const { timerTypeKey } = useTimerTypeKey(toRef(timerState, 'timerType'));
 
-function fetchSettings() {
+const fetchSettings = () => {
   const settingsData = localStorage.getItem('timerSettings');
 
   if (settingsData) {
@@ -47,7 +47,7 @@ function fetchSettings() {
     timerSettings.timerFormat = timerFormat;
     timerState.timerValue = timerSettings[timerTypeKey.value];
   }
-}
+};
 
 const isTimerPaused = computed(() => timerState.timerStatus === TIMER_STATUS.PAUSED);
 const isTimerStarted = computed(() => timerState.timerStatus === TIMER_STATUS.STARTED);
