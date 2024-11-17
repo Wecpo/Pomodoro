@@ -1,10 +1,10 @@
 import type { TimerSettings } from '@/types/interfaces/TimerSettings';
 import type { TimerState } from '@/types/interfaces/TimerState';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
+import { getFaviconHref } from '@/utils/getFaviconHref';
+import { getTitle } from '@/utils/getTitle';
 import { reactive, watchEffect } from 'vue';
 import { useToast } from 'vue-toastification';
-import { getFaviconHref } from '../utils/getFaviconHref';
-import { getTitle } from '../utils/getTitle';
 
 const toast = useToast();
 
