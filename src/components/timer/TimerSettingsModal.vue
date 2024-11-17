@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
-import { toMinutesFixed } from '@/utils/toSecondsFixed';
+import { toMinutesFixed } from '@/utils/toMinutesFixed';
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
 const props = withDefaults(defineProps<TimerSettingsModal>(), {
