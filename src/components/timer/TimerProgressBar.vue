@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { TimerProgressBar } from '@/types/interfaces/TimerProgressBar';
+import type { TimerProgressBarProps } from '@/types/interfaces/TimerProgressBarProps';
 import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
 import { computed } from 'vue';
 
-const props = defineProps<TimerProgressBar>();
+const props = defineProps<TimerProgressBarProps>();
 
 const timerCurrentValue = computed(() => props.timerType);
 const { timerTypeKey } = useTimerTypeKey(timerCurrentValue);
