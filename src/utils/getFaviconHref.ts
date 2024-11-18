@@ -1,6 +1,6 @@
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 
-export function useFaviconHref(timerStatus: TIMER_STATUS, timerType: TIMER_TYPE) {
+export const getFaviconHref = (timerStatus: TIMER_STATUS, timerType: TIMER_TYPE) => {
   let faviconLinkHref = '/icons/pomodoro-long-break.ico';
   if (timerStatus === TIMER_STATUS.PAUSED) {
     faviconLinkHref = '/icons/pomodoro-paused.ico';
@@ -12,5 +12,5 @@ export function useFaviconHref(timerStatus: TIMER_STATUS, timerType: TIMER_TYPE)
     faviconLinkHref = '/icons/pomodoro-short-break.ico';
   }
 
-  return { faviconLinkHref };
-}
+  return faviconLinkHref;
+};

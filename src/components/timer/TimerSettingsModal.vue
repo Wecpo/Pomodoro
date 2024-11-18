@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
+import { toMinutesFixed } from '@/utils/toMinutesFixed';
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
 const props = withDefaults(defineProps<TimerSettingsModal>(), {
@@ -26,15 +27,13 @@ const localTimerSettings = reactive({
   timerFormat: props.timerSettings.timerFormat,
 });
 
-function editSettings() {
-  const data = localTimerSettings;
-
-  const LSdata = JSON.stringify(data);
+const editSettings = () => {
+  const LSdata = JSON.stringify(localTimerSettings);
   localStorage.setItem('timerSettings', LSdata);
 
   emit('update');
   emit('close');
-}
+};
 
 watch(() => localTimerSettings.timerFormat, (timerFormat) => {
   if (timerFormat === 'seconds') {
@@ -43,21 +42,21 @@ watch(() => localTimerSettings.timerFormat, (timerFormat) => {
     localTimerSettings.longBreakDuration *= 60;
     return;
   }
-  localTimerSettings.focusDuration = +(localTimerSettings.focusDuration / 60).toFixed(0);
-  localTimerSettings.shortBreakDuration = +(localTimerSettings.shortBreakDuration / 60).toFixed(0);
-  localTimerSettings.longBreakDuration = +(localTimerSettings.longBreakDuration / 60).toFixed(0);
+  localTimerSettings.focusDuration = toMinutesFixed(localTimerSettings.focusDuration);
+  localTimerSettings.shortBreakDuration = toMinutesFixed(localTimerSettings.shortBreakDuration);
+  localTimerSettings.longBreakDuration = toMinutesFixed(localTimerSettings.longBreakDuration);
 });
 
 const modalRef = ref<HTMLElement | null>(null);
 
-function handleClickOutside(event: MouseEvent) {
+const handleClickOutside = (event: MouseEvent) => {
   if (props.settingsIconRef && props.settingsIconRef.contains(event.target as Node)) {
     emit('close');
   }
   if (modalRef.value && !modalRef.value.contains(event.target as Node)) {
     emit('close');
   }
-}
+};
 
 const timerFormatString = computed(() => `${localTimerSettings.timerFormat.slice(0, 3)}`);
 
