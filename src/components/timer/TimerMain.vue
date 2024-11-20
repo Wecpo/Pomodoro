@@ -4,12 +4,14 @@ import IconForwardButton from '@/components/icons/IconForwardButton.vue';
 import IconSettings from '@/components/icons/IconSettings.vue';
 import TimerButton from '@/components/timer/TimerButton.vue';
 import TimerProgressBar from '@/components/timer/TimerProgressBar.vue';
+import TimerRoundsCounter from '@/components/timer/TimerRoundsCounter.vue';
 import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
 import { useTimer } from '@/composable/useTimer';
 import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
 import { computed, onMounted, onUnmounted, reactive, ref, toRef } from 'vue';
+import IconCancelButton from '../icons/IconCancelButton.vue';
 
 const DEFAULT_TIMER_SETTINGS = {
   focusDuration: 1800,
@@ -88,6 +90,13 @@ onUnmounted(() => {
     </div>
     <div class="timer__time">
       {{ formatTime(timerState.timerValue) }}
+    </div>
+    <div class="timer__roundsCounter">
+      <TimerRoundsCounter
+        :rounds="timerState.totalRounds"
+        @cancel-reset="(prev) => timerState.totalRounds = prev"
+        @reset="timerState.totalRounds = 0"
+      />
     </div>
     <div class="timer__controls">
       <TimerButton v-if="isTimerPaused" @click="startTimer">

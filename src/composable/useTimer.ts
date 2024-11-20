@@ -12,6 +12,7 @@ export const useTimer = (timerSettings: TimerSettings) => {
   const timerState = reactive<TimerState>({
     timerValue: timerSettings.focusDuration,
     roundCounter: 1,
+    totalRounds: 0,
     timerType: TIMER_TYPE.FOCUS,
     timerStatus: TIMER_STATUS.PAUSED,
   });
@@ -28,6 +29,7 @@ export const useTimer = (timerSettings: TimerSettings) => {
       timerState.timerType = TIMER_TYPE.FOCUS;
       timerState.timerValue = timerSettings.focusDuration;
       pauseTimer();
+      timerState.totalRounds++;
       toast.info('Короткий перерыв завершен!');
       return;
     }
@@ -35,6 +37,7 @@ export const useTimer = (timerSettings: TimerSettings) => {
       timerState.roundCounter = 1;
       timerState.timerType = TIMER_TYPE.FOCUS;
       timerState.timerValue = timerSettings.focusDuration;
+      timerState.totalRounds++;
       pauseTimer();
       toast.info('Длинный перерыв завершен!');
     }
