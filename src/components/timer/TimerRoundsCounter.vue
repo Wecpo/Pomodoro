@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, type ComputedRef } from 'vue';
-import IconCancelButton from '../icons/IconCancelButton.vue';
+import IconCancelButton from '@/components/icons/IconCancelButton.vue';
+import { computed, type ComputedRef, onUpdated, ref } from 'vue';
 
 const props = defineProps(['rounds']);
 
@@ -9,21 +9,37 @@ defineEmits<{
   (e: 'cancelReset', prev: number): void
 }>();
 
-const prevRounds: ComputedRef<number> = computed((prev) => {
-  if (props.rounds <= 1) {
-    return prev;
+const isShowCancelButton = ref(false);
+let timeoutId = 0;
+
+const handleShowCancelButton = (action: string) => {
+  if (action === 'on') {
+    clearTimeout(timeoutId);
+    isShowCancelButton.value = true;
+    timeoutId = setTimeout(() => isShowCancelButton.value = false, 2000);
   }
-  return props.rounds;
+  if (action === 'off') {
+    clearTimeout(timeoutId);
+    isShowCancelButton.value = false;
+  }
+};
+
+const prevRounds: ComputedRef<number> = computed((prevRounds) => {
+  if (props.rounds >= 0) {
+    return props.rounds;
+  }
+  return prevRounds;
 });
 </script>
 
 <template>
-  <p class="rounds__paragraph" @click="$emit('reset')">
+  <p class="rounds__paragraph" @click="$emit('reset'), handleShowCancelButton('on')">
     Rounds completed: {{ props.rounds }}
+    prev:{{ prevRounds }}
   </p>
-  <div class="rounds__cancel--button">
+  <div v-show="isShowCancelButton" class="rounds__cancel--button">
     <Transition>
-      <IconCancelButton @click="$emit('cancelReset', prevRounds)" />
+      <IconCancelButton @click="$emit('cancelReset', prevRounds), handleShowCancelButton('off')" />
     </Transition>
   </div>
 </template>
@@ -36,5 +52,15 @@ const prevRounds: ComputedRef<number> = computed((prev) => {
 .rounds__paragraph:hover {
   cursor: pointer;
   opacity: 0.8;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.1s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

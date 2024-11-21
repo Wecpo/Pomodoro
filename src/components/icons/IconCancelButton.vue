@@ -24,7 +24,7 @@
 .cancelButton {
   position: absolute;
   top: -40px;
-  right: 160px;
+  right: 105%;
 }
 
 svg:hover {
