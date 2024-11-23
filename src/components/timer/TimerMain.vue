@@ -11,7 +11,6 @@ import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
 import { computed, onMounted, onUnmounted, reactive, ref, toRef } from 'vue';
-import IconCancelButton from '../icons/IconCancelButton.vue';
 
 const DEFAULT_TIMER_SETTINGS = {
   focusDuration: 1800,
@@ -94,7 +93,7 @@ onUnmounted(() => {
     <div class="timer__roundsCounter">
       <TimerRoundsCounter
         :rounds="timerState.totalRounds"
-        @cancel-reset="(prev) => timerState.totalRounds = prev"
+        @cancel-reset="(prevRounds) => timerState.totalRounds = prevRounds"
         @reset="timerState.totalRounds = 0"
       />
     </div>

@@ -4,9 +4,6 @@ import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { getFaviconHref } from '@/utils/getFaviconHref';
 import { getTitle } from '@/utils/getTitle';
 import { reactive, watchEffect } from 'vue';
-import { useToast } from 'vue-toastification';
-
-const toast = useToast();
 
 export const useTimer = (timerSettings: TimerSettings) => {
   const timerState = reactive<TimerState>({
@@ -17,7 +14,7 @@ export const useTimer = (timerSettings: TimerSettings) => {
     timerStatus: TIMER_STATUS.PAUSED,
   });
 
-  let intervalId = 0;
+  let intervalId: ReturnType<typeof setTimeout> | undefined;
 
   const pauseTimer = () => {
     clearInterval(intervalId);
@@ -30,7 +27,6 @@ export const useTimer = (timerSettings: TimerSettings) => {
       timerState.timerValue = timerSettings.focusDuration;
       pauseTimer();
       timerState.totalRounds++;
-      toast.info('Короткий перерыв завершен!');
       return;
     }
     if (timerState.timerType === TIMER_TYPE.LONG_BREAK) {
@@ -39,7 +35,6 @@ export const useTimer = (timerSettings: TimerSettings) => {
       timerState.timerValue = timerSettings.focusDuration;
       timerState.totalRounds++;
       pauseTimer();
-      toast.info('Длинный перерыв завершен!');
     }
   };
 
@@ -49,7 +44,6 @@ export const useTimer = (timerSettings: TimerSettings) => {
       timerState.timerType = TIMER_TYPE.SHORT_BREAK;
       timerState.timerValue = timerSettings.shortBreakDuration;
       pauseTimer();
-      toast.success('Помидор завершен!');
       return;
     }
 
@@ -58,7 +52,6 @@ export const useTimer = (timerSettings: TimerSettings) => {
       timerState.timerType = TIMER_TYPE.LONG_BREAK;
       timerState.timerValue = timerSettings.longBreakDuration;
       pauseTimer();
-      toast.success('Помидор завершен!');
     }
   };
 
