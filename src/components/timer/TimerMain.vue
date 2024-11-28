@@ -18,8 +18,8 @@ const DEFAULT_TIMER_SETTINGS = {
   longBreakDuration: 600,
   rounds: 3,
   timerFormat: 'minutes',
-  soundEndRound: true,
-  soundsVolume: 0.5,
+  ringAtTheEnd: true,
+  volume: 0.5,
 };
 
 const showModal = ref(false);
@@ -33,7 +33,7 @@ const fetchSettings = () => {
   const settingsData = localStorage.getItem('timerSettings');
 
   if (settingsData) {
-    const { focusDuration, shortBreakDuration, longBreakDuration, rounds, timerFormat, soundEndRound, soundsVolume }
+    const { focusDuration, shortBreakDuration, longBreakDuration, rounds, timerFormat, ringAtTheEnd, volume }
      = JSON.parse(settingsData);
     if (timerFormat === 'minutes') {
       timerSettings.focusDuration = focusDuration * 60;
@@ -47,9 +47,9 @@ const fetchSettings = () => {
       timerSettings.longBreakDuration = longBreakDuration;
     }
 
-    timerSettings.soundEndRound = soundEndRound;
+    timerSettings.ringAtTheEnd = ringAtTheEnd;
     timerSettings.rounds = rounds;
-    timerSettings.soundsVolume = soundsVolume;
+    timerSettings.volume = volume;
     timerSettings.timerFormat = timerFormat;
     timerState.timerValue = timerSettings[timerTypeKey.value];
   }

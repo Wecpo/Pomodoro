@@ -5,8 +5,8 @@ export interface TimerSettingsModal {
     longBreakDuration: number
     rounds: number
     timerFormat: string
-    soundEndRound: boolean
-    soundsVolume: number
+    ringAtTheEnd: boolean
+    volume: number
   }
   settingsIconRef: HTMLElement | null
 }
