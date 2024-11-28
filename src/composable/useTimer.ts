@@ -3,6 +3,7 @@ import type { TimerState } from '@/types/interfaces/TimerState';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { getFaviconHref } from '@/utils/getFaviconHref';
 import { getTitle } from '@/utils/getTitle';
+import { playSound } from '@/utils/playSound';
 import { reactive, watchEffect } from 'vue';
 
 export const useTimer = (timerSettings: TimerSettings) => {
@@ -62,6 +63,9 @@ export const useTimer = (timerSettings: TimerSettings) => {
   ]);
 
   const changeTimer = () => {
+    if (timerSettings.soundEndRound) {
+      playSound('/sounds/bell.mp3', timerSettings.soundsVolume);
+    }
     changeTimerMap.get(timerState.timerType)?.();
   };
 
