@@ -11,6 +11,8 @@ const props = withDefaults(defineProps<TimerSettingsModal>(), {
       longBreakDuration: 600,
       rounds: 3,
       timerFormat: 'seconds',
+      soundEndRound: true,
+      soundsVolume: 50,
     }),
 });
 
@@ -25,6 +27,8 @@ const localTimerSettings = reactive({
   longBreakDuration: props.timerSettings.longBreakDuration,
   rounds: props.timerSettings.rounds,
   timerFormat: props.timerSettings.timerFormat,
+  soundEndRound: props.timerSettings.soundEndRound,
+  soundsVolume: props.timerSettings.soundsVolume,
 });
 
 const editSettings = () => {
@@ -80,7 +84,27 @@ onUnmounted(() => {
 <template>
   <div ref="modalRef">
     <form class="modal" @submit.prevent="editSettings">
-      <fieldset class="fieldset">
+      <fieldset class="fieldset-sounds">
+        <legend>Sound at the end of the round</legend>
+        <label>
+          <input v-model="localTimerSettings.soundEndRound" type="radio" :value="true">On
+        </label>
+        <label>
+          <input v-model="localTimerSettings.soundEndRound" type="radio" :value="false">Off
+        </label>
+        <label class="label-volume" for="volume">Громкость: {{ Math.round(localTimerSettings.soundsVolume * 100) }}%
+          <input
+            id="volume"
+            v-model="localTimerSettings.soundsVolume"
+            type="range"
+            min="0"
+            max="1"
+            step="0.05"
+          >
+        </label>
+      </fieldset>
+
+      <fieldset class="fieldset-timer">
         <legend>Choose a timer format</legend>
         <label>
           <input v-model="localTimerSettings.timerFormat" type="radio" value="minutes">Minutes
@@ -110,16 +134,26 @@ onUnmounted(() => {
   padding: 15px;
   position: fixed;
   top: 10%;
-  left: 33.6%;
+  left: 42%;
   display: flex;
   flex-direction: column;
   background-color: rgba(128, 92, 92, 0.9);
-  width: 30%;
   min-width: 100px;
 }
 
-.fieldset {
+.fieldset-sounds {
+  display: flex;
+  flex-direction: column;
   margin: 6px;
+}
+
+.fieldset-timer {
+  margin: 6px;
+}
+
+.label-volume {
+  display: flex;
+  flex-direction: column;
 }
 
 .submit {

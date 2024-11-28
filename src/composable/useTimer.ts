@@ -3,20 +3,19 @@ import type { TimerState } from '@/types/interfaces/TimerState';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { getFaviconHref } from '@/utils/getFaviconHref';
 import { getTitle } from '@/utils/getTitle';
+import { playSound } from '@/utils/playSound';
 import { reactive, watchEffect } from 'vue';
-import { useToast } from 'vue-toastification';
-
-const toast = useToast();
 
 export const useTimer = (timerSettings: TimerSettings) => {
   const timerState = reactive<TimerState>({
     timerValue: timerSettings.focusDuration,
     roundCounter: 1,
+    totalRounds: 0,
     timerType: TIMER_TYPE.FOCUS,
     timerStatus: TIMER_STATUS.PAUSED,
   });
 
-  let intervalId = 0;
+  let intervalId: ReturnType<typeof setTimeout> | undefined;
 
   const pauseTimer = () => {
     clearInterval(intervalId);
@@ -28,15 +27,15 @@ export const useTimer = (timerSettings: TimerSettings) => {
       timerState.timerType = TIMER_TYPE.FOCUS;
       timerState.timerValue = timerSettings.focusDuration;
       pauseTimer();
-      toast.info('Короткий перерыв завершен!');
+      timerState.totalRounds++;
       return;
     }
     if (timerState.timerType === TIMER_TYPE.LONG_BREAK) {
       timerState.roundCounter = 1;
       timerState.timerType = TIMER_TYPE.FOCUS;
       timerState.timerValue = timerSettings.focusDuration;
+      timerState.totalRounds++;
       pauseTimer();
-      toast.info('Длинный перерыв завершен!');
     }
   };
 
@@ -46,7 +45,6 @@ export const useTimer = (timerSettings: TimerSettings) => {
       timerState.timerType = TIMER_TYPE.SHORT_BREAK;
       timerState.timerValue = timerSettings.shortBreakDuration;
       pauseTimer();
-      toast.success('Помидор завершен!');
       return;
     }
 
@@ -55,7 +53,6 @@ export const useTimer = (timerSettings: TimerSettings) => {
       timerState.timerType = TIMER_TYPE.LONG_BREAK;
       timerState.timerValue = timerSettings.longBreakDuration;
       pauseTimer();
-      toast.success('Помидор завершен!');
     }
   };
 
@@ -66,6 +63,9 @@ export const useTimer = (timerSettings: TimerSettings) => {
   ]);
 
   const changeTimer = () => {
+    if (timerSettings.soundEndRound) {
+      playSound('/sounds/bell.mp3', timerSettings.soundsVolume);
+    }
     changeTimerMap.get(timerState.timerType)?.();
   };
 

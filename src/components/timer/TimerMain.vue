@@ -4,6 +4,7 @@ import IconForwardButton from '@/components/icons/IconForwardButton.vue';
 import IconSettings from '@/components/icons/IconSettings.vue';
 import TimerButton from '@/components/timer/TimerButton.vue';
 import TimerProgressBar from '@/components/timer/TimerProgressBar.vue';
+import TimerRoundsCounter from '@/components/timer/TimerRoundsCounter.vue';
 import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
 import { useTimer } from '@/composable/useTimer';
 import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
@@ -17,6 +18,8 @@ const DEFAULT_TIMER_SETTINGS = {
   longBreakDuration: 600,
   rounds: 3,
   timerFormat: 'minutes',
+  soundEndRound: true,
+  soundsVolume: 0.5,
 };
 
 const showModal = ref(false);
@@ -30,7 +33,8 @@ const fetchSettings = () => {
   const settingsData = localStorage.getItem('timerSettings');
 
   if (settingsData) {
-    const { focusDuration, shortBreakDuration, longBreakDuration, rounds, timerFormat } = JSON.parse(settingsData);
+    const { focusDuration, shortBreakDuration, longBreakDuration, rounds, timerFormat, soundEndRound, soundsVolume }
+     = JSON.parse(settingsData);
     if (timerFormat === 'minutes') {
       timerSettings.focusDuration = focusDuration * 60;
       timerSettings.shortBreakDuration = shortBreakDuration * 60;
@@ -43,7 +47,9 @@ const fetchSettings = () => {
       timerSettings.longBreakDuration = longBreakDuration;
     }
 
+    timerSettings.soundEndRound = soundEndRound;
     timerSettings.rounds = rounds;
+    timerSettings.soundsVolume = soundsVolume;
     timerSettings.timerFormat = timerFormat;
     timerState.timerValue = timerSettings[timerTypeKey.value];
   }
@@ -88,6 +94,13 @@ onUnmounted(() => {
     </div>
     <div class="timer__time">
       {{ formatTime(timerState.timerValue) }}
+    </div>
+    <div class="timer__roundsCounter">
+      <TimerRoundsCounter
+        :rounds="timerState.totalRounds"
+        @cancel-reset="(prevRounds) => timerState.totalRounds = prevRounds"
+        @reset="timerState.totalRounds = 0"
+      />
     </div>
     <div class="timer__controls">
       <TimerButton v-if="isTimerPaused" @click="startTimer">
