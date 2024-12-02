@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
+import TimerSettingsModalFieldsetSound from '@/components/fieldsets/TimerSettingsModalFieldsetSound.vue';
+import TimerSettingsModalFieldsetTimer from '@/components/fieldsets/TimerSettingsModalFieldsetTimer.vue';
 import { toMinutesFixed } from '@/utils/toMinutesFixed';
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
@@ -11,8 +13,8 @@ const props = withDefaults(defineProps<TimerSettingsModal>(), {
       longBreakDuration: 600,
       rounds: 3,
       timerFormat: 'seconds',
-      soundEndRound: true,
-      soundsVolume: 50,
+      ringAtTheEnd: 'off',
+      volume: 50,
     }),
 });
 
@@ -27,8 +29,8 @@ const localTimerSettings = reactive({
   longBreakDuration: props.timerSettings.longBreakDuration,
   rounds: props.timerSettings.rounds,
   timerFormat: props.timerSettings.timerFormat,
-  soundEndRound: props.timerSettings.soundEndRound,
-  soundsVolume: props.timerSettings.soundsVolume,
+  ringAtTheEnd: props.timerSettings.ringAtTheEnd,
+  volume: props.timerSettings.volume,
 });
 
 const editSettings = () => {
@@ -84,36 +86,11 @@ onUnmounted(() => {
 <template>
   <div ref="modalRef">
     <form class="modal" @submit.prevent="editSettings">
-      <fieldset class="fieldset-sounds">
-        <legend>Sound at the end of the round</legend>
-        <label>
-          <input v-model="localTimerSettings.soundEndRound" type="radio" :value="true">On
-        </label>
-        <label>
-          <input v-model="localTimerSettings.soundEndRound" type="radio" :value="false">Off
-        </label>
-        <label class="label-volume" for="volume">Громкость: {{ Math.round(localTimerSettings.soundsVolume * 100) }}%
-          <input
-            id="volume"
-            v-model="localTimerSettings.soundsVolume"
-            type="range"
-            min="0"
-            max="1"
-            step="0.05"
-          >
-        </label>
-      </fieldset>
-
-      <fieldset class="fieldset-timer">
-        <legend>Choose a timer format</legend>
-        <label>
-          <input v-model="localTimerSettings.timerFormat" type="radio" value="minutes">Minutes
-        </label>
-        <br>
-        <label>
-          <input v-model="localTimerSettings.timerFormat" type="radio" value="seconds">Seconds
-        </label>
-      </fieldset>
+      <TimerSettingsModalFieldsetSound
+        v-model:ring-at-the-end="localTimerSettings.ringAtTheEnd"
+        v-model.number="localTimerSettings.volume"
+      />
+      <TimerSettingsModalFieldsetTimer :timer-format="localTimerSettings.timerFormat" />
       <label for="focus">Focus duration ({{ timerFormatString }})</label>
       <input id="focus" v-model="localTimerSettings.focusDuration" type="number" required="true" min="1">
       <label for="shortBreak">Short break duration ({{ timerFormatString }})</label>
@@ -139,16 +116,6 @@ onUnmounted(() => {
   flex-direction: column;
   background-color: rgba(128, 92, 92, 0.9);
   min-width: 100px;
-}
-
-.fieldset-sounds {
-  display: flex;
-  flex-direction: column;
-  margin: 6px;
-}
-
-.fieldset-timer {
-  margin: 6px;
 }
 
 .label-volume {

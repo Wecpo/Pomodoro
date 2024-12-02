@@ -4,6 +4,6 @@ export interface TimerSettings {
   longBreakDuration: number
   rounds: number
   timerFormat: string
-  ringAtTheEnd: boolean
+  ringAtTheEnd: string
   volume: number
 }
