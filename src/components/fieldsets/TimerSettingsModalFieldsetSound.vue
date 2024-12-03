@@ -1,16 +1,13 @@
 <script setup lang="ts">
-const ringAtheEnd = defineModel<string>('ringAtTheEnd');
-const volume = defineModel<string>('volume');
+const ringAtheEnd = defineModel<boolean>('ringAtTheEnd');
+const volume = defineModel<number>('volume', { required: true, default: 0.5 });
 </script>
 
 <template>
   <fieldset class="fieldset-sounds">
-    <legend>Sound at the end of the round</legend>
+    <legend>Sounds</legend>
     <label>
-      <input v-model="ringAtheEnd" type="radio" value="on">On
-    </label>
-    <label>
-      <input v-model="ringAtheEnd" type="radio" value="off">Off
+      <input v-model="ringAtheEnd" type="checkbox">Ring at the end
     </label>
     <label class="label-volume" for="volume">Громкость: {{ Math.round(volume * 100) }}%
       <input

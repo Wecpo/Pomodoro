@@ -18,7 +18,7 @@ const DEFAULT_TIMER_SETTINGS = {
   longBreakDuration: 600,
   rounds: 3,
   timerFormat: 'minutes',
-  ringAtTheEnd: 'off',
+  ringAtTheEnd: true,
   volume: 0.5,
 };
 

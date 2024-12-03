@@ -13,8 +13,8 @@ const props = withDefaults(defineProps<TimerSettingsModal>(), {
       longBreakDuration: 600,
       rounds: 3,
       timerFormat: 'seconds',
-      ringAtTheEnd: 'off',
-      volume: 50,
+      ringAtTheEnd: false,
+      volume: 0.5,
     }),
 });
 
@@ -88,9 +88,9 @@ onUnmounted(() => {
     <form class="modal" @submit.prevent="editSettings">
       <TimerSettingsModalFieldsetSound
         v-model:ring-at-the-end="localTimerSettings.ringAtTheEnd"
-        v-model.number="localTimerSettings.volume"
+        v-model:volume.number="localTimerSettings.volume"
       />
-      <TimerSettingsModalFieldsetTimer :timer-format="localTimerSettings.timerFormat" />
+      <TimerSettingsModalFieldsetTimer v-model:timer-format="localTimerSettings.timerFormat" />
       <label for="focus">Focus duration ({{ timerFormatString }})</label>
       <input id="focus" v-model="localTimerSettings.focusDuration" type="number" required="true" min="1">
       <label for="shortBreak">Short break duration ({{ timerFormatString }})</label>

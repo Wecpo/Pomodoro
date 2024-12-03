@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-
-const props = defineProps<{ timerFormat: string }>();
-const timerFormat = ref(props.timerFormat);
+const timerFormat = defineModel<string>('timerFormat');
 </script>
 
 <template>
