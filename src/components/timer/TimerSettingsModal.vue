@@ -4,6 +4,7 @@ import TimerSettingsModalFieldsetSound from '@/components/fieldsets/TimerSetting
 import TimerSettingsModalFieldsetTimer from '@/components/fieldsets/TimerSettingsModalFieldsetTimer.vue';
 import { toMinutesFixed } from '@/utils/toMinutesFixed';
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import BaseInput from '../inputs/BaseInput.vue';
 
 const props = withDefaults(defineProps<TimerSettingsModal>(), {
   timerSettings: () =>
@@ -53,13 +54,13 @@ watch(() => localTimerSettings.timerFormat, (timerFormat) => {
   localTimerSettings.longBreakDuration = toMinutesFixed(localTimerSettings.longBreakDuration);
 });
 
-const modalRef = ref<HTMLElement | null>(null);
+const formRef = ref<HTMLElement | null>(null);
 
 const handleClickOutside = (event: MouseEvent) => {
   if (props.settingsIconRef && props.settingsIconRef.contains(event.target as Node)) {
     emit('close');
   }
-  if (modalRef.value && !modalRef.value.contains(event.target as Node)) {
+  if (formRef.value && !formRef.value.contains(event.target as Node)) {
     emit('close');
   }
 };
@@ -84,26 +85,35 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="modalRef">
-    <form class="modal" @submit.prevent="editSettings">
-      <TimerSettingsModalFieldsetSound
-        v-model:ring-at-the-end="localTimerSettings.ringAtTheEnd"
-        v-model:volume.number="localTimerSettings.volume"
-      />
-      <TimerSettingsModalFieldsetTimer v-model:timer-format="localTimerSettings.timerFormat" />
-      <label for="focus">Focus duration ({{ timerFormatString }})</label>
-      <input id="focus" v-model="localTimerSettings.focusDuration" type="number" required="true" min="1">
-      <label for="shortBreak">Short break duration ({{ timerFormatString }})</label>
-      <input id="shortBreak" v-model="localTimerSettings.shortBreakDuration" required="true" type="number" min="1">
-      <label for="longBreak">Long break duration ({{ timerFormatString }})</label>
-      <input id="longBreak" v-model="localTimerSettings.longBreakDuration" required="true" type="number" min="1">
-      <label for="rounds">Rounds</label>
-      <input id="rounds" v-model="localTimerSettings.rounds" required="true" type="number" min="1">
-      <button class="submit" type="submit">
-        Apply
-      </button>
-    </form>
-  </div>
+  <form ref="formRef" class="modal" @submit.prevent="editSettings">
+    <TimerSettingsModalFieldsetSound
+      v-model:ring-at-the-end="localTimerSettings.ringAtTheEnd"
+      v-model:volume.number="localTimerSettings.volume"
+    />
+    <TimerSettingsModalFieldsetTimer v-model:timer-format="localTimerSettings.timerFormat" />
+    <BaseInput
+      v-model="localTimerSettings.focusDuration"
+      type="number" :label="`Focus duration (${timerFormatString})`"
+    />
+    <BaseInput
+      v-model="localTimerSettings.shortBreakDuration"
+      type="number"
+      :label="`Short break duration (${timerFormatString})`"
+    />
+    <BaseInput
+      v-model="localTimerSettings.longBreakDuration"
+      type="number"
+      :label="`Long break duration (${timerFormatString})`"
+    />
+    <BaseInput
+      v-model="localTimerSettings.rounds"
+      type="number"
+      label="Rounds"
+    />
+    <button class="submit" type="submit">
+      Apply
+    </button>
+  </form>
 </template>
 
 <style scoped>
@@ -118,11 +128,6 @@ onUnmounted(() => {
   min-width: 100px;
 }
 
-.label-volume {
-  display: flex;
-  flex-direction: column;
-}
-
 .submit {
   background-color: black;
   color: #fff;
@@ -132,11 +137,5 @@ onUnmounted(() => {
 
 .submit:hover {
   cursor: pointer;
-}
-
-input {
-  padding: 5px;
-  margin: 5px;
-  background-color: rgba(128, 92, 92, 0.7);
 }
 </style>
