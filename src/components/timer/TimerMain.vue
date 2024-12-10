@@ -98,7 +98,7 @@ onUnmounted(() => {
     <div class="timer__roundsCounter">
       <TimerRoundsCounter
         :rounds="timerState.totalRounds"
-        @cancel-reset="(prevRounds) => timerState.totalRounds = prevRounds"
+        @cancel-reset="timerState.totalRounds = $event"
         @reset="timerState.totalRounds = 0"
       />
     </div>

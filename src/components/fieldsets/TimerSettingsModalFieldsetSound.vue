@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BaseInput from '../inputs/BaseInput.vue';
+import BaseInput from '@/components/inputs/BaseInput.vue';
 
 const ringAtheEnd = defineModel<boolean>('ringAtTheEnd');
 const volume = defineModel<number>('volume', { required: true, default: 0.5 });

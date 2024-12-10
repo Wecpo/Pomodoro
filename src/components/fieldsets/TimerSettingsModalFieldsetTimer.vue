@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { useId } from 'vue';
-import BaseInput from '../inputs/BaseInput.vue';
+import BaseInput from '@/components/inputs/BaseInput.vue';
 
 const timerFormat = defineModel<string>('timerFormat');
 </script>

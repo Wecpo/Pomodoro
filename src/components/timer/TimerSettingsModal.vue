@@ -2,9 +2,9 @@
 import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
 import TimerSettingsModalFieldsetSound from '@/components/fieldsets/TimerSettingsModalFieldsetSound.vue';
 import TimerSettingsModalFieldsetTimer from '@/components/fieldsets/TimerSettingsModalFieldsetTimer.vue';
+import BaseInput from '@/components/inputs/BaseInput.vue';
 import { toMinutesFixed } from '@/utils/toMinutesFixed';
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
-import BaseInput from '../inputs/BaseInput.vue';
 
 const props = withDefaults(defineProps<TimerSettingsModal>(), {
   timerSettings: () =>
