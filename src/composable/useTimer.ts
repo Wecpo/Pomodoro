@@ -63,8 +63,8 @@ export const useTimer = (timerSettings: TimerSettings) => {
   ]);
 
   const changeTimer = () => {
-    if (timerSettings.soundEndRound) {
-      playSound('/sounds/bell.mp3', timerSettings.soundsVolume);
+    if (timerSettings.ringAtTheEnd) {
+      playSound('/sounds/bell.mp3', timerSettings.volume);
     }
     changeTimerMap.get(timerState.timerType)?.();
   };

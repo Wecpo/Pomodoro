@@ -43,5 +43,6 @@ svg {
 svg:hover {
   cursor: pointer;
   transform: scale(1.1);
+  transition-duration: 100ms;
 }
 </style>

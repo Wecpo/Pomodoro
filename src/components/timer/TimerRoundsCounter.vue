@@ -6,7 +6,7 @@ const props = defineProps<{
   rounds: number
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'reset'): void
   (e: 'cancelReset', prevRounds: number): void
 }>();
@@ -16,7 +16,7 @@ const isShowCancelButton = ref(false);
 
 let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
-const handleShowCancelButton = (action: 'show' | 'hidden') => {
+const toggleShowCancelButton = (action: 'show' | 'hidden') => {
   if (action === 'show' && props.rounds > 0) {
     isShowCancelButton.value = true;
     timeoutId = setTimeout(() => {
@@ -41,12 +41,12 @@ onUnmounted(() => clearInterval(timeoutId));
 </script>
 
 <template>
-  <p class="rounds__paragraph" @click="$emit('reset'), handleShowCancelButton('show')">
+  <p class="rounds__paragraph" @click="emit('reset'), toggleShowCancelButton('show')">
     Rounds completed: {{ props.rounds }}
   </p>
   <div v-show="isShowCancelButton" class="rounds__cancel--button">
     <Transition>
-      <IconCancelButton @click="$emit('cancelReset', prevRounds), handleShowCancelButton('hidden')" />
+      <IconCancelButton @click="emit('cancelReset', prevRounds), toggleShowCancelButton('hidden')" />
     </Transition>
   </div>
 </template>
