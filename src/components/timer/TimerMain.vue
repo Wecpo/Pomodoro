@@ -86,7 +86,7 @@ onUnmounted(() => {
       :timer-settings="timerSettings"
       :timer-type="timerState.timerType"
     />
-    <div ref="settingsIconRef" @click="showModal = !showModal">
+    <div ref="settingsIconRef" class="timer__settings" @click="showModal = !showModal">
       <IconSettings />
     </div>
     <div class="timer__title">
@@ -109,9 +109,11 @@ onUnmounted(() => {
       <TimerButton v-else-if="isTimerStarted" @click="pauseTimer">
         Pause
       </TimerButton>
-      <Transition>
-        <IconForwardButton v-if="isTimerStarted" @click="changeTimer" />
-      </Transition>
+      <div class="timer__forward-button">
+        <Transition>
+          <IconForwardButton v-if="isTimerStarted" @click="changeTimer" />
+        </Transition>
+      </div>
     </div>
   </div>
   <TimerSettingsModal
@@ -128,8 +130,8 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   font-family: Arial, sans-serif;
-  border-radius: 10px;
-  padding: 6px;
+  border-radius: 8px;
+  padding: 8px;
   color: #fff;
 }
 
@@ -155,11 +157,42 @@ onUnmounted(() => {
   margin-bottom: 1.5rem;
 }
 
+.timer__settings {
+  will-change: transform;
+}
+
+.timer__settings > svg {
+  height: 32px;
+}
+
+.timer__settings:hover {
+  cursor: pointer;
+  transform: scale(1.04);
+  transition-duration: 100ms;
+}
+
 .timer__controls {
   display: flex;
   position: relative;
   align-items: center;
   gap: 0.5rem;
+}
+
+.timer__forward-button {
+  position: absolute;
+  right: -20%;
+  will-change: transform;
+}
+
+.timer__forward-button > svg {
+  height: 100%;
+  height: 32px;
+}
+
+.timer__forward-button > svg:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  transition-duration: 100ms;
 }
 
 .v-enter-active,

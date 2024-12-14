@@ -3,11 +3,6 @@ import { useId } from 'vue';
 
 interface Props {
   label: string
-  type: string
-  placeholder?: string
-  min?: string
-  max?: string
-  step?: string
   value?: string
 }
 
@@ -18,23 +13,12 @@ const inputId = useId();
 </script>
 
 <template>
-  <label :for="inputId">
-    {{ label }}
-  </label>
-  <input
-    :id="inputId"
-    v-model="modelValue"
-    class="base-input"
-    :placeholder="placeholder"
-    :type="type"
-    :min="min"
-    :max="max"
-    :step="step"
-  >
+  <label :for="inputId">{{ label }}</label>
+  <input :id="inputId" v-model="modelValue" class="radio-input" type="radio" :value="value ">
 </template>
 
 <style scoped>
-.base-input {
+.radio-input {
   padding: 4px;
   margin: 4px;
   background-color: rgba(128, 92, 92, 0.7);

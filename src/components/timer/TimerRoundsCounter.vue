@@ -55,6 +55,16 @@ onUnmounted(() => clearInterval(timeoutId));
 .rounds__cancel--button {
   display: flex;
   position: relative;
+  height: 0px;
+  top: -40px;
+  right: 24%;
+  will-change: transform;
+}
+
+.rounds__cancel--button:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition-duration: 100ms;
 }
 .rounds__paragraph:hover {
   cursor: pointer;

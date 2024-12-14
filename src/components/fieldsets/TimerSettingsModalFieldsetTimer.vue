@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BaseInput from '@/components/inputs/BaseInput.vue';
+import RadioInput from '@/components/inputs/RadioInput.vue';
 
 const timerFormat = defineModel<string>('timerFormat');
 </script>
@@ -8,8 +8,8 @@ const timerFormat = defineModel<string>('timerFormat');
   <fieldset class="fieldset-timer">
     <legend>Choose a timer format</legend>
     <div>
-      <BaseInput v-model="timerFormat" type="radio" value="minutes" label="Minutes" />
-      <BaseInput v-model="timerFormat" type="radio" value="seconds" label="Seconds" />
+      <RadioInput v-model="timerFormat" value="minutes" label="Minutes" />
+      <RadioInput v-model="timerFormat" value="seconds" label="Seconds" />
     </div>
   </fieldset>
 </template>

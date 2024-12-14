@@ -1,6 +1,6 @@
 <template>
   <svg
-    class="cancelButton" fill="#000000" height="25px" width="25px" version="1.1"
+    fill="#000000" height="25px" width="25px" version="1.1"
     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
     viewBox="0 0 512 512" xml:space="preserve"
   >
@@ -17,17 +17,3 @@
     </g>
   </svg>
 </template>
-
-<style scoped>
-.cancelButton {
-  position: absolute;
-  top: -40px;
-  right: 105%;
-}
-
-svg:hover {
-  cursor: pointer;
-  transform: scale(1.1);
-  transition-duration: 100ms;
-}
-</style>
