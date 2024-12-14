@@ -157,6 +157,10 @@ onUnmounted(() => {
   margin-bottom: 1.5rem;
 }
 
+.timer__settings {
+  will-change: transform;
+}
+
 .timer__settings > svg {
   height: 32px;
 }
@@ -177,6 +181,7 @@ onUnmounted(() => {
 .timer__forward-button {
   position: absolute;
   right: -20%;
+  will-change: transform;
 }
 
 .timer__forward-button > svg {

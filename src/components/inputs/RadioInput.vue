@@ -14,11 +14,11 @@ const inputId = useId();
 
 <template>
   <label :for="inputId">{{ label }}</label>
-  <input :id="inputId" v-model="modelValue" type="radio" :value="value ">
+  <input :id="inputId" v-model="modelValue" class="radio-input" type="radio" :value="value ">
 </template>
 
 <style scoped>
-input {
+.radio-input {
   padding: 4px;
   margin: 4px;
   background-color: rgba(128, 92, 92, 0.7);

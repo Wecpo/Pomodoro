@@ -24,6 +24,7 @@ const inputId = useId();
   <input
     :id="inputId"
     v-model="modelValue"
+    class="base-input"
     :placeholder="placeholder"
     :type="type"
     :min="min"
@@ -33,7 +34,7 @@ const inputId = useId();
 </template>
 
 <style scoped>
-input {
+.base-input {
   padding: 5px;
   margin: 5px;
   background-color: rgba(128, 92, 92, 0.7);

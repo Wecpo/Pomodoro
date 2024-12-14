@@ -5,5 +5,3 @@ import MainView from '@/views/MainView.vue';
 <template>
   <MainView />
 </template>
-
-<style scoped></style>

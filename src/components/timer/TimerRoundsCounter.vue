@@ -58,6 +58,7 @@ onUnmounted(() => clearInterval(timeoutId));
   height: 0px;
   top: -40px;
   right: 24%;
+  will-change: transform;
 }
 
 .rounds__cancel--button:hover {
