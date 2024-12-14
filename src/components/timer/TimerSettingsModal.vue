@@ -3,6 +3,7 @@ import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
 import TimerSettingsModalFieldsetSound from '@/components/fieldsets/TimerSettingsModalFieldsetSound.vue';
 import TimerSettingsModalFieldsetTimer from '@/components/fieldsets/TimerSettingsModalFieldsetTimer.vue';
 import BaseInput from '@/components/inputs/BaseInput.vue';
+import { INPUT_LIMITS } from '@/types/enums/InputLimits';
 import { toMinutesFixed } from '@/utils/toMinutesFixed';
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
@@ -93,29 +94,29 @@ onUnmounted(() => {
     <TimerSettingsModalFieldsetTimer v-model:timer-format="localTimerSettings.timerFormat" />
     <BaseInput
       v-model="localTimerSettings.focusDuration"
-      min="1"
-      max="99999"
+      :min="INPUT_LIMITS.MIN_TIME"
+      :max="INPUT_LIMITS.MAX_TIME"
       type="number" :label="`Focus duration (${timerFormatString})`"
     />
     <BaseInput
       v-model="localTimerSettings.shortBreakDuration"
       type="number"
-      min="1"
-      max="99999"
+      :min="INPUT_LIMITS.MIN_TIME"
+      :max="INPUT_LIMITS.MAX_TIME"
       :label="`Short break duration (${timerFormatString})`"
     />
     <BaseInput
       v-model="localTimerSettings.longBreakDuration"
       type="number"
-      min="1"
-      max="99999"
+      :min="INPUT_LIMITS.MIN_TIME"
+      :max="INPUT_LIMITS.MAX_TIME"
       :label="`Long break duration (${timerFormatString})`"
     />
     <BaseInput
       v-model="localTimerSettings.rounds"
       type="number"
-      min="1"
-      max="9999"
+      :min="INPUT_LIMITS.MIN_ROUNDS"
+      :max="INPUT_LIMITS.MAX_ROUNDS"
       label="Rounds"
     />
     <button class="submit" type="submit">

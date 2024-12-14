@@ -35,8 +35,8 @@ const inputId = useId();
 
 <style scoped>
 .base-input {
-  padding: 5px;
-  margin: 5px;
+  padding: 4px;
+  margin: 4px;
   background-color: rgba(128, 92, 92, 0.7);
 }
 </style>
