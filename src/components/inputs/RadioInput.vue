@@ -3,33 +3,18 @@ import { useId } from 'vue';
 
 interface Props {
   label: string
-  type: string
-  placeholder?: string
-  min?: string
-  max?: string
-  step?: string
   value?: string
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 const modelValue = defineModel();
 
 const inputId = useId();
 </script>
 
 <template>
-  <label :for="inputId">
-    {{ label }}
-  </label>
-  <input
-    :id="inputId"
-    v-model="modelValue"
-    :placeholder="placeholder"
-    :type="type"
-    :min="min"
-    :max="max"
-    :step="step"
-  >
+  <label :for="inputId">{{ props.label }}</label>
+  <input :id="inputId" v-model="modelValue" type="radio" :value="props.value ">
 </template>
 
 <style scoped>

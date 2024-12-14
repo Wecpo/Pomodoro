@@ -118,7 +118,7 @@ onUnmounted(() => {
 
 <style scoped>
 .modal {
-  padding: 15px;
+  padding: 16px;
   position: fixed;
   top: 10%;
   left: 42%;
@@ -132,7 +132,7 @@ onUnmounted(() => {
   background-color: black;
   color: #fff;
   height: 30px;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .submit:hover {

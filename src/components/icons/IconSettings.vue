@@ -33,16 +33,3 @@
     </g>
   </svg>
 </template>
-
-<style scoped>
-svg {
-  height: 100%;
-  height: 30px;
-}
-
-svg:hover {
-  cursor: pointer;
-  transform: scale(1.1);
-  transition-duration: 100ms;
-}
-</style>
