@@ -6,21 +6,21 @@ interface Props {
   value?: string
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 const modelValue = defineModel();
 
 const inputId = useId();
 </script>
 
 <template>
-  <label :for="inputId">{{ props.label }}</label>
-  <input :id="inputId" v-model="modelValue" type="radio" :value="props.value ">
+  <label :for="inputId">{{ label }}</label>
+  <input :id="inputId" v-model="modelValue" type="radio" :value="value ">
 </template>
 
 <style scoped>
 input {
-  padding: 5px;
-  margin: 5px;
+  padding: 4px;
+  margin: 4px;
   background-color: rgba(128, 92, 92, 0.7);
 }
 </style>
