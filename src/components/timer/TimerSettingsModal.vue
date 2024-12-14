@@ -93,21 +93,29 @@ onUnmounted(() => {
     <TimerSettingsModalFieldsetTimer v-model:timer-format="localTimerSettings.timerFormat" />
     <BaseInput
       v-model="localTimerSettings.focusDuration"
+      min="1"
+      max="99999"
       type="number" :label="`Focus duration (${timerFormatString})`"
     />
     <BaseInput
       v-model="localTimerSettings.shortBreakDuration"
       type="number"
+      min="1"
+      max="99999"
       :label="`Short break duration (${timerFormatString})`"
     />
     <BaseInput
       v-model="localTimerSettings.longBreakDuration"
       type="number"
+      min="1"
+      max="99999"
       :label="`Long break duration (${timerFormatString})`"
     />
     <BaseInput
       v-model="localTimerSettings.rounds"
       type="number"
+      min="1"
+      max="9999"
       label="Rounds"
     />
     <button class="submit" type="submit">
