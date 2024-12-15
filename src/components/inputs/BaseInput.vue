@@ -5,6 +5,7 @@ interface Props {
   label: string
   type: string
   placeholder?: string
+  required?: boolean
   min?: string
   max?: string
   step?: string
@@ -24,6 +25,7 @@ const inputId = useId();
   <input
     :id="inputId"
     v-model="modelValue"
+    :required="required"
     class="base-input"
     :placeholder="placeholder"
     :type="type"

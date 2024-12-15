@@ -129,12 +129,12 @@ onUnmounted(() => {
 .modal {
   padding: 16px;
   position: fixed;
+  z-index: 1;
   top: 10%;
   left: 42%;
   display: flex;
   flex-direction: column;
-  background-color: rgba(128, 92, 92, 0.9);
-  min-width: 100px;
+  background-color: rgba(128, 92, 92, 0.95);
 }
 
 .submit {
