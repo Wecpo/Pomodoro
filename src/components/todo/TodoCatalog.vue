@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useTodoStore } from '@/store/useTodoStore';
-import TodoCard from './TodoCard.vue';
+import TodoCard from '@/components/todo/TodoCard.vue';
+import { useTodoStore } from '@/store/todoStore';
 
 const todoStore = useTodoStore();
 </script>
@@ -10,25 +10,25 @@ const todoStore = useTodoStore();
     <ol>
       Backlog
       <li v-for="todo in todoStore.getBacklogTodos" :key="todo.id">
-        <TodoCard :name="todo.name" :time="todo.time" :status="todo.status" />
+        <TodoCard :todo="todo" />
       </li>
     </ol>
     <ol>
       In Progress
       <li v-for="todo in todoStore.getInProgressTodos" :key="todo.id">
-        <TodoCard :name="todo.name" :time="todo.time" :status="todo.status" />
+        <TodoCard :todo="todo" />
       </li>
     </ol>
     <ol>
       Stopped
       <li v-for="todo in todoStore.getStoppedTodos" :key="todo.id">
-        <TodoCard :name="todo.name" :time="todo.time" :status="todo.status" />
+        <TodoCard :todo="todo" />
       </li>
     </ol>
     <ol>
       Done
       <li v-for="todo in todoStore.getDoneTodos" :key="todo.id">
-        <TodoCard :name="todo.name" :time="todo.time" :status="todo.status" />
+        <TodoCard :todo="todo" />
       </li>
     </ol>
   </div>

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import BaseInput from '@/components/inputs/BaseInput.vue';
-import { useTodoStore } from '@/store/useTodoStore';
+import { useTodoStore } from '@/store/todoStore';
 import { reactive } from 'vue';
 
 const newTodo = reactive({
   name: '',
-  time: 30,
+  time: 0,
 });
 
 const todoStore = useTodoStore();
