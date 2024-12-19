@@ -11,13 +11,22 @@ const todoStore = useTodoStore();
 
 <template>
   <div class="todo-card">
-    <div>{{ todo.name }}</div>
+    <div>
+      <span>Name: {{ todo.name }}</span>
+      <span>Remaining time: {{ todo.time }}</span>
+    </div>
     <div>
       <button @click="todoStore.removeTodo(todo)">
-        delete
+        Delete
       </button>
       <button @click="todoStore.startTodo(todo)">
-        start
+        Start
+      </button>
+      <button @click="todoStore.doneTodo(todo)">
+        Done
+      </button>
+      <button @click="todoStore.stopTodo(todo)">
+        Stop
       </button>
     </div>
   </div>

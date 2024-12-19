@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
+import type { TimerSettingsModal } from '@/types/interfaces/Timer';
 import TimerSettingsModalFieldsetSound from '@/components/fieldsets/TimerSettingsModalFieldsetSound.vue';
 import TimerSettingsModalFieldsetTimer from '@/components/fieldsets/TimerSettingsModalFieldsetTimer.vue';
 import BaseInput from '@/components/inputs/BaseInput.vue';

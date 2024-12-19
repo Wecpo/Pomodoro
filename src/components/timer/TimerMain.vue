@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import type { TimerSettings } from '@/types/interfaces/TimerSettings';
+import type { TimerSettings } from '@/types/interfaces/Timer';
+import BaseButton from '@/components/buttons/BaseButton.vue';
 import IconForwardButton from '@/components/icons/IconForwardButton.vue';
 import IconSettings from '@/components/icons/IconSettings.vue';
-import TimerButton from '@/components/timer/TimerButton.vue';
 import TimerProgressBar from '@/components/timer/TimerProgressBar.vue';
 import TimerRoundsCounter from '@/components/timer/TimerRoundsCounter.vue';
 import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
 import { useTimer } from '@/composable/useTimer';
 import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
+import { useTodoStore } from '@/store/todoStore';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
 import { computed, onMounted, onUnmounted, reactive, ref, toRef } from 'vue';
@@ -24,6 +25,8 @@ const DEFAULT_TIMER_SETTINGS = {
 
 const showModal = ref(false);
 const settingsIconRef = ref<HTMLElement | null>(null);
+
+const todoStore = useTodoStore();
 
 const timerSettings = reactive<TimerSettings>(DEFAULT_TIMER_SETTINGS);
 const { timerState, startTimer, pauseTimer, changeTimer, intervalId } = useTimer(timerSettings);
@@ -90,7 +93,8 @@ onUnmounted(() => {
       <IconSettings />
     </div>
     <div class="timer__title">
-      {{ timerState.timerType }}
+      <span>{{ timerState.timerType }}</span>
+      <span v-if="todoStore.getInProgressTodos[0]">Todo name: {{ todoStore.getInProgressTodos[0]?.name }}</span>
     </div>
     <div class="timer__time">
       {{ formatTime(timerState.timerValue) }}
@@ -103,12 +107,12 @@ onUnmounted(() => {
       />
     </div>
     <div class="timer__controls">
-      <TimerButton v-if="isTimerPaused" @click="startTimer">
+      <BaseButton v-if="isTimerPaused" @click="startTimer">
         Start
-      </TimerButton>
-      <TimerButton v-else-if="isTimerStarted" @click="pauseTimer">
+      </BaseButton>
+      <BaseButton v-else-if="isTimerStarted" @click="pauseTimer">
         Pause
-      </TimerButton>
+      </BaseButton>
       <div class="timer__forward-button">
         <Transition>
           <IconForwardButton v-if="isTimerStarted" @click="changeTimer" />
@@ -148,6 +152,9 @@ onUnmounted(() => {
 }
 
 .timer__title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-size: 2rem;
   margin-bottom: 1rem;
 }

@@ -1,18 +1,27 @@
 <script setup lang="ts">
 import BaseInput from '@/components/inputs/BaseInput.vue';
 import { useTodoStore } from '@/store/todoStore';
+import { TODO_STATUS } from '@/types/enums/TodoStatus';
 import { reactive } from 'vue';
+import TimerButton from '../buttons/BaseButton.vue';
 
 const newTodo = reactive({
-  name: '',
-  time: 0,
+  name: ``,
+  id: crypto.randomUUID(),
+  time: null,
+  status: TODO_STATUS.BACKLOG,
 });
+
+const resetForm = () => {
+  newTodo.name = '';
+  newTodo.time = null;
+};
 
 const todoStore = useTodoStore();
 </script>
 
 <template>
-  <form class="create-todo-form" @submit.prevent="todoStore.createTodo(newTodo)">
+  <form class="create-todo-form" @submit.prevent="todoStore.createTodo(newTodo), resetForm()">
     <h2>Create Todo</h2>
     <BaseInput
       v-model="newTodo.name"
@@ -28,9 +37,9 @@ const todoStore = useTodoStore();
       :required="true"
       placeholder="30"
     />
-    <button type="submit">
+    <TimerButton type="submit">
       Create
-    </button>
+    </TimerButton>
   </form>
 </template>
 

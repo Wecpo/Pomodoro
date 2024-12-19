@@ -24,7 +24,7 @@ const inputId = useId();
   </label>
   <input
     :id="inputId"
-    v-model="modelValue"
+    v-model.trim="modelValue"
     :required="required"
     class="base-input"
     :placeholder="placeholder"

@@ -1,11 +1,6 @@
 export interface Todo {
   name: string
-  time: number
+  time: number | null
   id: string
   status: string
-}
-
-export interface TodoFromForm {
-  name: string
-  time: number
 }
