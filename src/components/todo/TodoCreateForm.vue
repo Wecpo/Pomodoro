@@ -1,14 +1,15 @@
 <script setup lang="ts">
+import TimerButton from '@/components/buttons/BaseButton.vue';
 import BaseInput from '@/components/inputs/BaseInput.vue';
 import { useTodoStore } from '@/store/todoStore';
 import { TODO_STATUS } from '@/types/enums/TodoStatus';
 import { reactive } from 'vue';
-import TimerButton from '../buttons/BaseButton.vue';
 
 const newTodo = reactive({
   name: ``,
   id: crypto.randomUUID(),
   time: null,
+  timeDone: 0,
   status: TODO_STATUS.BACKLOG,
 });
 

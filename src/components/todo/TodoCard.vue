@@ -5,15 +5,14 @@ import { useTodoStore } from '@/store/todoStore';
 defineProps<{
   todo: Todo
 }>();
-
 const todoStore = useTodoStore();
 </script>
 
 <template>
   <div class="todo-card">
     <div>
-      <span>Name: {{ todo.name }}</span>
-      <span>Remaining time: {{ todo.time }}</span>
+      Name: {{ todo?.name }}
+      Remaining time: {{ todo?.timeDone }} / {{ todo?.time }}
     </div>
     <div>
       <button @click="todoStore.removeTodo(todo)">

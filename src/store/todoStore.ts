@@ -12,8 +12,17 @@ export const useTodoStore = defineStore('todo', () => {
   const getStoppedTodos = computed(() => todos.value.filter(todo => todo.status === TODO_STATUS.STOPPED));
   const getDoneTodos = computed(() => todos.value.filter(todo => todo.status === TODO_STATUS.DONE));
 
+  const getInProgressTodo = computed(() => todos.value.find(todo => todo.status === TODO_STATUS.IN_PROGRESS));
+
   const createTodo = (newTodo: Todo) => {
     todos.value.push({ ...newTodo, id: crypto.randomUUID(), status: TODO_STATUS.BACKLOG });
+  };
+
+  const changeTodoRemainingTime = (timeDone: number) => {
+    const inProgressTodo = todos.value.find(todo => todo.status === TODO_STATUS.IN_PROGRESS);
+    if (inProgressTodo) {
+      inProgressTodo.timeDone += timeDone;
+    }
   };
 
   const startTodo = (todo: Todo) => {
@@ -25,11 +34,11 @@ export const useTodoStore = defineStore('todo', () => {
   };
 
   const doneTodo = (todo: Todo) => {
-    todo.status = 'done';
+    todo.status = TODO_STATUS.DONE;
   };
 
   const stopTodo = (todo: Todo) => {
-    todo.status = 'stopped';
+    todo.status = TODO_STATUS.STOPPED;
   };
 
   return {
@@ -39,8 +48,10 @@ export const useTodoStore = defineStore('todo', () => {
     getInProgressTodos,
     getStoppedTodos,
     getDoneTodos,
+    getInProgressTodo,
 
     createTodo,
+    changeTodoRemainingTime,
     removeTodo,
     doneTodo,
     startTodo,
