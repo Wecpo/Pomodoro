@@ -17,10 +17,4 @@ import TodoCreateForm from '@/components/todo/TodoCreateForm.vue';
   background-color: rgb(175, 196, 175);
   border-radius: 8px;
 }
-
-.todo-status {
-  display: grid;
-  grid-template-columns: 25% 25% 25% 25%;
-  justify-items: center;
-}
 </style>

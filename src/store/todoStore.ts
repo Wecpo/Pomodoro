@@ -25,6 +25,14 @@ export const useTodoStore = defineStore('todo', () => {
     }
   };
 
+  const changeTodoOnDrop = (todoId: string | undefined, columnName: TODO_STATUS) => {
+    const todo = todos.value.find(todo => todo.id === todoId);
+
+    if (todo) {
+      todo.status = columnName;
+    }
+  };
+
   const startTodo = (todo: Todo) => {
     todo.status = TODO_STATUS.IN_PROGRESS;
   };
@@ -52,6 +60,7 @@ export const useTodoStore = defineStore('todo', () => {
 
     createTodo,
     changeTodoRemainingTime,
+    changeTodoOnDrop,
     removeTodo,
     doneTodo,
     startTodo,

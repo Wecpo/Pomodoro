@@ -5,6 +5,8 @@ import { useTodoStore } from '@/store/todoStore';
 import { TODO_STATUS } from '@/types/enums/TodoStatus';
 import { reactive } from 'vue';
 
+const todoStore = useTodoStore();
+
 const newTodo = reactive({
   name: ``,
   id: crypto.randomUUID(),
@@ -17,8 +19,6 @@ const resetForm = () => {
   newTodo.name = '';
   newTodo.time = null;
 };
-
-const todoStore = useTodoStore();
 </script>
 
 <template>
