@@ -83,7 +83,7 @@ export const useTimer = () => {
   };
 
   const changeTimerToBreak = () => {
-    todoStore.changeTodoRemainingTime(timerState.timerValue / 60);
+    todoStore.changeTodoRemainingTime(timerSettings.focusDuration / 60);
     if (timerState.roundCounter < timerSettings.rounds) {
       timerState.roundCounter++;
       timerState.timerType = TIMER_TYPE.SHORT_BREAK;
