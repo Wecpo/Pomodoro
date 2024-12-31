@@ -16,7 +16,7 @@ const settingsIconRef = ref<HTMLElement | null>(null);
 
 const todoStore = useTodoStore();
 
-const { timerState, startTimer, pauseTimer, changeTimer, fetchSettings } = useTimer();
+const { timerState, startTimer, pauseTimer, changeTimer, getSettings } = useTimer();
 
 const isTimerPaused = computed(() => timerState.timerStatus === TIMER_STATUS.PAUSED);
 const isTimerStarted = computed(() => timerState.timerStatus === TIMER_STATUS.STARTED);
@@ -74,7 +74,7 @@ const timerClass = computed(() => {
   <TimerSettingsModal
     v-if="showModal"
     :settings-icon-ref="settingsIconRef"
-    @update="fetchSettings" @close="showModal = !showModal"
+    @update="getSettings" @close="showModal = !showModal"
   />
 </template>
 

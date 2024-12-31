@@ -22,7 +22,7 @@ const resetForm = () => {
 </script>
 
 <template>
-  <form class="create-todo-form" @submit.prevent="todoStore.createTodo(newTodo), resetForm()">
+  <form class="create-todo-form" @submit.prevent="[todoStore.createTodo(newTodo), resetForm()]">
     <h2>Create Todo</h2>
     <BaseInput
       v-model="newTodo.name"

@@ -2,7 +2,7 @@
 import type { TimerProgressBarProps } from '@/types/interfaces/Timer';
 import { useTimer } from '@/composable/useTimer';
 import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
-import { computed, onUpdated } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps<TimerProgressBarProps>();
 

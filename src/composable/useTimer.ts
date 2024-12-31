@@ -32,7 +32,7 @@ export const useTimer = () => {
 
   const { timerTypeKey } = useTimerTypeKey(toRef(timerState, 'timerType'));
 
-  const fetchSettings = () => {
+  const getSettings = () => {
     const settingsData = localStorage.getItem('timerSettings');
 
     if (settingsData) {
@@ -139,12 +139,12 @@ export const useTimer = () => {
   });
 
   onMounted(() => {
-    fetchSettings();
+    getSettings();
   });
 
   onUnmounted(() => {
     clearInterval(intervalId);
   });
 
-  return { timerState, timerSettings, startTimer, pauseTimer, changeTimer, fetchSettings };
+  return { timerState, timerSettings, startTimer, pauseTimer, changeTimer, getSettings };
 };
