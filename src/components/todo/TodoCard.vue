@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import type { Todo } from '@/types/interfaces/Todo';
+import { useTodoStore } from '@/store/todoStore';
 
 defineProps<{
   todo: Todo
 }>();
+
+const todoStore = useTodoStore();
 </script>
 
 <template>
@@ -12,6 +15,9 @@ defineProps<{
       <h3>Name: {{ todo?.name }}</h3>
       <p>Remaining time: {{ todo?.timeDone }} / {{ todo?.time }}</p>
     </div>
+    <button @click="todoStore.removeTodo(todo)">
+      x
+    </button>
   </div>
 </template>
 
