@@ -1,61 +1,14 @@
 <script setup lang="ts">
-import TodoCard from '@/components/todo/TodoCard.vue';
-import { useTodoStore } from '@/store/todoStore';
+import TodoList from '@/components/todo/TodoList.vue';
 import { TODO_STATUS } from '@/types/enums/TodoStatus';
-
-const todoStore = useTodoStore();
 </script>
 
 <template>
   <div class="todo-status">
-    <ol
-      @dragover.prevent
-      @drop="todoStore.changeTodoOnDrop($event.dataTransfer?.getData('todoId'), TODO_STATUS.BACKLOG)"
-    >
-      Backlog
-      <li
-        v-for="todo in todoStore.getBacklogTodos" :key="todo.id" draggable="true"
-        @dragstart="($event.dataTransfer?.setData('todoId', todo.id))"
-      >
-        <TodoCard :todo="todo" />
-      </li>
-    </ol>
-    <ol
-      @dragover.prevent
-      @drop="todoStore.changeTodoOnDrop($event.dataTransfer?.getData('todoId'), TODO_STATUS.IN_PROGRESS)"
-    >
-      In Progress
-      <li
-        v-for="todo in todoStore.getInProgressTodos" :key="todo.id" draggable="true"
-        @dragstart="($event.dataTransfer?.setData('todoId', todo.id))"
-      >
-        <TodoCard :todo="todo" />
-      </li>
-    </ol>
-    <ol
-      @dragover.prevent
-      @drop="todoStore.changeTodoOnDrop($event.dataTransfer?.getData('todoId'), TODO_STATUS.STOPPED)"
-    >
-      Stopped
-      <li
-        v-for="todo in todoStore.getStoppedTodos" :key="todo.id" draggable="true"
-        @dragstart="($event.dataTransfer?.setData('todoId', todo.id))"
-      >
-        <TodoCard :todo="todo" />
-      </li>
-    </ol>
-    <ol
-      @dragover.prevent
-      @drop="todoStore.changeTodoOnDrop($event.dataTransfer?.getData('todoId'), TODO_STATUS.DONE)"
-    >
-      Done
-      <li
-        v-for="todo in todoStore.getDoneTodos" :key="todo.id" draggable="true"
-        @dragstart="($event.dataTransfer?.setData('todoId', todo.id))"
-      >
-        <TodoCard :todo="todo" />
-      </li>
-    </ol>
+    <TodoList label="Backlog" :todo-status="TODO_STATUS.BACKLOG" />
+    <TodoList label="In progress" :todo-status="TODO_STATUS.IN_PROGRESS" />
+    <TodoList label="Stopped" :todo-status="TODO_STATUS.STOPPED" />
+    <TodoList label="Done" :todo-status="TODO_STATUS.DONE" />
   </div>
 </template>
 

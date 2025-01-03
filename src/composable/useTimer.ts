@@ -5,7 +5,7 @@ import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { getFaviconHref } from '@/utils/getFaviconHref';
 import { getTitle } from '@/utils/getTitle';
 import { playSound } from '@/utils/playSound';
-import { onMounted, onUnmounted, reactive, toRef, watchEffect } from 'vue';
+import { reactive, toRef, watchEffect } from 'vue';
 
 const DEFAULT_TIMER_SETTINGS = {
   focusDuration: 1800,
@@ -138,13 +138,5 @@ export const useTimer = () => {
     faviconLink.href = faviconLinkHref;
   });
 
-  onMounted(() => {
-    getSettings();
-  });
-
-  onUnmounted(() => {
-    clearInterval(intervalId);
-  });
-
-  return { timerState, timerSettings, startTimer, pauseTimer, changeTimer, getSettings };
+  return { timerState, timerSettings, startTimer, pauseTimer, changeTimer, getSettings, intervalId };
 };

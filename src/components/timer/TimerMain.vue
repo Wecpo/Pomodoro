@@ -9,14 +9,14 @@ import { useTimer } from '@/composable/useTimer';
 import { useTodoStore } from '@/store/todoStore';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
-import { computed, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 
 const showModal = ref(false);
 const settingsIconRef = ref<HTMLElement | null>(null);
 
 const todoStore = useTodoStore();
 
-const { timerState, startTimer, pauseTimer, changeTimer, getSettings } = useTimer();
+const { timerState, startTimer, pauseTimer, changeTimer, getSettings, intervalId } = useTimer();
 
 const isTimerPaused = computed(() => timerState.timerStatus === TIMER_STATUS.PAUSED);
 const isTimerStarted = computed(() => timerState.timerStatus === TIMER_STATUS.STARTED);
@@ -31,6 +31,14 @@ const timerClass = computed(() => {
   }
 
   return 'timer--background--long-break';
+});
+
+onMounted(() => {
+  getSettings();
+});
+
+onUnmounted(() => {
+  clearInterval(intervalId);
 });
 </script>
 
