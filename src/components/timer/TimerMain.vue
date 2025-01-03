@@ -1,59 +1,22 @@
 <script setup lang="ts">
-import type { TimerSettings } from '@/types/interfaces/TimerSettings';
+import BaseButton from '@/components/buttons/BaseButton.vue';
 import IconForwardButton from '@/components/icons/IconForwardButton.vue';
 import IconSettings from '@/components/icons/IconSettings.vue';
-import TimerButton from '@/components/timer/TimerButton.vue';
 import TimerProgressBar from '@/components/timer/TimerProgressBar.vue';
 import TimerRoundsCounter from '@/components/timer/TimerRoundsCounter.vue';
 import TimerSettingsModal from '@/components/timer/TimerSettingsModal.vue';
 import { useTimer } from '@/composable/useTimer';
-import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
+import { useTodoStore } from '@/store/todoStore';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { formatTime } from '@/utils/formatTime';
-import { computed, onMounted, onUnmounted, reactive, ref, toRef } from 'vue';
-
-const DEFAULT_TIMER_SETTINGS = {
-  focusDuration: 1800,
-  shortBreakDuration: 300,
-  longBreakDuration: 600,
-  rounds: 3,
-  timerFormat: 'minutes',
-  ringAtTheEnd: true,
-  volume: 0.5,
-};
+import { computed, ref } from 'vue';
 
 const showModal = ref(false);
 const settingsIconRef = ref<HTMLElement | null>(null);
 
-const timerSettings = reactive<TimerSettings>(DEFAULT_TIMER_SETTINGS);
-const { timerState, startTimer, pauseTimer, changeTimer, intervalId } = useTimer(timerSettings);
-const { timerTypeKey } = useTimerTypeKey(toRef(timerState, 'timerType'));
+const todoStore = useTodoStore();
 
-const fetchSettings = () => {
-  const settingsData = localStorage.getItem('timerSettings');
-
-  if (settingsData) {
-    const { focusDuration, shortBreakDuration, longBreakDuration, rounds, timerFormat, ringAtTheEnd, volume }
-     = JSON.parse(settingsData);
-    if (timerFormat === 'minutes') {
-      timerSettings.focusDuration = focusDuration * 60;
-      timerSettings.shortBreakDuration = shortBreakDuration * 60;
-      timerSettings.longBreakDuration = longBreakDuration * 60;
-    }
-
-    if (timerFormat === 'seconds') {
-      timerSettings.focusDuration = focusDuration;
-      timerSettings.shortBreakDuration = shortBreakDuration;
-      timerSettings.longBreakDuration = longBreakDuration;
-    }
-
-    timerSettings.ringAtTheEnd = ringAtTheEnd;
-    timerSettings.rounds = rounds;
-    timerSettings.volume = volume;
-    timerSettings.timerFormat = timerFormat;
-    timerState.timerValue = timerSettings[timerTypeKey.value];
-  }
-};
+const { timerState, startTimer, pauseTimer, changeTimer, getSettings } = useTimer();
 
 const isTimerPaused = computed(() => timerState.timerStatus === TIMER_STATUS.PAUSED);
 const isTimerStarted = computed(() => timerState.timerStatus === TIMER_STATUS.STARTED);
@@ -69,28 +32,20 @@ const timerClass = computed(() => {
 
   return 'timer--background--long-break';
 });
-
-onMounted(() => {
-  fetchSettings();
-});
-
-onUnmounted(() => {
-  clearInterval(intervalId);
-});
 </script>
 
 <template>
   <div :class="`timer ${timerClass}`">
     <TimerProgressBar
       :timer="timerState.timerValue"
-      :timer-settings="timerSettings"
       :timer-type="timerState.timerType"
     />
     <div ref="settingsIconRef" class="timer__settings" @click="showModal = !showModal">
       <IconSettings />
     </div>
     <div class="timer__title">
-      {{ timerState.timerType }}
+      <span>{{ timerState.timerType }}</span>
+      <span v-if="todoStore.getInProgressTodo?.name">Todo name: {{ todoStore.getInProgressTodo?.name }}</span>
     </div>
     <div class="timer__time">
       {{ formatTime(timerState.timerValue) }}
@@ -103,12 +58,12 @@ onUnmounted(() => {
       />
     </div>
     <div class="timer__controls">
-      <TimerButton v-if="isTimerPaused" @click="startTimer">
+      <BaseButton v-if="isTimerPaused" @click="startTimer">
         Start
-      </TimerButton>
-      <TimerButton v-else-if="isTimerStarted" @click="pauseTimer">
+      </BaseButton>
+      <BaseButton v-else-if="isTimerStarted" @click="pauseTimer">
         Pause
-      </TimerButton>
+      </BaseButton>
       <div class="timer__forward-button">
         <Transition>
           <IconForwardButton v-if="isTimerStarted" @click="changeTimer" />
@@ -118,9 +73,8 @@ onUnmounted(() => {
   </div>
   <TimerSettingsModal
     v-if="showModal"
-    :timer-settings="timerSettings"
     :settings-icon-ref="settingsIconRef"
-    @update="fetchSettings" @close="showModal = !showModal"
+    @update="getSettings" @close="showModal = !showModal"
   />
 </template>
 
@@ -148,6 +102,9 @@ onUnmounted(() => {
 }
 
 .timer__title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-size: 2rem;
   margin-bottom: 1rem;
 }

@@ -1,12 +1,25 @@
-import type { TimerSettings } from '@/types/interfaces/TimerSettings';
-import type { TimerState } from '@/types/interfaces/TimerState';
+import type { TimerSettings, TimerState } from '@/types/interfaces/Timer';
+import { useTimerTypeKey } from '@/composable/useTimerTypeKey';
+import { useTodoStore } from '@/store/todoStore';
 import { TIMER_STATUS, TIMER_TYPE } from '@/types/enums/Timer';
 import { getFaviconHref } from '@/utils/getFaviconHref';
 import { getTitle } from '@/utils/getTitle';
 import { playSound } from '@/utils/playSound';
-import { reactive, watchEffect } from 'vue';
+import { onMounted, onUnmounted, reactive, toRef, watchEffect } from 'vue';
 
-export const useTimer = (timerSettings: TimerSettings) => {
+const DEFAULT_TIMER_SETTINGS = {
+  focusDuration: 1800,
+  shortBreakDuration: 300,
+  longBreakDuration: 600,
+  rounds: 3,
+  timerFormat: 'minutes',
+  ringAtTheEnd: true,
+  volume: 0.5,
+};
+
+export const useTimer = () => {
+  const timerSettings = reactive<TimerSettings>(DEFAULT_TIMER_SETTINGS);
+
   const timerState = reactive<TimerState>({
     timerValue: timerSettings.focusDuration,
     roundCounter: 1,
@@ -14,6 +27,36 @@ export const useTimer = (timerSettings: TimerSettings) => {
     timerType: TIMER_TYPE.FOCUS,
     timerStatus: TIMER_STATUS.PAUSED,
   });
+
+  const todoStore = useTodoStore();
+
+  const { timerTypeKey } = useTimerTypeKey(toRef(timerState, 'timerType'));
+
+  const getSettings = () => {
+    const settingsData = localStorage.getItem('timerSettings');
+
+    if (settingsData) {
+      const { focusDuration, shortBreakDuration, longBreakDuration, rounds, timerFormat, ringAtTheEnd, volume }
+       = JSON.parse(settingsData);
+      if (timerFormat === 'minutes') {
+        timerSettings.focusDuration = focusDuration * 60;
+        timerSettings.shortBreakDuration = shortBreakDuration * 60;
+        timerSettings.longBreakDuration = longBreakDuration * 60;
+      }
+
+      if (timerFormat === 'seconds') {
+        timerSettings.focusDuration = focusDuration;
+        timerSettings.shortBreakDuration = shortBreakDuration;
+        timerSettings.longBreakDuration = longBreakDuration;
+      }
+
+      timerSettings.ringAtTheEnd = ringAtTheEnd;
+      timerSettings.rounds = rounds;
+      timerSettings.volume = volume;
+      timerSettings.timerFormat = timerFormat;
+      timerState.timerValue = timerSettings[timerTypeKey.value];
+    }
+  };
 
   let intervalId: ReturnType<typeof setTimeout> | undefined;
 
@@ -40,6 +83,7 @@ export const useTimer = (timerSettings: TimerSettings) => {
   };
 
   const changeTimerToBreak = () => {
+    todoStore.changeTodoRemainingTime(timerSettings.focusDuration / 60);
     if (timerState.roundCounter < timerSettings.rounds) {
       timerState.roundCounter++;
       timerState.timerType = TIMER_TYPE.SHORT_BREAK;
@@ -94,5 +138,13 @@ export const useTimer = (timerSettings: TimerSettings) => {
     faviconLink.href = faviconLinkHref;
   });
 
-  return { timerState, startTimer, pauseTimer, changeTimer, intervalId };
+  onMounted(() => {
+    getSettings();
+  });
+
+  onUnmounted(() => {
+    clearInterval(intervalId);
+  });
+
+  return { timerState, timerSettings, startTimer, pauseTimer, changeTimer, getSettings };
 };

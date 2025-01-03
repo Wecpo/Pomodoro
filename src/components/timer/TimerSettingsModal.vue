@@ -1,38 +1,30 @@
 <script setup lang="ts">
-import type { TimerSettingsModal } from '@/types/interfaces/TimerSettingsModal';
+import type { TimerSettingsModal } from '@/types/interfaces/Timer';
 import TimerSettingsModalFieldsetSound from '@/components/fieldsets/TimerSettingsModalFieldsetSound.vue';
 import TimerSettingsModalFieldsetTimer from '@/components/fieldsets/TimerSettingsModalFieldsetTimer.vue';
 import BaseInput from '@/components/inputs/BaseInput.vue';
+import { useTimer } from '@/composable/useTimer';
 import { INPUT_LIMITS } from '@/types/enums/InputLimits';
 import { toMinutesFixed } from '@/utils/toMinutesFixed';
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
-const props = withDefaults(defineProps<TimerSettingsModal>(), {
-  timerSettings: () =>
-    ({
-      focusDuration: 1800,
-      shortBreakDuration: 300,
-      longBreakDuration: 600,
-      rounds: 3,
-      timerFormat: 'seconds',
-      ringAtTheEnd: false,
-      volume: 0.5,
-    }),
-});
+const props = defineProps<TimerSettingsModal>();
 
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'update'): void
 }>();
 
+const { timerSettings } = useTimer();
+
 const localTimerSettings = reactive({
-  focusDuration: props.timerSettings.focusDuration,
-  shortBreakDuration: props.timerSettings.shortBreakDuration,
-  longBreakDuration: props.timerSettings.longBreakDuration,
-  rounds: props.timerSettings.rounds,
-  timerFormat: props.timerSettings.timerFormat,
-  ringAtTheEnd: props.timerSettings.ringAtTheEnd,
-  volume: props.timerSettings.volume,
+  focusDuration: timerSettings.focusDuration,
+  shortBreakDuration: timerSettings.shortBreakDuration,
+  longBreakDuration: timerSettings.longBreakDuration,
+  rounds: timerSettings.rounds,
+  timerFormat: timerSettings.timerFormat,
+  ringAtTheEnd: timerSettings.ringAtTheEnd,
+  volume: timerSettings.volume,
 });
 
 const editSettings = () => {
@@ -129,12 +121,12 @@ onUnmounted(() => {
 .modal {
   padding: 16px;
   position: fixed;
+  z-index: 1;
   top: 10%;
   left: 42%;
   display: flex;
   flex-direction: column;
-  background-color: rgba(128, 92, 92, 0.9);
-  min-width: 100px;
+  background-color: rgba(128, 92, 92, 0.95);
 }
 
 .submit {
