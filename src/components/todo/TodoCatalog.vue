@@ -19,21 +19,4 @@ import { TODO_STATUS } from '@/types/enums/TodoStatus';
   gap: 16px;
   padding: 16px;
 }
-
-ol {
-  border: 1px solid #ccc;
-  padding: 1rem;
-  min-height: 200px;
-  background-color: #f9f9f9;
-  border-radius: 4px;
-}
-
-li {
-  margin-bottom: 1rem;
-  cursor: grab;
-}
-
-li:active {
-  cursor: grabbing;
-}
 </style>

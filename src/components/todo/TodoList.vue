@@ -13,6 +13,7 @@ const todoStore = useTodoStore();
 
 <template>
   <ol
+    class="todo-list"
     @dragover.prevent
     @drop="todoStore.changeTodoOnDrop($event.dataTransfer?.getData('todoId'), todoStatus)"
   >
@@ -27,4 +28,20 @@ const todoStore = useTodoStore();
 </template>
 
 <style scoped>
+.todo-list {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  min-height: 200px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.todo-list__li {
+  margin-bottom: 1rem;
+  cursor: grab;
+}
+
+.todo-list__li:active {
+  cursor: grabbing;
+}
 </style>
