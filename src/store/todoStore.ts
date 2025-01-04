@@ -1,10 +1,19 @@
 import type { Todo } from '@/types/interfaces/Todo';
 import { TODO_STATUS } from '@/types/enums/TodoStatus';
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 export const useTodoStore = defineStore('todo', () => {
   const todos = ref<Todo[]>([]);
+
+  const loadTodos = () => {
+    const todosData = localStorage.getItem('todos');
+    if (todosData) {
+      todos.value = JSON.parse(todosData);
+    }
+  };
+
+  loadTodos();
 
   const getTodosByStatus
    = computed(() => (todoStatus: TODO_STATUS) => todos.value.filter(todo => todo.status === todoStatus));
@@ -37,6 +46,10 @@ export const useTodoStore = defineStore('todo', () => {
     const todoIndex = getTodoIndexById(todo.id);
     todos.value.splice(todoIndex, 1);
   };
+
+  watch(todos, (newTodos) => {
+    localStorage.setItem('todos', JSON.stringify(newTodos));
+  }, { deep: true });
 
   return {
     todos,
