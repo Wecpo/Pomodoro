@@ -13,8 +13,6 @@ export const useTodoStore = defineStore('todo', () => {
     }
   };
 
-  loadTodos();
-
   const getTodosByStatus
    = computed(() => (todoStatus: TODO_STATUS) => todos.value.filter(todo => todo.status === todoStatus));
 
@@ -52,6 +50,8 @@ export const useTodoStore = defineStore('todo', () => {
   }, { deep: true });
 
   return {
+    loadTodos,
+
     todos,
     getInProgressTodo,
     getTodosByStatus,
@@ -61,5 +61,6 @@ export const useTodoStore = defineStore('todo', () => {
     changeTodoOnDrop,
     changeTodoStatus,
     removeTodo,
+
   };
 });

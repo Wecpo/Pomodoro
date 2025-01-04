@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import TodoList from '@/components/todo/TodoList.vue';
+import { useTodoStore } from '@/store/todoStore';
 import { TODO_STATUS } from '@/types/enums/TodoStatus';
+import { onMounted } from 'vue';
+
+const { loadTodos } = useTodoStore();
+
+onMounted(() => loadTodos());
 </script>
 
 <template>
