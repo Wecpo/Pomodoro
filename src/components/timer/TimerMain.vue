@@ -91,7 +91,6 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: Arial, sans-serif;
   border-radius: 8px;
   padding: 8px;
   color: #fff;

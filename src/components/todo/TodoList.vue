@@ -20,7 +20,7 @@ const [todoList, todos] = useDragAndDrop(writableTodos.value, {
   onDragend(data) {
     const newStatus = data.parent.el.dataset.status as TODO_STATUS;
     const todo = data.draggedNode.data.value as Todo;
-    if (newStatus && todo) {
+    if (todo && newStatus !== props.todoStatus) {
       todoStore.changeTodoStatus(todo, newStatus);
     }
     if (newStatus) {
@@ -34,20 +34,34 @@ watch(() => writableTodos.value, newTodos => todos.value = newTodos);
 </script>
 
 <template>
-  <ol ref="todoList" :data-status="props.todoStatus" class="todo-list">
-    {{ props.label }}
-    <li v-for="todo in todos" :key="todo.id">
-      <TodoCard :todo="todo" />
-    </li>
-  </ol>
+  <div class="todo-list__containter">
+    <h3>
+      {{ props.label }}
+    </h3>
+    <ol ref="todoList" :data-status="props.todoStatus" class="todo-list">
+      <li v-for="todo in todos" :key="todo.id">
+        <TodoCard :todo="todo" />
+      </li>
+    </ol>
+  </div>
 </template>
 
 <style scoped>
-.todo-list {
-  border: 1px solid #ccc;
-  padding: 1rem;
+.todo-list__containter {
   min-height: 200px;
-  background-color: #f9f9f9;
+  background-color: #e4e9d7;
+  border-radius: 8px;
+}
+
+.todo-list__containter h3 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.todo-list {
+  list-style-type: none;
+  min-height: 200px;
+  padding: 1rem;
   border-radius: 4px;
 }
 

@@ -11,51 +11,61 @@ const todoStore = useTodoStore();
 
 <template>
   <div class="todo-card">
-    <div>
-      <h3>Name: {{ todo?.name }}</h3>
+    <div class="todo-body">
+      <h3 class="todo-title">
+        Name: {{ todo?.name }}
+      </h3>
       <p>Remaining time: {{ todo?.timeDone }} / {{ todo?.time }}</p>
+      <button class="todo__delete-btn" @click="todoStore.removeTodo(todo)">
+        Remove
+      </button>
     </div>
-    <button @click="todoStore.removeTodo(todo)">
-      x
-    </button>
   </div>
 </template>
 
 <style scoped>
 .todo-card {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 16px;
-  border: 1px solid #ddd;
+  background-color: #fffbf5;
+  border: 2px solid #8fa3a0;
   border-radius: 8px;
-  background-color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin-bottom: 1rem;
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-  cursor: grab;
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .todo-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  cursor: grab;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
 
-.todo-card:active {
-  cursor: grabbing;
-  transform: scale(0.98);
-}
-
-.todo-card h3 {
-  margin: 4px;
+.todo-title {
   font-size: 1.2rem;
-  color: #333;
+  color: #2d423f;
+  font-weight: 600;
+  margin: 0;
 }
 
-.todo-card p {
-  margin: 8px 0 0;
-  font-size: 0.9rem;
-  color: #666;
+.todo__delete-btn {
+  background-color: #f8f1f1;
+  color: #ff4d4d;
+  border-radius: 4px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+.todo__delete-btn:hover {
+  background-color: #ebabab;
+  color: #d31a1a;
+}
+
+.todo-body {
+  font-size: 1rem;
+  color: #2d423f;
 }
 </style>
