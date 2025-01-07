@@ -13,9 +13,9 @@ const todoStore = useTodoStore();
   <div class="todo-card">
     <div class="todo-body">
       <h3 class="todo-title">
-        Name: {{ todo?.name }}
+        {{ todo?.name }}
       </h3>
-      <p>Remaining time: {{ todo?.timeDone }} / {{ todo?.time }}</p>
+      <p>Remaining time: {{ todo?.timeDone }} / {{ todo?.time }} (m)</p>
       <button class="todo__delete-btn" @click="todoStore.removeTodo(todo)">
         Remove
       </button>
@@ -43,7 +43,8 @@ const todoStore = useTodoStore();
 }
 
 .todo-title {
-  font-size: 1.2rem;
+  text-align: center;
+  font-size: 1.4rem;
   color: #2d423f;
   font-weight: 600;
   margin: 0;
@@ -65,7 +66,10 @@ const todoStore = useTodoStore();
 }
 
 .todo-body {
+  display: flex;
+  flex-direction: column;
   font-size: 1rem;
   color: #2d423f;
+  align-items: center;
 }
 </style>

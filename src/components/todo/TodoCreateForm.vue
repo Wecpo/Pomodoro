@@ -23,7 +23,9 @@ const resetForm = () => {
 
 <template>
   <form class="create-todo-form" @submit.prevent="[todoStore.createTodo(newTodo), resetForm()]">
-    <h2>Create Todo</h2>
+    <h2 class="create-todo-form__title">
+      Create Todo
+    </h2>
     <BaseInput
       v-model="newTodo.name"
       type="text"
@@ -37,6 +39,7 @@ const resetForm = () => {
       label="Todo time (m)"
       :required="true"
       placeholder="30"
+      min="1"
     />
     <TimerButton type="submit">
       Create
@@ -50,5 +53,11 @@ const resetForm = () => {
   flex-direction: column;
   align-items: center;
   margin: 4px;
+}
+
+.create-todo-form__title {
+  background-color: #d5eccb;
+  padding: 12px;
+  border-radius: 16px;
 }
 </style>

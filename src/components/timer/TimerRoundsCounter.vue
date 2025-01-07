@@ -66,6 +66,11 @@ onUnmounted(() => clearInterval(timeoutId));
   transform: scale(1.05);
   transition-duration: 100ms;
 }
+
+.rounds__paragraph {
+  font-size: large;
+}
+
 .rounds__paragraph:hover {
   cursor: pointer;
   opacity: 0.8;

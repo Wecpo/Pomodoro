@@ -19,13 +19,11 @@ const [todoList, todos] = useDragAndDrop(writableTodos.value, {
   group: 'todoList',
   onDragend(data) {
     const newStatus = data.parent.el.dataset.status as TODO_STATUS;
-    const todo = data.draggedNode.data.value as Todo;
-    if (todo && newStatus !== props.todoStatus) {
+    if (newStatus !== props.todoStatus) {
+      const todo = data.draggedNode.data.value as Todo;
       todoStore.changeTodoStatus(todo, newStatus);
     }
-    if (newStatus) {
-      todoStore.updateTodosOrder(newStatus, data.values as Todo[]);
-    }
+    todoStore.updateTodosOrder(newStatus, data.values as Todo[]);
   },
 
 });
@@ -35,9 +33,9 @@ watch(() => writableTodos.value, newTodos => todos.value = newTodos);
 
 <template>
   <div class="todo-list__containter">
-    <h3>
+    <h2>
       {{ props.label }}
-    </h3>
+    </h2>
     <ol ref="todoList" :data-status="props.todoStatus" class="todo-list">
       <li v-for="todo in todos" :key="todo.id">
         <TodoCard :todo="todo" />
@@ -48,14 +46,15 @@ watch(() => writableTodos.value, newTodos => todos.value = newTodos);
 
 <style scoped>
 .todo-list__containter {
-  min-height: 200px;
   background-color: #e4e9d7;
   border-radius: 8px;
 }
 
-.todo-list__containter h3 {
+.todo-list__containter h2 {
   text-align: center;
   margin-bottom: 1rem;
+  text-decoration: underline;
+  color: rgb(59, 55, 55);
 }
 
 .todo-list {
