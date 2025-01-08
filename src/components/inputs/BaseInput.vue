@@ -42,6 +42,7 @@ const inputId = useId();
   background-color: rgba(128, 92, 92, 0.7);
   border-radius: 4px;
   font-size: large;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
 
 .base-input::placeholder {

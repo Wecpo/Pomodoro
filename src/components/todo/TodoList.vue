@@ -17,13 +17,15 @@ const writableTodos = computed(() => todoStore.getTodosByStatus(props.todoStatus
 
 const [todoList, todos] = useDragAndDrop(writableTodos.value, {
   group: 'todoList',
-  onDragend(data) {
+  onTransfer: (data) => {
+    const todo = data.draggedNodes[0].data.value as Todo;
+    const newStatus = data.targetParent.el.dataset.status as TODO_STATUS;
+    todoStore.changeTodoStatus(todo, newStatus);
+  },
+  onSort: (data) => {
     const newStatus = data.parent.el.dataset.status as TODO_STATUS;
-    if (newStatus !== props.todoStatus) {
-      const todo = data.draggedNode.data.value as Todo;
-      todoStore.changeTodoStatus(todo, newStatus);
-    }
-    todoStore.updateTodosOrder(newStatus, data.values as Todo[]);
+    const newTodos = data.values;
+    todoStore.updateTodosOrder(newStatus, newTodos as Todo[]);
   },
 
 });
