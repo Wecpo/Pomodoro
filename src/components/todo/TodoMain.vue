@@ -14,7 +14,7 @@ import TodoCreateForm from '@/components/todo/TodoCreateForm.vue';
 .todo-main {
   margin-top: 4px;
   padding: 4px;
-  background-color: rgb(175, 196, 175);
-  border-radius: 8px;
+  background: linear-gradient(135deg, #92d4ab, #ebf5ef);
+  border-radius: 16px;
 }
 </style>

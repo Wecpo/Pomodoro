@@ -1,22 +1,28 @@
 <template>
-  <button class="button">
+  <button class="base-button">
     <slot />
   </button>
 </template>
 
 <style>
-.button {
+.base-button {
   color: aliceblue;
   background-color: rgb(36, 33, 33);
-  border-radius: 5px;
-  width: 90px;
+  border-radius: 8px;
+  width: 100px;
   height: 40px;
-  margin: 15px;
-  font-size: 22px;
+  margin: 16px;
+  font-size: 24px;
   font-weight: bold;
+  box-shadow: 0 8px 12px rgba(7, 2, 2, 0.2);
+  transition:
+    box-shadow 0.2s,
+    color 0.2s;
 }
 
-.button:hover {
+.base-button:hover {
   cursor: pointer;
+  color: rgb(196, 196, 196);
+  box-shadow: 12px 12px 12px rgba(7, 2, 2, 0.2);
 }
 </style>

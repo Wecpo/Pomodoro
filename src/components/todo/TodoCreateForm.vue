@@ -56,8 +56,7 @@ const resetForm = () => {
 }
 
 .create-todo-form__title {
-  background-color: #d5eccb;
-  padding: 12px;
-  border-radius: 16px;
+  color: #333;
+  font-size: 48px;
 }
 </style>

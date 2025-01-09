@@ -52,7 +52,7 @@ onUnmounted(() => {
       <IconSettings />
     </div>
     <div class="timer__title">
-      <span>{{ timerState.timerType }}</span>
+      <span class="timer__title__timer-type">{{ timerState.timerType }}</span>
       <span v-if="todoStore.getInProgressTodo?.name">Todo name: {{ todoStore.getInProgressTodo?.name }}</span>
     </div>
     <div class="timer__time">
@@ -91,21 +91,23 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 8px;
-  padding: 8px;
-  color: #fff;
+  gap: 1.5rem;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
 }
 
 .timer--backgound--focus {
-  background-color: rgb(206, 76, 76);
+  background: linear-gradient(135deg, #e74b33, #fecfef);
 }
 
 .timer--background--short-break {
-  background-color: rgb(85, 197, 122);
+  background: linear-gradient(135deg, #358b1b, #fecfef);
 }
 
 .timer--background--long-break {
-  background-color: rgb(107, 194, 209);
+  background: linear-gradient(135deg, #236975, #fecfef);
 }
 
 .timer__title {
@@ -114,24 +116,33 @@ onUnmounted(() => {
   align-items: center;
   font-size: 2rem;
   margin-bottom: 1rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.timer__title__timer-type {
+  font-size: 48px;
+  margin-bottom: 16px;
 }
 
 .timer__time {
-  font-size: 3rem;
-  margin-bottom: 1.5rem;
+  font-size: 5rem;
+  font-weight: 700;
 }
 
 .timer__settings {
   will-change: transform;
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
 .timer__settings > svg {
-  height: 32px;
+  height: 40px;
 }
 
 .timer__settings:hover {
   cursor: pointer;
-  transform: scale(1.04);
+  transform: scale(1.2);
   transition-duration: 100ms;
 }
 
@@ -139,7 +150,7 @@ onUnmounted(() => {
   display: flex;
   position: relative;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .timer__forward-button {

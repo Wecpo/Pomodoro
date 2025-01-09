@@ -35,10 +35,10 @@ watch(() => writableTodos.value, newTodos => todos.value = newTodos);
 
 <template>
   <div class="todo-list__containter">
-    <h2>
+    <h2 class="todo-list__title">
       {{ props.label }}
     </h2>
-    <ol ref="todoList" :data-status="props.todoStatus" class="todo-list">
+    <ol ref="todoList" :data-status="props.todoStatus" class="todo-list__ol">
       <li v-for="todo in todos" :key="todo.id">
         <TodoCard :todo="todo" />
       </li>
@@ -48,30 +48,21 @@ watch(() => writableTodos.value, newTodos => todos.value = newTodos);
 
 <style scoped>
 .todo-list__containter {
-  background-color: #e4e9d7;
+  background: linear-gradient(15deg, #9ca8a1, #ebf5ef);
   border-radius: 8px;
 }
 
-.todo-list__containter h2 {
+.todo-list__title {
   text-align: center;
   margin-bottom: 1rem;
   text-decoration: underline;
   color: rgb(59, 55, 55);
 }
 
-.todo-list {
+.todo-list__ol {
   list-style-type: none;
   min-height: 200px;
   padding: 1rem;
   border-radius: 4px;
-}
-
-.todo-list__li {
-  margin-bottom: 1rem;
-  cursor: grab;
-}
-
-.todo-list__li:active {
-  cursor: grabbing;
 }
 </style>
