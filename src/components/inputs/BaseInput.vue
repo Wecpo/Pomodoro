@@ -43,6 +43,7 @@ const inputId = useId();
   border-radius: 4px;
   font-size: 1.2rem;
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+  width: 14rem;
 }
 
 .base-input:hover {

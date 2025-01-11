@@ -48,6 +48,8 @@ const todoStore = useTodoStore();
   color: #2d423f;
   font-weight: 600;
   margin: 0;
+  word-wrap: break-word;
+  width: 11rem;
 }
 
 .todo__delete-btn {

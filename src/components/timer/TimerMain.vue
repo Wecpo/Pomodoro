@@ -53,7 +53,10 @@ onUnmounted(() => {
     </div>
     <div class="timer__title">
       <span class="timer__title__timer-type">{{ timerState.timerType }}</span>
-      <span v-if="todoStore.getInProgressTodo?.name">Todo name: {{ todoStore.getInProgressTodo?.name }}</span>
+      <span
+        v-if="todoStore.getInProgressTodo?.name"
+        class="timer__title__todo-name"
+      >Todo name: {{ todoStore.getInProgressTodo?.name }}</span>
     </div>
     <div class="timer__time">
       {{ formatTime(timerState.timerValue) }}
@@ -116,18 +119,24 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
   font-size: 2rem;
-  margin-bottom: 1rem;
   color: #333;
   font-weight: bold;
 }
 
 .timer__title__timer-type {
   font-size: 3rem;
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
+}
+
+.timer__title__todo-name {
+  width: 300px;
+  overflow-wrap: break-word;
 }
 
 .timer__time {
+  text-align: center;
   font-size: 5rem;
   font-weight: 700;
 }
@@ -184,5 +193,15 @@ onUnmounted(() => {
 .v-leave-to {
   transform: translate(-50%, -60%);
   opacity: 0;
+}
+
+@media (max-width: 360px) {
+  .timer {
+    gap: 1rem;
+  }
+
+  .timer__time {
+    font-size: 4rem;
+  }
 }
 </style>

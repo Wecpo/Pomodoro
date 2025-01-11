@@ -64,6 +64,5 @@ watch(() => writableTodos.value, newTodos => todos.value = newTodos);
   height: 100%;
   min-height: 200px;
   padding: 1rem;
-  border-radius: 4px;
 }
 </style>
