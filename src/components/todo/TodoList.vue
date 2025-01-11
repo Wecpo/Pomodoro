@@ -61,6 +61,7 @@ watch(() => writableTodos.value, newTodos => todos.value = newTodos);
 
 .todo-list__ol {
   list-style-type: none;
+  height: 100%;
   min-height: 200px;
   padding: 1rem;
   border-radius: 4px;

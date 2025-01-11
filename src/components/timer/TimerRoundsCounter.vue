@@ -68,7 +68,7 @@ onUnmounted(() => clearInterval(timeoutId));
 }
 
 .rounds__paragraph {
-  font-size: large;
+  font-size: 2rem;
 }
 
 .rounds__paragraph:hover {
@@ -78,6 +78,7 @@ onUnmounted(() => clearInterval(timeoutId));
 
 .v-enter-active,
 .v-leave-active {
+  will-change: opacity;
   transition: opacity 0.1s ease;
 }
 

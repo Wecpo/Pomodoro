@@ -57,6 +57,6 @@ const resetForm = () => {
 
 .create-todo-form__title {
   color: #333;
-  font-size: 48px;
+  font-size: 2.4rem;
 }
 </style>

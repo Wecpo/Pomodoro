@@ -11,8 +11,8 @@
   border-radius: 8px;
   width: 100px;
   height: 40px;
-  margin: 16px;
-  font-size: 24px;
+  margin: 1rem;
+  font-size: 1.4rem;
   font-weight: bold;
   box-shadow: 0 8px 12px rgba(7, 2, 2, 0.2);
   transition:

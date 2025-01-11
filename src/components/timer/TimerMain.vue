@@ -79,11 +79,13 @@ onUnmounted(() => {
       </div>
     </div>
   </div>
-  <TimerSettingsModal
-    v-if="showModal"
-    :settings-icon-ref="settingsIconRef"
-    @update="getSettings" @close="showModal = !showModal"
-  />
+  <Transition>
+    <TimerSettingsModal
+      v-if="showModal"
+      :settings-icon-ref="settingsIconRef" :show-modal="showModal"
+      @update="getSettings" @close="showModal = !showModal"
+    />
+  </Transition>
 </template>
 
 <style scoped>
@@ -121,7 +123,7 @@ onUnmounted(() => {
 }
 
 .timer__title__timer-type {
-  font-size: 48px;
+  font-size: 3rem;
   margin-bottom: 16px;
 }
 
@@ -137,7 +139,7 @@ onUnmounted(() => {
 }
 
 .timer__settings > svg {
-  height: 40px;
+  height: 3rem;
 }
 
 .timer__settings:hover {
@@ -172,11 +174,15 @@ onUnmounted(() => {
 
 .v-enter-active,
 .v-leave-active {
-  transition: opacity 0.1s ease;
+  will-change: opacity, transform;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .v-enter-from,
 .v-leave-to {
+  transform: translate(-50%, -60%);
   opacity: 0;
 }
 </style>

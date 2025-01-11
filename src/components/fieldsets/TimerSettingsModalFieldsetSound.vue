@@ -24,6 +24,6 @@ const volume = defineModel<number>('volume', { required: true, default: 0.5 });
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 8px;
+  margin: 1rem;
 }
 </style>

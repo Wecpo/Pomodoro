@@ -41,13 +41,17 @@ const inputId = useId();
   margin: 4px;
   background-color: rgba(128, 92, 92, 0.7);
   border-radius: 4px;
-  font-size: large;
+  font-size: 1.2rem;
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.base-input:hover {
+  cursor: pointer;
 }
 
 .base-input::placeholder {
   color: rgb(194, 191, 191);
-  font-size: large;
+  font-size: 1.2rem;
 }
 
 .base-input:focus::placeholder {
@@ -55,6 +59,6 @@ const inputId = useId();
 }
 
 .base-input__label {
-  font-size: larger;
+  font-size: 1.2rem;
 }
 </style>
