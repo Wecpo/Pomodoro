@@ -4,7 +4,7 @@ import { TODO_STATUS } from '@/types/enums/TodoStatus';
 </script>
 
 <template>
-  <div class="todo-status">
+  <div class="todo-catalog">
     <TodoList label="Backlog" :todo-status="TODO_STATUS.BACKLOG" />
     <TodoList label="In progress" :todo-status="TODO_STATUS.IN_PROGRESS" />
     <TodoList label="Stopped" :todo-status="TODO_STATUS.STOPPED" />
@@ -13,7 +13,7 @@ import { TODO_STATUS } from '@/types/enums/TodoStatus';
 </template>
 
 <style scoped>
-.todo-status {
+.todo-catalog {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;

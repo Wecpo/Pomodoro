@@ -23,7 +23,7 @@ const toggleShowCancelButton = (action: 'show' | 'hidden') => {
       isShowCancelButton.value = false;
       clearTimeout(timeoutId);
       prevRounds.value = 0;
-    }, 15000);
+    }, 3000);
   }
   if (action === 'hidden') {
     clearTimeout(timeoutId);

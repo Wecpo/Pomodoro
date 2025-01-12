@@ -34,7 +34,7 @@ watch(() => writableTodos.value, newTodos => todos.value = newTodos);
 </script>
 
 <template>
-  <div class="todo-list__containter">
+  <div class="todo-list">
     <h2 class="todo-list__title">
       {{ props.label }}
     </h2>
@@ -47,7 +47,7 @@ watch(() => writableTodos.value, newTodos => todos.value = newTodos);
 </template>
 
 <style scoped>
-.todo-list__containter {
+.todo-list {
   background: linear-gradient(15deg, #9ca8a1, #ebf5ef);
   border-radius: 8px;
 }

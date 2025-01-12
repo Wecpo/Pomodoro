@@ -37,8 +37,8 @@ const inputId = useId();
 
 <style scoped>
 .base-input {
-  padding: 8px;
-  margin: 4px;
+  padding: 0.6rem;
+  margin: 0.5rem;
   background-color: rgba(128, 92, 92, 0.7);
   border-radius: 4px;
   font-size: 1.2rem;
@@ -60,6 +60,6 @@ const inputId = useId();
 }
 
 .base-input__label {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
 </style>
