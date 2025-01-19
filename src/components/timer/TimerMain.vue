@@ -83,11 +83,13 @@ onUnmounted(() => {
     </div>
   </div>
   <Transition>
-    <TimerSettingsModal
-      v-if="showModal"
-      :settings-icon-ref="settingsIconRef" :show-modal="showModal"
-      @update="getSettings" @close="showModal = !showModal"
-    />
+    <Teleport to="body">
+      <TimerSettingsModal
+        v-if="showModal"
+        :settings-icon-ref="settingsIconRef" :show-modal="showModal"
+        @update="getSettings" @close="showModal = !showModal"
+      />
+    </Teleport>
   </Transition>
 </template>
 
