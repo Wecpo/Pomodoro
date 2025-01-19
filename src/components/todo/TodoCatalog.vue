@@ -1,16 +1,10 @@
 <script setup lang="ts">
 import TodoList from '@/components/todo/TodoList.vue';
-import { useTodoStore } from '@/store/todoStore';
 import { TODO_STATUS } from '@/types/enums/TodoStatus';
-import { onMounted } from 'vue';
-
-const { loadTodos } = useTodoStore();
-
-onMounted(() => loadTodos());
 </script>
 
 <template>
-  <div class="todo-status">
+  <div class="todo-catalog">
     <TodoList label="Backlog" :todo-status="TODO_STATUS.BACKLOG" />
     <TodoList label="In progress" :todo-status="TODO_STATUS.IN_PROGRESS" />
     <TodoList label="Stopped" :todo-status="TODO_STATUS.STOPPED" />
@@ -19,10 +13,10 @@ onMounted(() => loadTodos());
 </template>
 
 <style scoped>
-.todo-status {
+.todo-catalog {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  padding: 16px;
+  gap: 1rem;
+  padding: 1rem;
 }
 </style>

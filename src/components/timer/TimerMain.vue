@@ -52,8 +52,11 @@ onUnmounted(() => {
       <IconSettings />
     </div>
     <div class="timer__title">
-      <span>{{ timerState.timerType }}</span>
-      <span v-if="todoStore.getInProgressTodo?.name">Todo name: {{ todoStore.getInProgressTodo?.name }}</span>
+      <span class="timer__title__timer-type">{{ timerState.timerType }}</span>
+      <span
+        v-if="todoStore.getInProgressTodo?.name"
+        class="timer__title__todo-name"
+      >Todo name: {{ todoStore.getInProgressTodo?.name }}</span>
     </div>
     <div class="timer__time">
       {{ formatTime(timerState.timerValue) }}
@@ -79,11 +82,13 @@ onUnmounted(() => {
       </div>
     </div>
   </div>
-  <TimerSettingsModal
-    v-if="showModal"
-    :settings-icon-ref="settingsIconRef"
-    @update="getSettings" @close="showModal = !showModal"
-  />
+  <Transition>
+    <TimerSettingsModal
+      v-if="showModal"
+      :settings-icon-ref="settingsIconRef" :show-modal="showModal"
+      @update="getSettings" @close="showModal = !showModal"
+    />
+  </Transition>
 </template>
 
 <style scoped>
@@ -91,48 +96,64 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: Arial, sans-serif;
-  border-radius: 8px;
-  padding: 8px;
-  color: #fff;
+  gap: 1.5rem;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
 }
 
 .timer--backgound--focus {
-  background-color: rgb(206, 76, 76);
+  background: linear-gradient(135deg, #e74b33, #fecfef);
 }
 
 .timer--background--short-break {
-  background-color: rgb(85, 197, 122);
+  background: linear-gradient(135deg, #358b1b, #fecfef);
 }
 
 .timer--background--long-break {
-  background-color: rgb(107, 194, 209);
+  background: linear-gradient(135deg, #236975, #fecfef);
 }
 
 .timer__title {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
   font-size: 2rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.timer__title__timer-type {
+  font-size: 3rem;
   margin-bottom: 1rem;
 }
 
+.timer__title__todo-name {
+  width: 300px;
+  overflow-wrap: break-word;
+}
+
 .timer__time {
-  font-size: 3rem;
-  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 5rem;
+  font-weight: 700;
 }
 
 .timer__settings {
   will-change: transform;
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
 .timer__settings > svg {
-  height: 32px;
+  height: 3rem;
 }
 
 .timer__settings:hover {
   cursor: pointer;
-  transform: scale(1.04);
+  transform: scale(1.2);
   transition-duration: 100ms;
 }
 
@@ -140,7 +161,7 @@ onUnmounted(() => {
   display: flex;
   position: relative;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .timer__forward-button {
@@ -162,11 +183,25 @@ onUnmounted(() => {
 
 .v-enter-active,
 .v-leave-active {
-  transition: opacity 0.1s ease;
+  will-change: opacity, transform;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 .v-enter-from,
 .v-leave-to {
+  transform: translate(-50%, -60%);
   opacity: 0;
+}
+
+@media (max-width: 360px) {
+  .timer {
+    gap: 1rem;
+  }
+
+  .timer__time {
+    font-size: 4rem;
+  }
 }
 </style>

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import TimerButton from '@/components/buttons/BaseButton.vue';
+import BaseButton from '@/components/buttons/BaseButton.vue';
 import BaseInput from '@/components/inputs/BaseInput.vue';
 import { useTodoStore } from '@/store/todoStore';
+import { INPUT_LIMITS } from '@/types/enums/InputLimits';
 import { TODO_STATUS } from '@/types/enums/TodoStatus';
 import { reactive } from 'vue';
 
@@ -23,7 +24,9 @@ const resetForm = () => {
 
 <template>
   <form class="create-todo-form" @submit.prevent="[todoStore.createTodo(newTodo), resetForm()]">
-    <h2>Create Todo</h2>
+    <h2 class="create-todo-form__title">
+      Create Todo
+    </h2>
     <BaseInput
       v-model="newTodo.name"
       type="text"
@@ -37,10 +40,12 @@ const resetForm = () => {
       label="Todo time (m)"
       :required="true"
       placeholder="30"
+      :min="INPUT_LIMITS.MIN_TIME"
+      :max="INPUT_LIMITS.MAX_TIME"
     />
-    <TimerButton type="submit">
+    <BaseButton type="submit">
       Create
-    </TimerButton>
+    </BaseButton>
   </form>
 </template>
 
@@ -49,6 +54,10 @@ const resetForm = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 4px;
+}
+
+.create-todo-form__title {
+  color: #333;
+  font-size: 2.4rem;
 }
 </style>

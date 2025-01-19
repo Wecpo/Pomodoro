@@ -13,13 +13,13 @@ interface Props {
 }
 
 defineProps<Props>();
-const modelValue = defineModel();
 
+const modelValue = defineModel();
 const inputId = useId();
 </script>
 
 <template>
-  <label :for="inputId">
+  <label :for="inputId" class="base-input__label">
     {{ label }}
   </label>
   <input
@@ -37,8 +37,29 @@ const inputId = useId();
 
 <style scoped>
 .base-input {
-  padding: 4px;
-  margin: 4px;
+  padding: 0.6rem;
+  margin: 0.5rem;
   background-color: rgba(128, 92, 92, 0.7);
+  border-radius: 4px;
+  font-size: 1.2rem;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+  width: 14rem;
+}
+
+.base-input:hover {
+  cursor: pointer;
+}
+
+.base-input::placeholder {
+  color: rgb(194, 191, 191);
+  font-size: 1.2rem;
+}
+
+.base-input:focus::placeholder {
+  color: transparent;
+}
+
+.base-input__label {
+  font-size: 1.4rem;
 }
 </style>

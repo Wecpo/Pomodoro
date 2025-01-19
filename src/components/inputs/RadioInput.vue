@@ -23,4 +23,8 @@ const inputId = useId();
   margin: 4px;
   background-color: rgba(128, 92, 92, 0.7);
 }
+
+.radio-input:hover {
+  cursor: pointer;
+}
 </style>

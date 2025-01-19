@@ -13,6 +13,8 @@ export const useTodoStore = defineStore('todo', () => {
     }
   };
 
+  loadTodos();
+
   const getTodosByStatus
    = computed(() => (todoStatus: TODO_STATUS) => todos.value.filter(todo => todo.status === todoStatus));
 
@@ -45,13 +47,17 @@ export const useTodoStore = defineStore('todo', () => {
     todos.value.splice(todoIndex, 1);
   };
 
+  const updateTodosOrder = (todoStatus: TODO_STATUS, newTodos: Todo[]) => {
+    todos.value = todos.value
+      .filter(todo => todo.status !== todoStatus)
+      .concat(newTodos);
+  };
+
   watch(todos, (newTodos) => {
     localStorage.setItem('todos', JSON.stringify(newTodos));
   }, { deep: true });
 
   return {
-    loadTodos,
-
     todos,
     getInProgressTodo,
     getTodosByStatus,
@@ -61,6 +67,7 @@ export const useTodoStore = defineStore('todo', () => {
     changeTodoOnDrop,
     changeTodoStatus,
     removeTodo,
+    updateTodosOrder,
 
   };
 });
