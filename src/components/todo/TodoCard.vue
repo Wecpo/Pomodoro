@@ -9,9 +9,9 @@ const props = defineProps<{
 
 const todoStore = useTodoStore();
 
-const isTodoDone = computed(() => {
+const todoBackgroundClass = computed(() => {
   if (props.todo.time) {
-    return props.todo.timeDone >= props.todo.time ? `todo-card--done` : ``;
+    return props.todo.timeDone >= props.todo.time ? `todo-card--backgound-done` : ``;
   }
 
   return ``;
@@ -19,7 +19,7 @@ const isTodoDone = computed(() => {
 </script>
 
 <template>
-  <div :class="`todo-card ${isTodoDone}`">
+  <div :class="`todo-card ${todoBackgroundClass}`">
     <div class="todo-card__body">
       <h3 class="todo-сard__title">
         {{ todo?.name }}
@@ -48,7 +48,7 @@ const isTodoDone = computed(() => {
     box-shadow 0.2s;
 }
 
-.todo-card--done {
+.todo-card--backgound-done {
   background-color: rgba(166, 180, 143, 0.733);
 }
 

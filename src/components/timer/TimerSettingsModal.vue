@@ -122,15 +122,14 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   position: fixed;
-  top: 30%;
+  top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: rgba(105, 104, 104, 0.95);
   padding: 1rem 2rem;
   box-shadow: 4px 4px 0 rgba(85, 84, 84, 0.1);
   border-radius: 8px;
-  z-index: 1000;
-  min-width: 260px;
+  min-width: 226px;
 }
 
 .submit {
@@ -150,23 +149,17 @@ onUnmounted(() => {
   box-shadow: 4px 4px 4px rgba(7, 2, 2, 0.2);
 }
 
-@media (min-width: 1440px) {
+@media (max-height: 1024px) {
   .modal {
-    top: 28%;
-  }
-}
-
-@media (max-width: 768px) {
-  .modal {
+    padding: 0.4rem;
     top: 45%;
-    padding: 0.5rem;
   }
 }
 
-@media (max-width: 548px) {
+@media (max-height: 932px) {
   .modal {
-    top: 50%;
-    padding: 0.5rem;
+    padding: 0.4rem;
+    top: 49%;
   }
 }
 </style>

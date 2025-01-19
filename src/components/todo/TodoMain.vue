@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import TodoCatalog from '@/components/todo/TodoCatalog.vue';
 import TodoCreateForm from '@/components/todo/TodoCreateForm.vue';
+import { useTodoStore } from '@/store/todoStore';
+import { onMounted } from 'vue';
+
+const todoStore = useTodoStore();
+
+onMounted(() => todoStore.loadTodos());
 </script>
 
 <template>

@@ -62,4 +62,16 @@ const inputId = useId();
 .base-input__label {
   font-size: 1.4rem;
 }
+
+@media (max-width: 632px) {
+  .base-input {
+    width: 10rem;
+  }
+}
+
+@media (max-width: 432px) {
+  .base-input {
+    width: 8rem;
+  }
+}
 </style>

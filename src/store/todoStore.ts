@@ -13,10 +13,7 @@ export const useTodoStore = defineStore('todo', () => {
     }
   };
 
-  loadTodos();
-
-  const getTodosByStatus
-   = computed(() => (todoStatus: TODO_STATUS) => todos.value.filter(todo => todo.status === todoStatus));
+  const getTodosByStatus = (todoStatus: TODO_STATUS) => todos.value.filter(todo => todo.status === todoStatus);
 
   const getInProgressTodo = computed(() => todos.value.find(todo => todo.status === TODO_STATUS.IN_PROGRESS));
 
@@ -62,12 +59,12 @@ export const useTodoStore = defineStore('todo', () => {
     getInProgressTodo,
     getTodosByStatus,
 
+    loadTodos,
     createTodo,
     changeTodoRemainingTime,
     changeTodoOnDrop,
     changeTodoStatus,
     removeTodo,
     updateTodosOrder,
-
   };
 });
