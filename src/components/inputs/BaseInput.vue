@@ -35,7 +35,9 @@ const inputId = useId();
   >
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@use '@/styles/mixins';
+
 .base-input {
   padding: 0.6rem;
   margin: 0.5rem;
@@ -44,34 +46,29 @@ const inputId = useId();
   font-size: 1.2rem;
   box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
   width: 14rem;
-}
 
-.base-input:hover {
-  cursor: pointer;
-}
-
-.base-input::placeholder {
-  color: rgb(194, 191, 191);
-  font-size: 1.2rem;
-}
-
-.base-input:focus::placeholder {
-  color: transparent;
-}
-
-.base-input__label {
-  font-size: 1.4rem;
-}
-
-@media (max-width: 632px) {
-  .base-input {
-    width: 10rem;
+  &__label {
+    font-size: 1.2rem;
+    @include mixins.respond-to('xs') {
+      font-size: 1rem;
+    }
   }
-}
 
-@media (max-width: 432px) {
-  .base-input {
-    width: 8rem;
+  &:hover {
+    cursor: pointer;
+  }
+
+  &::placeholder {
+    color: rgb(194, 191, 191);
+    font-size: 1.2rem;
+  }
+
+  &:focus::placeholder {
+    color: transparent;
+  }
+
+  @include mixins.respond-to('xs') {
+    padding: 0.2rem;
   }
 }
 </style>

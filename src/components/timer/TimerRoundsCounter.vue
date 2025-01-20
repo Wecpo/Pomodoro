@@ -41,11 +41,11 @@ onUnmounted(() => clearInterval(timeoutId));
 </script>
 
 <template>
-  <div class="rounds__cointainer">
-    <p class="rounds__paragraph" @click="emit('reset'), toggleShowCancelButton('show')">
+  <div class="rounds-counter">
+    <p class="rounds-counter__paragraph" @click="emit('reset'), toggleShowCancelButton('show')">
       Rounds completed: {{ props.rounds }}
     </p>
-    <div v-show="isShowCancelButton" class="rounds__cancel--button">
+    <div v-show="isShowCancelButton" class="rounds-counter__cancel--button">
       <Transition>
         <IconCancelButton @click="emit('cancelReset', prevRounds), toggleShowCancelButton('hidden')" />
       </Transition>
@@ -53,57 +53,55 @@ onUnmounted(() => clearInterval(timeoutId));
   </div>
 </template>
 
-<style scoped>
-.rounds__cointainer {
+<style scoped lang="scss">
+@use '@/styles/mixins';
+@use '@/styles/variables';
+
+.rounds-counter {
   height: 2rem;
-}
-.rounds__cancel--button {
-  display: flex;
-  position: relative;
-  height: 0px;
-  top: -64px;
-  right: 14%;
-  will-change: transform;
-}
 
-.rounds__cancel--button:hover {
-  cursor: pointer;
-  transform: scale(1.05);
-  transition-duration: 100ms;
-}
+  &__cancel--button {
+    display: flex;
+    position: relative;
+    height: 0px;
+    top: -54px;
+    right: 14%;
+    will-change: transform;
 
-.rounds__paragraph {
-  font-size: 2rem;
-}
+    @include mixins.respond-to('xs') {
+      top: -40px;
+      right: 25%;
+    }
 
-.rounds__paragraph:hover {
-  cursor: pointer;
-  opacity: 0.8;
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.05);
+      transition-duration: variables.$transition-duration;
+    }
+  }
+
+  &__paragraph {
+    font-size: 1.6rem;
+
+    @include mixins.respond-to('xs') {
+      font-size: 1rem;
+    }
+
+    &:hover {
+      cursor: pointer;
+      opacity: 0.8;
+    }
+  }
 }
 
 .v-enter-active,
 .v-leave-active {
   will-change: opacity;
-  transition: opacity 0.1s ease;
+  transition: opacity variables.$transition-duration variables.$transition-easing;
 }
 
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
-}
-
-@media (max-width: 768px) {
-  .rounds__cointainer {
-    height: 1rem;
-  }
-
-  .rounds__paragraph {
-    font-size: 1.4rem;
-  }
-
-  .rounds__cancel--button {
-    top: -50px;
-    right: 16%;
-  }
 }
 </style>

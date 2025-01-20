@@ -19,11 +19,10 @@ const volume = defineModel<number>('volume', { required: true, default: 0.5 });
   </fieldset>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@use '@/styles/mixins';
+
 .fieldset-sounds {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 1rem;
+  @include mixins.flex-center();
 }
 </style>

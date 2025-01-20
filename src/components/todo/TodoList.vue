@@ -46,22 +46,22 @@ watch(() => writableTodos.value, newTodos => todos.value = newTodos);
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .todo-list {
   background: linear-gradient(15deg, #9ca8a1, #ebf5ef);
   border-radius: 8px;
-}
 
-.todo-list__title {
-  text-align: center;
-  margin-bottom: 1rem;
-  color: rgb(59, 55, 55);
-}
+  &__title {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: rgb(59, 55, 55);
+  }
 
-.todo-list__ol {
-  list-style-type: none;
-  height: 100%;
-  min-height: 200px;
-  padding: 1rem;
+  &__ol {
+    list-style-type: none;
+    height: 100%;
+    min-height: 200px;
+    padding: 1rem;
+  }
 }
 </style>

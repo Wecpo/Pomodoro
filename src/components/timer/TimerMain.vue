@@ -23,7 +23,7 @@ const isTimerStarted = computed(() => timerState.timerStatus === TIMER_STATUS.ST
 
 const timerClass = computed(() => {
   if (timerState.timerType === TIMER_TYPE.FOCUS) {
-    return 'timer--backgound--focus';
+    return 'timer--background--focus';
   }
 
   if (timerState.timerType === TIMER_TYPE.SHORT_BREAK) {
@@ -93,117 +93,124 @@ onUnmounted(() => {
   </Transition>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@use '@/styles/variables';
+@use '@/styles/mixins';
+@use '@/styles/colors';
+
 .timer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  @include mixins.flex-center();
   gap: 1.5rem;
   padding: 2rem;
   border-radius: 20px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  margin: 0 auto;
-}
 
-.timer--backgound--focus {
-  background: linear-gradient(135deg, #e74b33, #fecfef);
-}
+  @include mixins.respond-to('md') {
+    gap: 1rem;
+    font-size: 4rem;
+  }
 
-.timer--background--short-break {
-  background: linear-gradient(135deg, #358b1b, #fecfef);
-}
+  @include mixins.respond-to('xs') {
+    font-size: 1rem;
+  }
 
-.timer--background--long-break {
-  background: linear-gradient(135deg, #236975, #fecfef);
-}
+  &--background--focus {
+    background: linear-gradient(135deg, colors.$focus-primary-color, colors.$focus-secondary-color);
+  }
 
-.timer__title {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  font-size: 2rem;
-  color: #333;
-  font-weight: bold;
-}
+  &--background--short-break {
+    background: linear-gradient(135deg, colors.$short-break-primary-color, colors.$short-break-secondary-color);
+  }
 
-.timer__title__timer-type {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
+  &--background--long-break {
+    background: linear-gradient(135deg, colors.$long-break-primary-color, colors.$long-break-secondary-color);
+  }
 
-.timer__title__todo-name {
-  width: 300px;
-  overflow-wrap: break-word;
-}
+  &__title {
+    @include mixins.flex-center();
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    font-weight: bold;
 
-.timer__time {
-  text-align: center;
-  font-size: 5rem;
-  font-weight: 700;
-}
+    @include mixins.respond-to('xs') {
+      font-size: 1rem;
+    }
+  }
 
-.timer__settings {
-  will-change: transform;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
+  &__title__timer-type {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    @include mixins.respond-to('xs') {
+      font-size: 2rem;
+    }
+  }
 
-.timer__settings > svg {
-  height: 3rem;
-}
+  &__title__todo-name {
+    width: 300px;
+    overflow-wrap: break-word;
+    @include mixins.respond-to('xs') {
+      font-size: 1.8rem;
+    }
+  }
 
-.timer__settings:hover {
-  cursor: pointer;
-  transform: scale(1.2);
-  transition-duration: 100ms;
-}
+  &__time {
+    text-align: center;
+    font-size: 5rem;
+    font-weight: 700;
 
-.timer__controls {
-  display: flex;
-  position: relative;
-  align-items: center;
-  gap: 1rem;
-}
+    @include mixins.respond-to('xs') {
+      font-size: 3rem;
+    }
+  }
 
-.timer__forward-button {
-  position: absolute;
-  right: -20%;
-  will-change: transform;
-}
+  &__settings {
+    will-change: transform;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
 
-.timer__forward-button > svg {
-  height: 100%;
-  height: 32px;
-}
+  &__settings > svg {
+    height: 3rem;
+  }
 
-.timer__forward-button > svg:hover {
-  cursor: pointer;
-  transform: scale(1.1);
-  transition-duration: 100ms;
+  &__settings:hover {
+    @include mixins.hover-scale(1.2);
+  }
+
+  &__controls {
+    display: flex;
+    position: relative;
+    align-items: center;
+  }
+
+  &__forward-button {
+    position: absolute;
+    right: -20%;
+    will-change: transform;
+  }
+
+  &__forward-button > svg {
+    height: 100%;
+    height: 32px;
+  }
+
+  &__forward-button > svg:hover {
+    @include mixins.hover-scale(1.2);
+  }
 }
 
 .v-enter-active,
 .v-leave-active {
   will-change: opacity, transform;
   transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
+    opacity variables.$transition-duration variables.$transition-easing,
+    transform variables.$transition-duration variables.$transition-easing;
 }
 
 .v-enter-from,
 .v-leave-to {
   transform: translate(-50%, -60%);
   opacity: 0;
-}
-
-@media (max-width: 360px) {
-  .timer {
-    gap: 1rem;
-  }
-
-  .timer__time {
-    font-size: 4rem;
-  }
 }
 </style>

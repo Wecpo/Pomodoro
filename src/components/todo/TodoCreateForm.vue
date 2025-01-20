@@ -49,15 +49,15 @@ const resetForm = () => {
   </form>
 </template>
 
-<style scoped>
-.create-todo-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+<style scoped lang="scss">
+@use '@/styles/mixins';
 
-.create-todo-form__title {
-  color: #333;
-  font-size: 2.4rem;
+.create-todo-form {
+  @include mixins.flex-center;
+
+  &__title {
+    color: #333;
+    font-size: 2.4rem;
+  }
 }
 </style>

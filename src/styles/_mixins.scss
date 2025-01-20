@@ -1,0 +1,31 @@
+@use 'sass:map';
+
+@mixin flex-center($direction: column) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: center;
+}
+
+@mixin hover-scale($scale: 1.2, $duration: 100ms) {
+  cursor: pointer;
+  transform: scale($scale);
+  transition-duration: $duration;
+}
+
+$breakpoints: (
+  'xs': 375px,
+  'sm': 600px,
+  'md': 768px,
+  'lg': 1024px,
+  'xl': 1440px,
+);
+
+@mixin respond-to($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (max-width: map.get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @warn "Такого брейкпоинта нет в списке: #{$breakpoint}";
+  }
+}
