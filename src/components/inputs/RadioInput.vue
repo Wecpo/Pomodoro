@@ -17,14 +17,10 @@ const inputId = useId();
   <input :id="inputId" v-model="modelValue" class="radio-input" type="radio" :value="value ">
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .radio-input {
-  padding: 4px;
-  margin: 4px;
-  background-color: rgba(128, 92, 92, 0.7);
-}
-
-.radio-input:hover {
-  cursor: pointer;
+  &:hover {
+    cursor: pointer;
+  }
 }
 </style>

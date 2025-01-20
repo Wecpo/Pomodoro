@@ -4,7 +4,7 @@
   </button>
 </template>
 
-<style>
+<style scoped lang="scss">
 .base-button {
   color: aliceblue;
   background-color: rgb(36, 33, 33);
@@ -18,11 +18,11 @@
   transition:
     box-shadow 0.2s,
     color 0.2s;
-}
 
-.base-button:hover {
-  cursor: pointer;
-  color: rgb(196, 196, 196);
-  box-shadow: 12px 12px 12px rgba(7, 2, 2, 0.2);
+  &:hover {
+    cursor: pointer;
+    color: rgb(196, 196, 196);
+    box-shadow: 12px 12px 12px rgba(7, 2, 2, 0.2);
+  }
 }
 </style>

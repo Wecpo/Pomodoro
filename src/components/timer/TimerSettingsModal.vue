@@ -111,13 +111,15 @@ onUnmounted(() => {
       :max="INPUT_LIMITS.MAX_ROUNDS"
       label="Rounds"
     />
-    <button class="submit" type="submit">
+    <button class="modal__submit" type="submit">
       Apply
     </button>
   </form>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@use '@/styles/mixins';
+
 .modal {
   display: flex;
   flex-direction: column;
@@ -130,36 +132,31 @@ onUnmounted(() => {
   box-shadow: 4px 4px 0 rgba(85, 84, 84, 0.1);
   border-radius: 8px;
   min-width: 226px;
-}
 
-.submit {
-  background-color: black;
-  color: #fff;
-  height: 30px;
-  font-size: 1.2rem;
-  margin-top: 12px;
-  transition:
-    box-shadow 0.2s,
-    color 0.2s;
-}
-
-.submit:hover {
-  cursor: pointer;
-  color: rgb(196, 196, 196);
-  box-shadow: 4px 4px 4px rgba(7, 2, 2, 0.2);
-}
-
-@media (max-height: 1024px) {
-  .modal {
+  @include mixins.respond-to('xs') {
     padding: 0.4rem;
-    top: 45%;
+    top: 46%;
   }
-}
 
-@media (max-height: 932px) {
-  .modal {
-    padding: 0.4rem;
-    top: 49%;
+  @include mixins.respond-to('sm') {
+    top: 50%;
+  }
+
+  &__submit {
+    background-color: black;
+    color: #fff;
+    height: 30px;
+    margin-top: 12px;
+    font-size: 1.2rem;
+    transition:
+      box-shadow 0.2s,
+      color 0.2s;
+
+    &:hover {
+      cursor: pointer;
+      color: rgb(196, 196, 196);
+      box-shadow: 4px 4px 4px rgba(7, 2, 2, 0.2);
+    }
   }
 }
 </style>

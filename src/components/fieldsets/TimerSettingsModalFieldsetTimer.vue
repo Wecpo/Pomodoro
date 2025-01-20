@@ -14,16 +14,16 @@ const timerFormat = defineModel<string>('timerFormat');
   </fieldset>
 </template>
 
-<style scoped>
-.fieldset-timer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 1.4rem;
-  margin: 1rem;
-}
+<style scoped lang="scss">
+@use '@/styles/mixins';
 
-.fieldset-timer__radio-input {
+.fieldset-timer {
   font-size: 1.2rem;
+  margin: 1rem;
+  @include mixins.flex-center();
+
+  @include mixins.respond-to('xs') {
+    font-size: 1rem;
+  }
 }
 </style>
