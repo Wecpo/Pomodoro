@@ -36,7 +36,7 @@ watch(() => writableTodos.value, newTodos => todos.value = newTodos);
 <template>
   <div class="todo-list">
     <h2 class="todo-list__title">
-      {{ props.label }}
+      {{ props.label }} ({{ writableTodos.length }})
     </h2>
     <ol ref="todoList" :data-status="props.todoStatus" class="todo-list__ol">
       <li v-for="todo in todos" :key="todo.id">
@@ -55,7 +55,6 @@ watch(() => writableTodos.value, newTodos => todos.value = newTodos);
 .todo-list__title {
   text-align: center;
   margin-bottom: 1rem;
-  text-decoration: underline;
   color: rgb(59, 55, 55);
 }
 
